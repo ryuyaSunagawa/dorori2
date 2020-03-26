@@ -88,8 +88,6 @@ public class PlayerScript : MonoBehaviour
 			else if( GameManager.Instance.padMode == false )
 			{
 				//キーボード移動
-				//float horizontal = ReturnDirectFloat( "Horizontal" );
-				//float vertical = ReturnDirectFloat( "Vertical" );
 				float horizontal = Input.GetAxis( "Horizontal" );
 				float vertical = Input.GetAxis( "Vertical" );
 
@@ -102,6 +100,7 @@ public class PlayerScript : MonoBehaviour
 		
 	}
 
+	//ジャンプ処理
 	void Jump()
 	{
 		rb.AddForce( new Vector3( 0f, 7f, 0f ), ForceMode.Impulse );
