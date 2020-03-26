@@ -22,36 +22,46 @@ public class CameraScript : MonoBehaviour
 	/// </summary>
 	float pitchClamp = 0;
 
-	// Start is called before the first frame update
-	void Start()
-	{
-
-	}
+	float yawblend = 0;
+	float pitchblend = 0;
 
 	// Update is called once per frame
 	void Update()
 	{
 
+		//マウスロック判定
+		GameManager.Instance.MouseLockComp();
+
 		//パッド入力かマウス入力かを判定
-		if( GameManager.Instance.padMode == true )
+		GetInputAxis();
+	}
+
+	void GetInputAxis()
+	{
+		if( GameManager.Instance.cursorLock == true )
 		{
-			//パッド操作
+			if( GameManager.Instance.padMode == true )
+			{
+				//パッド操作
 
-			float yaw = Input.GetAxis( "RightHorizontal" ) * padSensitivity;
-			float pitch = Input.GetAxis( "RightVertical" ) * padSensitivity;
+				float yaw = Input.GetAxis( "RightHorizontal" ) * padSensitivity;
+				float pitch = Input.GetAxis( "RightVertical" ) * padSensitivity;
+				yawblend = yaw;
+				pitchblend = pitch;
 
-			//カメラ回転
-			RotateCamera( yaw, pitch );
-		}
-		else
-		{
-			//マウス操作
+				//カメラ回転
+				RotateCamera( yaw, pitch );
+			}
+			else
+			{
+				//マウス操作
 
-			float yaw = Input.GetAxis( "Mouse X" ) * mouseSensitivity;
-			float pitch = Input.GetAxis( "Mouse Y" ) * mouseSensitivity;
+				float yaw = Input.GetAxis( "Mouse X" ) * mouseSensitivity;
+				float pitch = Input.GetAxis( "Mouse Y" ) * mouseSensitivity;
 
-			//カメラ回転
-			RotateCamera( yaw, -pitch );
+				//カメラ回転
+				RotateCamera( yaw, -pitch );
+			}
 		}
 	}
 
@@ -70,4 +80,11 @@ public class CameraScript : MonoBehaviour
 			transform.RotateAround( player.position, transform.right, pitch );
 		}
 	}
+
+	//private void OnGUI()
+	//{
+	//	GUI.Box( new Rect( 0, 0, 150, 60 ), "Yaw = " + yawblend.ToString() );
+	//	GUI.Box( new Rect( 0, 60, 150, 60 ), "Pit = " + pitchblend.ToString() );
+	//}
+
 }
