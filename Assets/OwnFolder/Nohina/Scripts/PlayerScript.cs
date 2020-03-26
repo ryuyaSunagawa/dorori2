@@ -120,8 +120,8 @@ public class PlayerScript : MonoBehaviour
 	{
 		//実験的にRayを作ってみる
 		Ray ray = new Ray( transform.position, transform.forward );
-		Debug.DrawRay( ray.origin, ray.direction * 5, Color.blue );
-		Debug.DrawLine( transform.position, transform.position + transform.forward, Color.green );
+		//Debug.DrawRay( ray.origin, ray.direction * 5, Color.blue );
+		//Debug.DrawLine( transform.position, transform.position + transform.forward, Color.green );
 
 		//TextMeshProに描画
 		myTmp.GetComponent<TextMeshPro>().text = "Position = " + transform.position + ", \n"
