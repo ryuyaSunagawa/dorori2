@@ -15,32 +15,14 @@ public class EnemyScript : MoveActorClass
 	//自分のTextMeshPro描画
 	[SerializeField] TextMeshPro myTmp;
 
-	//List<long> tickList = new List<long>();
-
-	//現在の処理のティック
-	//int nowTick = 0;
+	//distanceがtrueの時ここにtrueが入る
+	bool nearPlayerFlg = false;
 
 	void Update()
 	{
-
-		//処理時間計測
-		Ray ray = new Ray( transform.position, transform.forward.normalized );
-		RaycastHit hit;
-
-		Debug.DrawRay( ray.origin, ray.direction * 10, Color.red );
-
-		//System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-		//sw.Start();
-
-		bool raybool = Physics.Raycast( ray, out hit, 10.0f );
-
-		//sw.Stop();
-		//nowTick = ( int )sw.ElapsedTicks;
-		//tickList.Add( sw.ElapsedTicks );
-		//Debug.Log( sw.Elapsed + ", " + sw.ElapsedTicks );
+		nearPlayerFlg = GameManager.Instance.Distance( this.gameObject.transform );
 
 		DrawInformation();
-
 	}
 
 	private void FixedUpdate()
@@ -61,7 +43,9 @@ public class EnemyScript : MoveActorClass
 	void DrawInformation()
 	{
 		myTmp.GetComponent<TextMeshPro>().text = "Position = " + transform.position + "\n"
-											+ "normalized = " + transform.forward.normalized + "\n";
+											+ "normalized = " + transform.forward.normalized + "\n"
+											+ "distance = " + GameManager.Instance.PlayerDistance + "\n"
+											+ "distanceFlg = " + nearPlayerFlg;
 	}
 
 	//終了時
@@ -70,6 +54,11 @@ public class EnemyScript : MoveActorClass
 		//Debug.Log( tickList[ 0 ] );
 		//tickList.Remove( 0 );
 		//Debug.Log( tickList.Average() );
+	}
+
+	public void Death()
+	{
+		gameObject.SetActive( false );
 	}
 
 }
