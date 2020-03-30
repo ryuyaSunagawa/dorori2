@@ -5,17 +5,24 @@ using UnityEngine;
 
 public class EnemyScriptToki : MonoBehaviour
 {
+
+	const float enemyRangeStand = 10;
+	const float enemyRangeSit = 6;
+
     Ray ray;
     RaycastHit hit;
     [SerializeField] private float speed = 1.0f;
-    [SerializeField] private float range = 10.0f;
+    private float range = 10.0f;
 
     public Transform[] points;
     private int destPoint = 0;
     private NavMeshAgent agent;
 
-    // Start is called before the first frame update
-    void Start()
+	//distanceがtrueの時ここにtrueが入る
+	bool nearPlayerFlg = false;
+
+	// Start is called before the first frame update
+	void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
@@ -29,7 +36,6 @@ public class EnemyScriptToki : MonoBehaviour
 
     void GotoNextPoint()
     {
-       
             // 地点がなにも設定されていないときに返します
             if (points.Length == 0)
                 return;
@@ -41,13 +47,23 @@ public class EnemyScriptToki : MonoBehaviour
             // 必要ならば出発地点にもどります
             destPoint = (destPoint + 1) % points.Length;
     }
-
-
-
+	
     // Update is called once per frame
     void Update()
     {
-        ray = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
+
+		nearPlayerFlg = GameManager.Instance.Distance( this.gameObject.transform );
+
+		ray = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
+
+		if( GameManager.Instance.playerSitdown == true )
+		{
+			range = enemyRangeSit;
+		}
+		else if( GameManager.Instance.playerSitdown == false )
+		{
+			range = enemyRangeStand;
+		}
 
         if (Physics.Raycast(ray, out hit, range))
         {
@@ -56,24 +72,29 @@ public class EnemyScriptToki : MonoBehaviour
             transform.position += transform.forward * speed * Time.deltaTime;
 
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
-           
         }
         else
         {
-            agent.isStopped = false;
+			Debug.DrawRay( transform.position, transform.TransformDirection( Vector3.forward ) * hit.distance, Color.red );
+			agent.isStopped = false;
             // エージェントが現目標地点に近づいてきたら、
             // 次の目標地点を選択します
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
               GotoNextPoint();
-        }
-        
-    }
-    private void OnCollisionEnter(Collision other)
-    {
-        if(other.gameObject.name =="Player")
-        {
-            Debug.Log("死んだよ！");
-        }
-    }
+		}
+	}
+
+	public void Death()
+	{
+		gameObject.SetActive( false );
+	}
+
+	private void OnTriggerEnter( Collider other )
+	{
+		if( other.gameObject.name == "Player" )
+		{
+			Debug.Log( "死んだよ！" );
+		}
+	}
 
 }

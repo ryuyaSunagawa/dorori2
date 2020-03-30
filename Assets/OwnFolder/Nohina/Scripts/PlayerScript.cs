@@ -30,10 +30,14 @@ public class PlayerScript : MonoBehaviour
 	bool evationFlg = false;
 
 	Rigidbody rb;
+	Animator anm;
+
+	bool sitFlg = false;
 
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+		anm = GetComponent<Animator>();
 	}
 
 	// Update is called once per frame
@@ -45,6 +49,10 @@ public class PlayerScript : MonoBehaviour
 		EnemyKiller();
 
 		EvationPlayer();
+
+		Jump();
+
+		SitPlayer();
 
 	}
 
@@ -82,7 +90,6 @@ public class PlayerScript : MonoBehaviour
 
 				//プレイヤー移動
 				MovePlayer( horizontal, vertical );
-				Jump();
 			}
 			//キーボード操作
 			else if( GameManager.Instance.padMode == false )
@@ -93,7 +100,6 @@ public class PlayerScript : MonoBehaviour
 
 				//プレイヤー移動
 				MovePlayer( horizontal, vertical );
-				Jump();
 			}
 		}
 
@@ -103,7 +109,28 @@ public class PlayerScript : MonoBehaviour
 	//ジャンプ処理
 	void Jump()
 	{
-		rb.AddForce( new Vector3( 0f, 7f, 0f ), ForceMode.Impulse );
+		if( Input.GetKeyDown( KeyCode.Space ) || Input.GetButtonDown( "Fire1" ) )
+		{
+			rb.AddForce( new Vector3( 0f, 7f, 0f ), ForceMode.Impulse );
+		}
+	}
+
+	void SitPlayer()
+	{
+		if( Input.GetKeyDown( KeyCode.LeftControl ) ) {
+			if( sitFlg == true )
+			{
+				anm.SetBool( "Sit", false );
+				sitFlg = false;
+				GameManager.Instance.playerSitdown = false;
+			}
+			else if( sitFlg == false )
+			{
+				anm.SetBool( "Sit", true );
+				sitFlg = true;
+				GameManager.Instance.playerSitdown = true;
+			}
+		}
 	}
 
 	//プレイヤー移動
@@ -166,7 +193,7 @@ public class PlayerScript : MonoBehaviour
 			&& ( Input.GetAxis( "Trigger" ) < 0 || Input.GetAxis( "Trigger" ) > 0 ) )
 		{
 			Transform enemyObj = GameManager.Instance.getenemyObj;
-			enemyObj.GetComponent<EnemyScript>().Death();
+			enemyObj.GetComponent<EnemyScriptToki>().Death();
 		}
 	}
 
@@ -184,5 +211,10 @@ public class PlayerScript : MonoBehaviour
 			evationFlg = true;
 		}
 	}
+
+	//private void OnCollisionEnter( Collision collision )
+	//{
+	//	Debug.Log( collision.gameObject.name );
+	//}
 
 }

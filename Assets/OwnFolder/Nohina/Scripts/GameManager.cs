@@ -7,6 +7,10 @@ using System.Linq;
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
 
+	/// <summary>
+	/// 変数群
+	/// </summary>
+
 	//パッドモード( falseならマウス )
 	public bool padMode;
 
@@ -45,6 +49,21 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 			return enemyObj;
 		}
 	}
+
+	bool _playerSitdown = false;
+	public bool playerSitdown
+	{
+		set {
+			_playerSitdown = value;
+		}
+		get {
+			return _playerSitdown;
+		}
+	}
+
+	/// <summary>
+	/// 関数群
+	/// </summary>
 
 	//マウスロック
 	void MouseLock()
