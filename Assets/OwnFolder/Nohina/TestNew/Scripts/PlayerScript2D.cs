@@ -24,6 +24,11 @@ public class PlayerScript2D : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		//PlayerMotion();
+	}
+
+	private void FixedUpdate()
+	{
 		PlayerMotion();
 	}
 
@@ -42,14 +47,7 @@ public class PlayerScript2D : MonoBehaviour
 		float horizontal = 0;
 
 		//傾き取得
-		if( GameManager.Instance.padMode == true )
-		{
-			horizontal = Input.GetAxis( "LeftHorizontal" ) * a_PlayerSpeedPre;
-		}
-		else if( GameManager.Instance.padMode == false )
-		{
-			horizontal = Input.GetAxis( "Horizontal" ) * a_PlayerSpeedPre;
-		}
+		horizontal = Input.GetAxis( "Horizontal" ) * a_PlayerSpeedPre;
 
 		//移動
 		transform.Translate( horizontal * playerSpeed, 0f, 0f );
