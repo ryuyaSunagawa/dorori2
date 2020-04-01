@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerScript2D : MonoBehaviour
 {
 	//プレイヤーのスピード
+	const float a_PlayerSpeedPre = 0.5f;
 	const float a_PlayerSpeed = 0;
-	[SerializeField] [Range( 0, 5 )] float playerSpeed;
+	[SerializeField] [Range( 0, 1 )] float playerSpeed;
 
 	//ジャンプ力
 	const float a_JumpForce = 0;
@@ -43,11 +44,11 @@ public class PlayerScript2D : MonoBehaviour
 		//傾き取得
 		if( GameManager.Instance.padMode == true )
 		{
-			horizontal = Input.GetAxis( "LeftHorizontal" );
+			horizontal = Input.GetAxis( "LeftHorizontal" ) * a_PlayerSpeedPre;
 		}
 		else if( GameManager.Instance.padMode == false )
 		{
-			horizontal = Input.GetAxis( "Horizontal" );
+			horizontal = Input.GetAxis( "Horizontal" ) * a_PlayerSpeedPre;
 		}
 
 		//移動
