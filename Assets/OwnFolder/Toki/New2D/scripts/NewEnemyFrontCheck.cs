@@ -20,6 +20,12 @@ public class NewEnemyFrontCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        
         check = true;
+
+        if(collision.gameObject.name == "Player")
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }
