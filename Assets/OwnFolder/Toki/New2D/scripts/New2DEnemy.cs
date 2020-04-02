@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class New2DEnemy : MonoBehaviour
@@ -8,13 +9,27 @@ public class New2DEnemy : MonoBehaviour
 
     Rigidbody2D rb;
 
-    private bool direction = false; //false:左, true:右
+    private bool direction = false; //false:右, true:左
 
     public NewEnemyFrontCheck frontcheck;
 
     private float count = 0.0f;
 
+    private float reactioncount = 0.0f;
+
+
+
     [SerializeField] private float waittime = 0.0f;
+    [SerializeField] private float reaction = 0.0f;
+
+    Ray2D ray;
+    RaycastHit2D hit;
+
+    [SerializeField] private float range = 5.0f;
+
+    public bool find = false;
+
+    public bool attack = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,24 +40,101 @@ public class New2DEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        if(transform.localScale.x < 0)
+        //敵の向いている向きのフラグ//
+        if (transform.localScale.x < 0)
         {
-            //みぎ
+            //左
             direction = true;
         }
         else
         {
-            //ひだり
+            //右
             direction = false;
         }
 
-        if (frontcheck.check)
+        //向いてる向きにレイを設定//
+        if (direction)
         {
-            count += Time.deltaTime;
+            ray = new Ray2D(transform.position, Vector2.left);
+        }
+        else
+        {
+            ray = new Ray2D(transform.position, Vector2.right);
+        }
 
+        //まだプレイヤーを見つけれていならレイをとばす//
+        if (find == false)
+        {
+            hit = Physics2D.Raycast(ray.origin, ray.direction, range);
+        }
+
+        
+        Debug.DrawRay(ray.origin, ray.direction * range, Color.red);
+
+
+        //レイが何かに当たったか？//
+        if (hit.collider)
+        {
+           Debug.Log(hit.collider.gameObject.name);
+
+            //レイが当たったのはプレイヤー？//
+            if(hit.collider.gameObject.name == "Player")
+            {
+                //プレイヤーをみつけた//
+                find = true;
+
+                Debug.Log(hit.distance);
+
+
+                if(Vector2.Distance(hit.transform.position, transform.position) > range)
+                {
+                    find = false;
+                    reactioncount = 0.0f;
+                    attack = false;
+                }
+                else if (Vector2.Distance(hit.transform.position, transform.position) > range / 2 && attack == false)
+                { 
+                    reactioncount += Time.deltaTime;
+
+                    if (reaction <= reactioncount)
+                    {
+                        //プレイヤーの方向に進む//
+                        if (transform.position.x < hit.transform.position.x)
+                        {
+                            rb.velocity = new Vector2(speed / 2, rb.velocity.y);
+                        }
+                        else if (transform.position.x > hit.transform.position.x)
+                        {
+                            rb.velocity = new Vector2(-speed / 2, rb.velocity.y);
+                        }
+                    }
+                }
+                else if(Vector2.Distance(hit.transform.position, transform.position) <= range / 2)
+                {
+                    attack = true;
+                    //プレイヤーの方向に進む//
+                    if (transform.position.x < hit.transform.position.x)
+                    {
+                        rb.velocity = new Vector2(speed * 1.5f, rb.velocity.y);
+                    }
+                    else if (transform.position.x > hit.transform.position.x)
+                    {
+                        rb.velocity = new Vector2(-speed * 1.5f, rb.velocity.y);
+                    }
+                }
+                
+            }
+        }
+
+        //前方にオブジェクトがある、プレイヤーを見つけていない//
+        if (frontcheck.check && find == false)
+        {
+
+            count += Time.deltaTime;
+            //数秒まつ
             if (count >= waittime)
             {
+                //プレイヤーの向きに画像を合わせる
                 if (direction)
                 {
                     transform.localScale = new Vector2(0.25f, 0.25f);
@@ -52,12 +144,14 @@ public class New2DEnemy : MonoBehaviour
                     transform.localScale = new Vector2(-0.25f, 0.25f);
                 }
 
+
                 frontcheck.check = false;
                 count = 0.0f;
             }
-        }
-        else
+        }//敵を見つけていない
+        else if(find == false)
         {
+            //巡回//
             if(direction)
             {
                 rb.velocity = new Vector2(-speed, rb.velocity.y);
@@ -69,4 +163,5 @@ public class New2DEnemy : MonoBehaviour
             
         }
     }
+
 }
