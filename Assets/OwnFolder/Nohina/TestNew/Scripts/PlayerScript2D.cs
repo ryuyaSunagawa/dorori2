@@ -14,6 +14,7 @@ public class PlayerScript2D : MonoBehaviour
 	[SerializeField] [Range( 0, 10 )] float jumpForce;
 
 	private Rigidbody2D myRigidbody;
+	private BoxCollider2D myCollider;
 	
 	public string verifyObject;
 
@@ -21,16 +22,26 @@ public class PlayerScript2D : MonoBehaviour
 
 	int aho = 0;
 
+	private bool _hideFlg;
+	public bool hideFlg
+	{
+		set {
+			_hideFlg = value;
+		}
+	}
+
+
 	// Start is called before the first frame update
 	void Start()
 	{
 		myRigidbody = GetComponent<Rigidbody2D>();
+		myCollider = GetComponent<BoxCollider2D>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		HidePlayer();
+		HideFlag();
 	}
 
 	private void FixedUpdate()
@@ -69,21 +80,24 @@ public class PlayerScript2D : MonoBehaviour
 	//CollisionStay2D
 	private void OnCollisionStay2D( Collision2D collision )
 	{
-		if( collision.gameObject.tag == "DownFloor" && Input.GetButton( "Hide" ) && downFlg == false )
-		{
-			downFlg = true;
-			collision.gameObject.SetActive( false );
-		}
+		//if( collision.gameObject.tag == "DownFloor" && Input.GetButton( "Hide" ) && downFlg == false )
+		//{
+		//	downFlg = true;
+		//	collision.gameObject.SetActive( false );
+		//}
 
-		if( collision.gameObject.tag == "DownFloor" )
-		{
-			
-		}
-		print( aho );
-		aho++;
-		verifyObject = collision.transform.name;
+		//if( collision.gameObject.tag == "DownFloor" )
+		//{
+
+		//}
+		//print( aho );
+		//aho++;
+		//verifyObject = collision.transform.name;
+
+		//myCollider.isTrigger = true;
 	}
 
+	//CollisionExit2D
 	private void OnCollisionExit2D( Collision2D collision )
 	{
 		if( collision.gameObject.tag == "DownFloor" )
@@ -93,8 +107,14 @@ public class PlayerScript2D : MonoBehaviour
 		}
 	}
 
-	//プレイヤーが隠れる処理
-	private void HidePlayer()
+	private void OnTriggerExit2D( Collider2D collision )
 	{
+		myCollider.isTrigger = false;
+	}
+
+	//プレイヤーが隠れる処理
+	public bool HideFlag()
+	{
+		return true;
 	}
 }
