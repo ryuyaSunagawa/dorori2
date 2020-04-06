@@ -75,7 +75,7 @@ public class New2DEnemy : MonoBehaviour
         //レイが何かに当たったか？//
         if (hit.collider)
         {
-           Debug.Log(hit.collider.gameObject.name);
+           //Debug.Log(hit.collider.gameObject.name);
 
             //レイが当たったのはプレイヤー？//
             if(hit.collider.gameObject.name == "Player")

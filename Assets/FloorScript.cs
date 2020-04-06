@@ -11,12 +11,13 @@ public class FloorScript : MonoBehaviour
     {
 		if( floorTrigger.collideChecker == true && Input.GetButtonDown( "Hide" ) )
 		{
-			Debug.Log( this.transform.up );
+			Debug.Log( this.transform.up + transform.position );
 			floorTrigger.theObject.GetComponent<PlayerScript2D>().hideFlg = true;
-
+			floorTrigger.theObject.GetComponent<PlayerScript2D>().nextPosition = HidePosition();
 		}
 	}
 
+	//隠れるポジションを
 	public Vector2 HidePosition()
 	{
 		return transform.up + transform.position;

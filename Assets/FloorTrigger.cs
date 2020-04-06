@@ -16,14 +16,14 @@ public class FloorTrigger : MonoBehaviour
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
 		collideChecker = true;
-		Debug.Log( "in" );
+		//Debug.Log( "in" );
 		theObject = collision.gameObject;
 	}
 
 	private void OnTriggerExit2D( Collider2D collision )
 	{
 		collideChecker = false;
-		Debug.Log( "out" );
+		//Debug.Log( "out" );
 		theObject = null;
 	}
 }
