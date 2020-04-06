@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class New2DEnemy : MonoBehaviour
 {
+    public bool patrol_only = false;
+
     [SerializeField] private float speed = 10.0f;
 
     Rigidbody2D rb;
@@ -63,7 +65,7 @@ public class New2DEnemy : MonoBehaviour
         }
 
         //まだプレイヤーを見つけれていならレイをとばす//
-        if (find == false)
+        if (!patrol_only && find == false)
         {
             hit = Physics2D.Raycast(ray.origin, ray.direction, range);
         }

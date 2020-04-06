@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9252cc3b4b278248b246a987e032a22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patrol_only: 1
   speed: 2
   frontcheck: {fileID: 8512516389048878608}
   waittime: 1.5
@@ -219,4 +220,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e79fac38f92a143b0ddbddc8cc2f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyscript: {fileID: 0}
   check: 0
