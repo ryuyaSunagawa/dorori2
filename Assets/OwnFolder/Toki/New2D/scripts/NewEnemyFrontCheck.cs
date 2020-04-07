@@ -21,10 +21,12 @@ public class NewEnemyFrontCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-        check = true;
+		if( collision.tag == "Border" )
+		{
+			check = true;
+		}
 
-        if(!enemyscript.patrol_only && collision.gameObject.name == "Player")
+		if(!enemyscript.patrol_only && collision.gameObject.name == "Player")
         {
             Destroy(collision.gameObject);
         }

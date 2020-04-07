@@ -19,7 +19,16 @@ public class New2DEnemy : MonoBehaviour
 
     private float reactioncount = 0.0f;
 
+	public int _poisonState = 0;
+	public int poisonState
+	{
+		set {
+			_poisonState = value;
+		}
+	}
 
+	private float pAmount = 0f;
+	[SerializeField] float maxPoisonAmount = 3f;
 
     [SerializeField] private float waittime = 0.0f;
     [SerializeField] private float reaction = 0.0f;
@@ -42,6 +51,16 @@ public class New2DEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+		if( _poisonState == 2 )
+		{
+			pAmount += Time.deltaTime;
+			if( pAmount >= maxPoisonAmount )
+			{
+				gameObject.SetActive( false );
+			}
+		}
+
         //敵の向いている向きのフラグ//
         if (transform.localScale.x < 0)
         {
@@ -128,42 +147,56 @@ public class New2DEnemy : MonoBehaviour
             }
         }
 
-        //前方にオブジェクトがある、プレイヤーを見つけていない//
-        if (frontcheck.check && find == false)
-        {
+		///<summary>
+		///投げ待ち時にパトロールを止める
+		/// </summary>
+		if( _poisonState != 1 )
+		{
+			//前方にオブジェクトがある、プレイヤーを見つけていない//
+			if( frontcheck.check && find == false )
+			{
 
-            count += Time.deltaTime;
-            //数秒まつ
-            if (count >= waittime)
-            {
-                //プレイヤーの向きに画像を合わせる
-                if (direction)
-                {
-                    transform.localScale = new Vector2(0.25f, 0.25f);
-                }
-                else
-                {
-                    transform.localScale = new Vector2(-0.25f, 0.25f);
-                }
+				count += Time.deltaTime;
+				//数秒まつ
+				if( count >= waittime )
+				{
+					//プレイヤーの向きに画像を合わせる
+					if( direction )
+					{
+						transform.localScale = new Vector2( 0.25f, 0.25f );
+					}
+					else
+					{
+						transform.localScale = new Vector2( -0.25f, 0.25f );
+					}
 
 
-                frontcheck.check = false;
-                count = 0.0f;
-            }
-        }//敵を見つけていない
-        else if(find == false)
-        {
-            //巡回//
-            if(direction)
-            {
-                rb.velocity = new Vector2(-speed, rb.velocity.y);
-            }
-            else
-            {
-                rb.velocity = new Vector2(speed, rb.velocity.y);
-            }
-            
-        }
+					frontcheck.check = false;
+					count = 0.0f;
+				}
+			}//敵を見つけていない
+			else if( find == false )
+			{
+				//巡回//
+				if( direction )
+				{
+					rb.velocity = new Vector2( -speed, rb.velocity.y );
+				}
+				else
+				{
+					rb.velocity = new Vector2( speed, rb.velocity.y );
+				}
+
+			}
+		}
     }
+
+	private void OnCollisionEnter2D( Collision2D collision )
+	{
+		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2 ) )
+		{
+			collision.transform.GetComponent<New2DEnemy>().poisonState = 2;
+		}
+	}
 
 }

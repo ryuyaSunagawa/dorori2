@@ -18,6 +18,8 @@ public class PlayerScript2D : MonoBehaviour
 	private BoxCollider2D myCollider;
 	//Sprite Renderer
 	private SpriteRenderer myRenderer;
+	//子オブジェクトのEnemyDistanceTriggerのBoxCollider2Dを取得する
+	[SerializeField] DistanceTriggerScript dtsChild;
 
 	//隠れるフラグ
 	public bool _hideFlg;
@@ -48,6 +50,11 @@ public class PlayerScript2D : MonoBehaviour
 	//右を向いているとtrue
 	bool directionRight = true;
 
+	//敵を吹っ飛ばす力
+	[SerializeField] float enemyBlowPower = 3f;
+
+	GameObject nearEnemy;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -60,6 +67,8 @@ public class PlayerScript2D : MonoBehaviour
 	void Update()
 	{
 		HideProcess();
+
+		TouchEnemy();
 
 		if( directionRight == true && Input.GetAxisRaw( "Horizontal" ) == -1 )
 		{
@@ -114,6 +123,16 @@ public class PlayerScript2D : MonoBehaviour
 		//}
 	}
 
+	private void OnTriggerExit2D( Collider2D collision )
+	{
+		if( collision.tag == "OverTrigger" || collision.tag == "UnderTrigger" )
+		{
+			_hideFlg = false;
+			hidePosition = Vector2.zero;
+			print( "exit" );
+		}
+	}
+
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
 		//場所によって移動先を指定する
@@ -130,16 +149,6 @@ public class PlayerScript2D : MonoBehaviour
 		print( "Enter" );
 	}
 
-	private void OnTriggerExit2D( Collider2D collision )
-	{
-		if( collision.tag == "OverTrigger" || collision.tag == "UnderTrigger" )
-		{
-			_hideFlg = false;
-			hidePosition = Vector2.zero;
-			print( "exit" );
-		}
-	}
-
 	//プレイヤーが隠れる処理
 	public void HideProcess()
 	{
@@ -151,12 +160,45 @@ public class PlayerScript2D : MonoBehaviour
 		}
 	}
 
-	void GrabEnemy()
+	void TouchEnemy()
 	{
-		if( !( Input.GetButton( "Touch" ) ) && grabFrame <= 10 )
+		if( dtsChild.IsHitEnemy() )
 		{
-
+			if( Input.GetButtonDown( "Touch" ) )
+			{
+				dtsChild.enemyObject.GetComponent<New2DEnemy>().poisonState = 1;
+				nearEnemy = dtsChild.enemyObject;
+			}
+			else if( Input.GetButton( "Touch" ) )
+			{
+				if( Input.GetAxisRaw( "Horizontal" ) == 1 )
+				{
+					StartCoroutine( cor1( enemyBlowPower ) );
+				}
+				else if( Input.GetAxisRaw( "Horizontal" ) == -1 )
+				{
+					StartCoroutine( cor1( -enemyBlowPower ) );
+				}
+			}
+			else if( Input.GetButtonUp( "Touch" ) )
+			{
+				nearEnemy.GetComponent<New2DEnemy>().poisonState = 2;
+				nearEnemy = null;
+			}
 		}
+	}
+
+	IEnumerator cor1( float blowPower )
+	{
+		nearEnemy.GetComponent<Rigidbody2D>().AddForce( new Vector2( blowPower, 5f ), ForceMode2D.Impulse );
+		gameObject.layer = 11;
+
+		yield return new WaitForSeconds( 2f );
+
+		gameObject.layer = 13;
+		nearEnemy.GetComponent<New2DEnemy>().poisonState = 2;
+
+		yield break;
 	}
 
 }

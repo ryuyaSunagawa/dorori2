@@ -9,6 +9,7 @@ TagManager:
   - HideFloor
   - OverTrigger
   - UnderTrigger
+  - Border
   layers:
   - Default
   - TransparentFX
@@ -21,10 +22,10 @@ TagManager:
   - PostProcessing
   - 
   - sika
-  - 
-  - 
-  - 
-  - 
+  - PassOnce
+  - Floor
+  - PlayerLayer
+  - EnemyLayer
   - 
   - 
   - 
