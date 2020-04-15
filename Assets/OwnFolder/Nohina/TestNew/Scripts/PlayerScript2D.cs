@@ -55,6 +55,12 @@ public class PlayerScript2D : MonoBehaviour
 
 	GameObject nearEnemy;
 
+	//階層
+	int stair = 1;
+	Transform stairComp;
+	string tag = "";
+	bool nowHide = false;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -98,8 +104,15 @@ public class PlayerScript2D : MonoBehaviour
 	{
 		//変数宣言
 		float horizontal = Input.GetAxis( "Horizontal" ) * a_PlayerSpeedPre;
-		
-		transform.Translate( horizontal * playerSpeed, 0f, 0f );
+
+		if( stair == 0 )
+		{
+			transform.Translate( horizontal * 0.15f, 0f, 0f );
+		}
+		else
+		{
+			transform.Translate( horizontal * playerSpeed, 0f, 0f );
+		}
 	}
 
 	//OnCollisionEnterで当たったらEnemy TagをSetActive( false )にする
@@ -130,6 +143,7 @@ public class PlayerScript2D : MonoBehaviour
 			_hideFlg = false;
 			hidePosition = Vector2.zero;
 			print( "exit" );
+			stairComp = null;
 		}
 	}
 
@@ -140,12 +154,23 @@ public class PlayerScript2D : MonoBehaviour
 		{
 			_hideFlg = true;
 			hidePosition = collision.transform.parent.position + Vector3.down;
+			stairComp = collision.transform;
+			tag = collision.tag;
 		}
 		else if( collision.tag == "UnderTrigger" )
 		{
 			_hideFlg = true;
 			hidePosition = collision.transform.parent.position + Vector3.up;
+			stairComp = collision.transform;
+			tag = collision.tag;
 		}
+		if( collision.tag == "BackHideTirgger" )
+		{
+			_hideFlg = true;
+			hidePosition = collision.transform.position;
+			tag = collision.tag;
+		}
+
 		print( "Enter" );
 	}
 
@@ -154,9 +179,23 @@ public class PlayerScript2D : MonoBehaviour
 	{
 		if( _hideFlg == true && Input.GetButtonDown( "Hide" ) )
 		{
-			transform.position = hidePosition;
-			hidePosition = Vector2.zero;
-			_hideFlg = false;
+			if( tag == "OverTrigger" || tag == "UnderTrigger" )
+			{
+				transform.position = hidePosition;
+				hidePosition = Vector2.zero;
+			}
+			else if( tag == "BackHideTirgger" && nowHide == false )
+			{
+				gameObject.layer = 15;
+				nowHide = true;
+				transform.position += new Vector3( 0, 0, 2 );
+			}
+			else if( tag == "BackHideTirgger" && nowHide == true )
+			{
+				gameObject.layer = 13;
+				nowHide = false;
+				transform.position -= new Vector3( 0, 0, 2 );
+			}
 		}
 	}
 

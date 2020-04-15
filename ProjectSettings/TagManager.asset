@@ -10,6 +10,9 @@ TagManager:
   - OverTrigger
   - UnderTrigger
   - Border
+  - LowStair
+  - HighStair
+  - BackHideTirgger
   layers:
   - Default
   - TransparentFX
@@ -26,7 +29,7 @@ TagManager:
   - Floor
   - PlayerLayer
   - EnemyLayer
-  - 
+  - NeutralHideLayer
   - 
   - 
   - 
