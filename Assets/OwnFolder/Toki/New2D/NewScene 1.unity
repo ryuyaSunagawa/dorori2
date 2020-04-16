@@ -1014,7 +1014,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 0.08
-  jumpForce: 4
+  dtsChild: {fileID: 0}
+  _hideFlg: 0
+  enemyBlowPower: 3
 --- !u!23 &2066582993
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1128,6 +1130,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 8512516387051245090, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_LocalPosition.x
