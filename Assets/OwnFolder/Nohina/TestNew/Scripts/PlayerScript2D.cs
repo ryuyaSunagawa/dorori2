@@ -66,6 +66,8 @@ public class PlayerScript2D : MonoBehaviour
 	LayerMask maskLayer;
 	int plusInt = 0;
 
+	public int stairNow = 1;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -80,6 +82,8 @@ public class PlayerScript2D : MonoBehaviour
 		//HideProcess();
 
 		TouchEnemy();
+
+		nowStair();
 
 		//hideComp();
 
@@ -106,17 +110,33 @@ public class PlayerScript2D : MonoBehaviour
 		MovePlayer();
 	}
 
+	void nowStair()
+	{
+		if( transform.position.y >= 5f )
+		{
+			stairNow = 2;
+		}
+		else if( transform.position.y <= 1f )
+		{
+			stairNow = 0;
+		}
+		else
+		{
+			stairNow = 1;
+		}
+	}
+
 	//プレイヤー移動(水平方向だけの移動)
 	void MovePlayer()
 	{
 		//変数宣言
 		float horizontal = Input.GetAxis( "Horizontal" ) * a_PlayerSpeedPre;
 
-		if( stair == 0 )
+		if( stairNow == 0 )
 		{
 			transform.Translate( horizontal * 0.15f, 0f, 0f );
 		}
-		else
+		else if( stairNow == 1 )
 		{
 			transform.Translate( horizontal * playerSpeed, 0f, 0f );
 		}
@@ -124,10 +144,14 @@ public class PlayerScript2D : MonoBehaviour
 
 	private void OnTriggerStay2D( Collider2D collision )
 	{
-		if( collision.transform.tag == "UnderTrigger" && Input.GetButtonDown( "Hide" ) )
+		if( collision.transform.tag == "UnderTrigger" && collision.transform.parent.tag == "HighStair" && Input.GetButtonDown( "Hide" ) )
 		{
 			transform.position = collision.transform.parent.GetChild( 0 ).position;
 			GetComponent<SpriteRenderer>().flipY = true;
+		}
+		else if( collision.transform.tag == "UnderTrigger" && collision.transform.parent.tag == "NeutralStair" && Input.GetButtonDown( "Hide" ) )
+		{
+			transform.position = collision.transform.parent.GetChild( 0 ).position;
 		}
 		else if( collision.transform.tag == "OverTrigger" && Input.GetButtonDown( "Hide" ) )
 		{

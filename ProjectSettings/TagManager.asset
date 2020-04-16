@@ -13,6 +13,7 @@ TagManager:
   - LowStair
   - HighStair
   - BackHideTrigger
+  - NeutralStair
   layers:
   - Default
   - TransparentFX
