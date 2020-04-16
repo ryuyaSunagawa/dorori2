@@ -12,7 +12,7 @@ TagManager:
   - Border
   - LowStair
   - HighStair
-  - BackHideTirgger
+  - BackHideTrigger
   layers:
   - Default
   - TransparentFX

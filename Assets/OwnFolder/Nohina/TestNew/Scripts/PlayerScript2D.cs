@@ -61,6 +61,11 @@ public class PlayerScript2D : MonoBehaviour
 	string tag = "";
 	bool nowHide = false;
 
+	public bool nearHide = false;
+
+	LayerMask maskLayer;
+	int plusInt = 0;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -72,9 +77,11 @@ public class PlayerScript2D : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		HideProcess();
+		//HideProcess();
 
 		TouchEnemy();
+
+		//hideComp();
 
 		if( directionRight == true && Input.GetAxisRaw( "Horizontal" ) == -1 )
 		{
@@ -115,89 +122,149 @@ public class PlayerScript2D : MonoBehaviour
 		}
 	}
 
-	//OnCollisionEnterで当たったらEnemy TagをSetActive( false )にする
-	private void OnCollisionEnter2D( Collision2D collision )
+	private void OnTriggerStay2D( Collider2D collision )
 	{
-		//if( collision.collider.tag == "Finish" )
+		if( collision.transform.tag == "UnderTrigger" && Input.GetButtonDown( "Hide" ) )
+		{
+			transform.position = collision.transform.parent.GetChild( 0 ).position;
+			GetComponent<SpriteRenderer>().flipY = true;
+		}
+		else if( collision.transform.tag == "OverTrigger" && Input.GetButtonDown( "Hide" ) )
+		{
+			transform.position = collision.transform.parent.GetChild( 1 ).position;
+			GetComponent<SpriteRenderer>().flipY = false;
+		}
+		else if( collision.tag == "BackHideTrigger" && nowHide == false )
+		{
+			nowHide = true;
+			transform.position += new Vector3( 0, 0, 2 );
+		}
+		else if( collision.tag == "BackHideTrigger" && nowHide == true )
+		{
+			nowHide = true;
+			transform.position -= new Vector3( 0, 0, 2 );
+		}
+
+		Debug.Log( collision.tag.ToString() );
+	}
+
+	//OnCollisionEnterで当たったらEnemy TagをSetActive( false )にする
+	//private void OnCollisionEnter2D( Collision2D collision )
+	//{
+	//	//if( collision.collider.tag == "Finish" )
+	//	//{
+	//	//	collision.gameObject.SetActive( false );
+	//	//}
+
+	//	//if( collision.collider.tag == "OverTrigger" )
+	//	//{
+	//	//	myCollider[ 0 ].enabled = false;
+	//	//}
+
+	//	//if( collision.collider.tag == "UnderTrigger" )
+	//	//{
+	//	//	Transform parentTransform = collision.transform.root.gameObject.transform;
+	//	//	Vector2 parentPosition = parentTransform.position + parentTransform.up;
+	//	//	transform.position = parentPosition;
+	//	//}
+		
+	//}
+
+	//OnTriggerStay難しい版!
+	private void hideComp()
+	{
+		//Collider2D[] results = new Collider2D[ 10 ];
+		//int collisionCount = myCollider.OverlapCollider( new ContactFilter2D(), results );
+		//Debug.Log( collisionCount );
+
+		//if( collisionCount > 0 )
 		//{
-		//	collision.gameObject.SetActive( false );
+		//	for( int i = 0; i < collisionCount; i++ )
+		//	{
+		//		if( results[ i ].transform.tag == "OverTrigger" || results[ i ].transform.tag == "UnderTrigger" || results[ i ].transform.tag == "BackHideTrigger" )
+		//		{
+		//			nearHide = true;
+		//		}
+		//		else
+		//		{
+		//			nearHide = false;
+		//		}
+		//	}
 		//}
 
-		//if( collision.collider.tag == "OverTrigger" )
-		//{
-		//	myCollider[ 0 ].enabled = false;
-		//}
-
-		//if( collision.collider.tag == "UnderTrigger" )
-		//{
-		//	Transform parentTransform = collision.transform.root.gameObject.transform;
-		//	Vector2 parentPosition = parentTransform.position + parentTransform.up;
-		//	transform.position = parentPosition;
-		//}
+		//Collider2D[] overlap = Physics2D.OverlapBox( transform.position, myCollider.size, 0f );
 	}
 
 	private void OnTriggerExit2D( Collider2D collision )
 	{
-		if( collision.tag == "OverTrigger" || collision.tag == "UnderTrigger" )
-		{
-			_hideFlg = false;
-			hidePosition = Vector2.zero;
-			print( "exit" );
-			stairComp = null;
-		}
+		//if( collision.tag == "OverTrigger" || collision.tag == "UnderTrigger" || collision.tag == "BackHideTrigger" )
+		//{
+		//	_hideFlg = false;
+		//	hidePosition = Vector2.zero;
+		//	print( "exit" );
+		//	stairComp = null;
+		//}
 	}
 
 	private void OnTriggerEnter2D( Collider2D collision )
 	{
 		//場所によって移動先を指定する
-		if( collision.tag == "OverTrigger" )
-		{
-			_hideFlg = true;
-			hidePosition = collision.transform.parent.position + Vector3.down;
-			stairComp = collision.transform;
-			tag = collision.tag;
-		}
-		else if( collision.tag == "UnderTrigger" )
-		{
-			_hideFlg = true;
-			hidePosition = collision.transform.parent.position + Vector3.up;
-			stairComp = collision.transform;
-			tag = collision.tag;
-		}
-		if( collision.tag == "BackHideTirgger" )
-		{
-			_hideFlg = true;
-			hidePosition = collision.transform.position;
-			tag = collision.tag;
-		}
+		//if( collision.tag == "OverTrigger" )
+		//{
+		//	_hideFlg = true;
+		//	//hidePosition = collision.transform.parent.position + Vector3.down;
+		//	hidePosition = collision.transform.parent.GetChild( 1 ).position;
+		//	stairComp = collision.transform;
+		//	tag = collision.tag;
+		//}
+		//else if( collision.tag == "UnderTrigger" )
+		//{
+		//	_hideFlg = true;
+		//	//hidePosition = collision.transform.parent.position + Vector3.up;
+		//	hidePosition = collision.transform.parent.GetChild( 0 ).position;
+		//	stairComp = collision.transform;
+		//	tag = collision.tag;
+		//}
+		//if( collision.tag == "BackHideTrigger" )
+		//{
+		//	_hideFlg = true;
+		//	hidePosition = collision.transform.position;
+		//	tag = collision.tag;
+		//}
 
-		print( "Enter" );
+		//print( "Enter" );
 	}
 
 	//プレイヤーが隠れる処理
-	public void HideProcess()
-	{
-		if( _hideFlg == true && Input.GetButtonDown( "Hide" ) )
-		{
-			if( tag == "OverTrigger" || tag == "UnderTrigger" )
-			{
-				transform.position = hidePosition;
-				hidePosition = Vector2.zero;
-			}
-			else if( tag == "BackHideTirgger" && nowHide == false )
-			{
-				gameObject.layer = 15;
-				nowHide = true;
-				transform.position += new Vector3( 0, 0, 2 );
-			}
-			else if( tag == "BackHideTirgger" && nowHide == true )
-			{
-				gameObject.layer = 13;
-				nowHide = false;
-				transform.position -= new Vector3( 0, 0, 2 );
-			}
-		}
-	}
+	//public void HideProcess()
+	//{
+	//	if( _hideFlg == true && Input.GetButtonDown( "Hide" ) )
+	//	{
+	//		if( tag == "OverTrigger" )
+	//		{
+	//			transform.position = hidePosition;
+	//			hidePosition = Vector2.zero;
+	//		}
+	//		else if( tag == "UnderTrigger" )
+	//		{
+	//			transform.position = hidePosition;
+	//			hidePosition = Vector2.zero;
+	//			myRigidbody.simulated = false;
+	//		}
+	//		else if( tag == "BackHideTrigger" && nowHide == false )
+	//		{
+	//			gameObject.layer = 15;
+	//			nowHide = true;
+	//			transform.position += new Vector3( 0, 0, 2 );
+	//		}
+	//		else if( tag == "BackHideTrigger" && nowHide == true )
+	//		{
+	//			gameObject.layer = 13;
+	//			nowHide = false;
+	//			transform.position -= new Vector3( 0, 0, 2 );
+	//		}
+	//	}
+	//}
 
 	void TouchEnemy()
 	{
