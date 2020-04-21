@@ -9,11 +9,15 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] private float speed = 10.0f;
 
+    [SerializeField] private GameObject left;//左側の巡回目的地
+    [SerializeField] private GameObject rihgt;//右側の巡回目的地
+
+    private bool patrollpoint = false; //巡回目的地　false : 右, true : 左
+    private bool arrive = false;//巡回目的地に到着したか
+
     Rigidbody2D rb;
 
     private bool direction = false; //false:右, true:左
-
-    public NewEnemyFrontCheck frontcheck;
 
     private float count = 0.0f;
 
@@ -109,12 +113,14 @@ public class New2DEnemy : MonoBehaviour
 
                 if(Vector2.Distance(hit.transform.position, transform.position) > range)
                 {
+                    //視認距離からでたら追跡をやめる
                     find = false;
                     reactioncount = 0.0f;
                     attack = false;
                 }
-                else if (Vector2.Distance(hit.transform.position, transform.position) > range / 2 && attack == false)
+                else if (Vector2.Distance(hit.transform.position, transform.position) > (range / 3 + range / 3) && attack == false)
                 { 
+                    //視認距離に入ったらゆっくり近づく
                     reactioncount += Time.deltaTime;
 
                     if (reaction <= reactioncount)
@@ -130,8 +136,9 @@ public class New2DEnemy : MonoBehaviour
                         }
                     }
                 }
-                else if(Vector2.Distance(hit.transform.position, transform.position) <= range / 2)
+                else if(Vector2.Distance(hit.transform.position, transform.position) >= range / 3)
                 {
+                    //完全に見つけたら追いかける
                     attack = true;
                     //プレイヤーの方向に進む//
                     if (transform.position.x < hit.transform.position.x)
@@ -143,6 +150,10 @@ public class New2DEnemy : MonoBehaviour
                         rb.velocity = new Vector2(-speed * 1.5f, rb.velocity.y);
                     }
                 }
+                else if(Vector2.Distance(hit.transform.position, transform.position) < range / 3)
+                {
+                    Destroy(hit.collider.gameObject);
+                }
                 
             }
         }
@@ -152,8 +163,9 @@ public class New2DEnemy : MonoBehaviour
 		/// </summary>
 		if( _poisonState != 1 )
 		{
+
 			//前方にオブジェクトがある、プレイヤーを見つけていない//
-			if( frontcheck.check && find == false )
+			if( arrive && find == false )
 			{
 
 				count += Time.deltaTime;
@@ -170,8 +182,17 @@ public class New2DEnemy : MonoBehaviour
 						transform.localScale = new Vector2( -0.25f, 0.25f );
 					}
 
+                    if(patrollpoint)
+                    {//目的地を右側に
+                        patrollpoint = false;
+                    }
+                    else
+                    {//目的地を左側に
+                        patrollpoint = true;
+                    }
 
-					frontcheck.check = false;
+                    arrive = false;
+					//frontcheck.check = false;
 					count = 0.0f;
 				}
 			}//敵を見つけていない
@@ -186,6 +207,19 @@ public class New2DEnemy : MonoBehaviour
 				{
 					rb.velocity = new Vector2( speed, rb.velocity.y );
 				}
+                
+                if(patrollpoint)
+                {//目的地が左側の場合
+
+                    if(transform.position.x <= left.transform.position.x)
+                        arrive = true;//目的地に到着
+                }
+                else
+                {//目的地が右側の場合
+
+                    if (transform.position.x >= rihgt.transform.position.x)
+                        arrive = true;//目的地に到着
+                }
 
 			}
 		}
