@@ -32,7 +32,7 @@ public class New2DEnemy : MonoBehaviour
 	}
 
 	private float pAmount = 0f;
-	[SerializeField] float maxPoisonAmount = 3f;
+	[SerializeField] float maxPoisonAmount = 2f;
 
     [SerializeField] private float waittime = 0.0f;
     [SerializeField] private float reaction = 0.0f;
@@ -46,9 +46,13 @@ public class New2DEnemy : MonoBehaviour
 
     public bool attack = false;
 
+    int layernum;
+    int layerMask;
     // Start is called before the first frame update
     void Start()
     {
+        layernum = LayerMask.NameToLayer("PlayerLayer");
+        layerMask = 1 << layernum;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -61,9 +65,15 @@ public class New2DEnemy : MonoBehaviour
 			pAmount += Time.deltaTime;
 			if( pAmount >= maxPoisonAmount )
 			{
-				gameObject.SetActive( false );
+                //gameObject.SetActive( false );
+                _poisonState = 3;
 			}
 		}
+        if(_poisonState == 3)
+        {
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+            gameObject.layer = 16;
+        }
 
         //敵の向いている向きのフラグ//
         if (transform.localScale.x < 0)
@@ -90,7 +100,7 @@ public class New2DEnemy : MonoBehaviour
         //まだプレイヤーを見つけれていならレイをとばす//
         if (!patrol_only && find == false)
         {
-            hit = Physics2D.Raycast(ray.origin, ray.direction, range);
+            hit = Physics2D.Raycast(ray.origin, ray.direction, range, layerMask);
         }
 
         
@@ -98,9 +108,9 @@ public class New2DEnemy : MonoBehaviour
 
 
         //レイが何かに当たったか？//
-        if (hit.collider)
+        if (hit.collider && _poisonState != 3)
         {
-           //Debug.Log(hit.collider.gameObject.name);
+           Debug.Log(hit.collider.gameObject.name);
 
             //レイが当たったのはプレイヤー？//
             if(hit.collider.gameObject.name == "Player")
@@ -161,10 +171,10 @@ public class New2DEnemy : MonoBehaviour
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
-		if( _poisonState != 1 )
+		if( _poisonState != 1  && _poisonState != 3)
 		{
 
-			//前方にオブジェクトがある、プレイヤーを見つけていない//
+			//目的地にいる、プレイヤーを見つけていない//
 			if( arrive && find == false )
 			{
 
@@ -227,10 +237,11 @@ public class New2DEnemy : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
-		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2 ) )
+		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2 || _poisonState == 3) )
 		{
 			collision.transform.GetComponent<New2DEnemy>().poisonState = 2;
 		}
+        
 	}
 
 }
