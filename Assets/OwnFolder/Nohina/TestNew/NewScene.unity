@@ -221,7 +221,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 32dd624a56662194e8f6cc7e2b531704, type: 3}
   - {fileID: 21300000, guid: 28dfd5bb2a46d3844b35afb75e548217, type: 3}
   _hideFlg: 0
-  enemyBlowPower: 10.8
+  enemyBlowPower: 0.8
   stair: 0
   nearHide: 0
   hideWaitTime: 0

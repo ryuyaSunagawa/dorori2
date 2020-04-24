@@ -231,7 +231,7 @@ public class PlayerScript2D : MonoBehaviour
 
 	IEnumerator cor1( float blowPower )
 	{
-		nearEnemy.GetComponent<Rigidbody2D>().AddForce( new Vector2( blowPower, 5f ), ForceMode2D.Impulse );
+		nearEnemy.GetComponent<Rigidbody2D>().AddForce( new Vector2( blowPower, 0.4f ), ForceMode2D.Impulse );
 		gameObject.layer = 11;
 
 		yield return new WaitForSeconds( 2f );
