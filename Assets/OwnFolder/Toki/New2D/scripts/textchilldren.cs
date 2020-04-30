@@ -15,7 +15,8 @@ public class textchilldren : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        changetext = GetComponent<Text>();   
+        changetext = GetComponent<Text>();
+        changetext.fontSize = 35;
     }
 
     // Update is called once per frame
@@ -23,13 +24,13 @@ public class textchilldren : MonoBehaviour
     {
         transform.position = new Vector2(enemy.transform.position.x, enemy.transform.position.y + 2);
 
-        if(script.find)
+        if(script.find && script._poisonState != 3)
         {
             
             if(script.attack)
             {
-                changetext.text = "!!";
-                changetext.color = Color.red;
+                changetext.text = "!?";
+                changetext.color = Color.yellow;
             }
             else
             {

@@ -6,18 +6,25 @@ using UnityEngine;
 public class New2DEnemy : MonoBehaviour
 {
     public bool patrol_only = false;
+    [SerializeField] private Material normal;
 
-    [SerializeField] private float speed = 10.0f;
+    [SerializeField] private Material poison;
+
+    [SerializeField] private Sprite deadenemy;
+
+    [SerializeField] private float speed = 2.0f;
 
     [SerializeField] private GameObject left;//左側の巡回目的地
     [SerializeField] private GameObject rihgt;//右側の巡回目的地
 
-    private bool patrollpoint = false; //巡回目的地　false : 右, true : 左
+    private bool patrollpoint = true; //巡回目的地　false : 右, true : 左
     private bool arrive = false;//巡回目的地に到着したか
 
     Rigidbody2D rb;
 
-    private bool direction = false; //false:右, true:左
+    SpriteRenderer sr;
+
+    private bool direction = true; //false:右, true:左
 
     private float count = 0.0f;
 
@@ -40,7 +47,9 @@ public class New2DEnemy : MonoBehaviour
     Ray2D ray;
     RaycastHit2D hit;
 
-    [SerializeField] private float range = 5.0f;
+    [SerializeField] private float range1 = 6.0f;
+    [SerializeField] private float range2 = 4.0f;
+    [SerializeField] private float range3 = 2.0f;
 
     public bool find = false;
 
@@ -54,6 +63,7 @@ public class New2DEnemy : MonoBehaviour
         layernum = LayerMask.NameToLayer("PlayerLayer");
         layerMask = 1 << layernum;
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -62,6 +72,8 @@ public class New2DEnemy : MonoBehaviour
 
 		if( _poisonState == 2 )
 		{
+            speed = 1.0f;
+            sr.material = poison;
 			pAmount += Time.deltaTime;
 			if( pAmount >= maxPoisonAmount )
 			{
@@ -71,12 +83,16 @@ public class New2DEnemy : MonoBehaviour
 		}
         if(_poisonState == 3)
         {
+            transform.localScale = new Vector2(-1.2f, 1.2f);
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+            //下のコメントはずしたらZ区分になるよ
+            //sr.sprite = deadenemy;
+            //sr.material = normal;
             gameObject.layer = 16;
         }
 
         //敵の向いている向きのフラグ//
-        if (transform.localScale.x < 0)
+        if (transform.localScale.x > 0)
         {
             //左
             direction = true;
@@ -100,11 +116,11 @@ public class New2DEnemy : MonoBehaviour
         //まだプレイヤーを見つけれていならレイをとばす//
         if (!patrol_only && find == false)
         {
-            hit = Physics2D.Raycast(ray.origin, ray.direction, range, layerMask);
+            hit = Physics2D.Raycast(ray.origin, ray.direction, range1, layerMask);
         }
 
         
-        Debug.DrawRay(ray.origin, ray.direction * range, Color.red);
+        Debug.DrawRay(ray.origin, ray.direction * range1, Color.red);
 
 
         //レイが何かに当たったか？//
@@ -121,14 +137,14 @@ public class New2DEnemy : MonoBehaviour
                 Debug.Log(hit.distance);
 
 
-                if(Vector2.Distance(hit.transform.position, transform.position) > range)
+                if(Vector2.Distance(hit.transform.position, transform.position) > range1)
                 {
                     //視認距離からでたら追跡をやめる
                     find = false;
                     reactioncount = 0.0f;
                     attack = false;
                 }
-                else if (Vector2.Distance(hit.transform.position, transform.position) > (range / 3 + range / 3) && attack == false)
+                else if (Vector2.Distance(hit.transform.position, transform.position) > range2 && attack == false)
                 { 
                     //視認距離に入ったらゆっくり近づく
                     reactioncount += Time.deltaTime;
@@ -146,7 +162,7 @@ public class New2DEnemy : MonoBehaviour
                         }
                     }
                 }
-                else if(Vector2.Distance(hit.transform.position, transform.position) >= range / 3)
+                else if(Vector2.Distance(hit.transform.position, transform.position) >= range3)
                 {
                     //完全に見つけたら追いかける
                     attack = true;
@@ -160,7 +176,7 @@ public class New2DEnemy : MonoBehaviour
                         rb.velocity = new Vector2(-speed * 1.5f, rb.velocity.y);
                     }
                 }
-                else if(Vector2.Distance(hit.transform.position, transform.position) < range / 3)
+                else if(Vector2.Distance(hit.transform.position, transform.position) < range3)
                 {
                     Destroy(hit.collider.gameObject);
                 }
@@ -182,14 +198,22 @@ public class New2DEnemy : MonoBehaviour
 				//数秒まつ
 				if( count >= waittime )
 				{
+                    if(direction)
+                    {
+                        direction = false;
+                    }
+                    else
+                    {
+                        direction = true;
+                    }
 					//プレイヤーの向きに画像を合わせる
 					if( direction )
 					{
-						transform.localScale = new Vector2( 0.25f, 0.25f );
+						transform.localScale = new Vector2( 1.2f, 1.2f );
 					}
 					else
 					{
-						transform.localScale = new Vector2( -0.25f, 0.25f );
+						transform.localScale = new Vector2( -1.2f, 1.2f );
 					}
 
                     if(patrollpoint)
