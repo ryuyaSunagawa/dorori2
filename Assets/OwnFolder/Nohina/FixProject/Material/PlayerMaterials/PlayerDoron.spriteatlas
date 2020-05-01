@@ -55,15 +55,15 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f96f271a336a554418c173998c525e7d, type: 3}
   - {fileID: 21300000, guid: e95bc99a82a998b4d8665af533e19f34, type: 3}
   m_PackedSpriteNamesToIndex:
-  - f8
-  - f6
-  - f10
-  - f2
-  - f5
-  - f3
-  - f4
-  - f1
-  - f7
-  - f9
+  - 8
+  - 6
+  - 10
+  - 2
+  - 5
+  - 3
+  - 4
+  - 1
+  - 7
+  - 9
   m_Tag: PlayerDoron
   m_IsVariant: 0

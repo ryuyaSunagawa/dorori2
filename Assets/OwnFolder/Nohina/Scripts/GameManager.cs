@@ -61,6 +61,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 	}
 
+	[SerializeField] int _playerStairState = 0;
+	public int playerStairState
+	{
+		set {
+			_playerStairState = value;
+		}
+
+		get {
+			return _playerStairState;
+		}
+	}
+
 	/// <summary>
 	/// 関数群
 	/// </summary>
