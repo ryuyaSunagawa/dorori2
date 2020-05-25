@@ -39,7 +39,7 @@ public class New2DEnemy : MonoBehaviour
 	}
 
 	private float pAmount = 0f;
-	[SerializeField] float maxPoisonAmount = 2f;
+	[SerializeField] float maxPoisonAmount = 1.5f;
 
     [SerializeField] private float waittime = 0.0f;
     [SerializeField] private float reaction = 0.0f;
@@ -54,6 +54,8 @@ public class New2DEnemy : MonoBehaviour
     public bool find = false;
 
     public bool attack = false;
+
+    private bool settaiflg = false; //プレイヤーの攻撃中と待ってくれる接待フラグ
 
     int layernum;
     int layerMask;
@@ -72,9 +74,16 @@ public class New2DEnemy : MonoBehaviour
 
 		if( _poisonState == 2 )
 		{
-            speed = 1.0f;
+            // speed = 1.0f;
             sr.material = poison;
-			pAmount += Time.deltaTime;
+            transform.localScale = new Vector2(-0.47f, 0.47f);
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+            //下のコメントはずしたらZ区分になるよ
+            //sr.sprite = deadenemy;
+            //sr.material = normal;
+            gameObject.layer = 16;
+
+            pAmount += Time.deltaTime;
 			if( pAmount >= maxPoisonAmount )
 			{
                 //gameObject.SetActive( false );
@@ -83,12 +92,13 @@ public class New2DEnemy : MonoBehaviour
 		}
         if(_poisonState == 3)
         {
-            transform.localScale = new Vector2(-1.2f, 1.2f);
-            transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
+            Destroy(gameObject);
+            //transform.localScale = new Vector2(-1.2f, 1.2f);
+            //transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
             //下のコメントはずしたらZ区分になるよ
             //sr.sprite = deadenemy;
             //sr.material = normal;
-            gameObject.layer = 16;
+            //gameObject.layer = 16;
         }
 
         //敵の向いている向きのフラグ//
@@ -124,7 +134,7 @@ public class New2DEnemy : MonoBehaviour
 
 
         //レイが何かに当たったか？//
-        if (hit.collider && _poisonState != 3)
+        if (hit.collider && _poisonState != 2)
         {
            Debug.Log(hit.collider.gameObject.name);
 
@@ -187,7 +197,7 @@ public class New2DEnemy : MonoBehaviour
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
-		if( _poisonState != 1  && _poisonState != 3)
+		if( _poisonState != 1  && _poisonState != 2)
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
@@ -209,11 +219,11 @@ public class New2DEnemy : MonoBehaviour
 					//プレイヤーの向きに画像を合わせる
 					if( direction )
 					{
-						transform.localScale = new Vector2( 1.2f, 1.2f );
+						transform.localScale = new Vector2( 0.47f, 0.47f );
 					}
 					else
 					{
-						transform.localScale = new Vector2( -1.2f, 1.2f );
+						transform.localScale = new Vector2( -0.47f, 0.47f );
 					}
 
                     if(patrollpoint)
@@ -261,7 +271,7 @@ public class New2DEnemy : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
-		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2 || _poisonState == 3) )
+		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2) )
 		{
 			collision.transform.GetComponent<New2DEnemy>().poisonState = 2;
 		}
