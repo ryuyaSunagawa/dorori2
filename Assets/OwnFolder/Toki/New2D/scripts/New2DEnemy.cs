@@ -5,30 +5,35 @@ using UnityEngine;
 
 public class New2DEnemy : MonoBehaviour
 {
-    public bool patrol_only = false;
-    [SerializeField] private Material normal;
+    public bool patrol_only = false;            //パトロールだけさせる時用
 
-    [SerializeField] private Material poison;
+    [SerializeField] private Material normal;   //通常のマテリアル
 
-    [SerializeField] private Sprite deadenemy;
+    [SerializeField] private Material poison;   //紫色マテリアル
 
-    [SerializeField] private float speed = 2.0f;
+    [SerializeField] private Sprite deadenemy;  //お遊びで作った死体スプライト
 
-    [SerializeField] private GameObject left;//左側の巡回目的地
-    [SerializeField] private GameObject rihgt;//右側の巡回目的地
+    [SerializeField] private float speed = 2.0f;//敵の歩行スピード
 
-    private bool patrollpoint = true; //巡回目的地　false : 右, true : 左
-    private bool arrive = false;//巡回目的地に到着したか
+    [SerializeField] private GameObject left;   //左側の巡回目的地
+    [SerializeField] private GameObject rihgt;  //右側の巡回目的地
 
-    Rigidbody2D rb;
+    private bool patrollpoint = true;           //巡回目的地　false : 右, true : 左
+    private bool arrive = false;                //巡回目的地に到着したか
 
-    SpriteRenderer sr;
+    Rigidbody2D rb;                             //敵のリジットボデー
 
-    private bool direction = true; //false:右, true:左
+    SpriteRenderer sr;                          //敵のスプライトレンダラー
 
-    private float count = 0.0f;
+    private bool direction = true;              //false:右, true:左
 
-    private float reactioncount = 0.0f;
+    private float count = 0.0f;                 //巡回地点についた時の待ち時間カウント
+
+    [SerializeField] private float waittime = 0.0f;//巡回地点についた時の待ち時間
+
+    private float reactioncount = 0.0f;         //プレイヤーを見つけた時の反応時間カウント
+
+    [SerializeField] private float reaction = 0.0f;//プレイヤーを見つけた時の反応時間
 
 	public int _poisonState = 0;
 	public int poisonState
@@ -41,24 +46,26 @@ public class New2DEnemy : MonoBehaviour
 	private float pAmount = 0f;
 	[SerializeField] float maxPoisonAmount = 1.5f;
 
-    [SerializeField] private float waittime = 0.0f;
-    [SerializeField] private float reaction = 0.0f;
+    
+    Ray2D ray;                                      //敵のレイ
+    RaycastHit2D hit;                               //レイが当たった奴の保存箱
 
-    Ray2D ray;
-    RaycastHit2D hit;
+    [SerializeField] private float range1 = 12.0f;　//敵の発見段階lv1の距離 (？マークを出してゆっくり近づく)
+    [SerializeField] private float range2 = 10.0f;  //敵の発見段階lv2の距離 (!?マークを出してすごい形相で追っかける)
+    [SerializeField] private float range3 = 5.0f;   //敵の発見段階lv3の距離 (ぶっ殺死!!)
 
-    [SerializeField] private float range1 = 6.0f;
-    [SerializeField] private float range2 = 4.0f;
-    [SerializeField] private float range3 = 2.0f;
+    public bool find = false;                       //敵の発見段階lv1に入ったよのフラグ
 
-    public bool find = false;
+    public bool attack = false;                     //敵の発見段階lv2に入ったよのフラグ
 
-    public bool attack = false;
+    private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    private bool settaiflg = false; //プレイヤーの攻撃中と待ってくれる接待フラグ
+    private float enemy_size_x;                     //敵の初期サイズX
+    private float enemy_size_y;                     //敵の初期サイズY
 
-    int layernum;
-    int layerMask;
+    int layernum;                                   //PlayerLayerのナンバー入れ
+    int layerMask;                                  //PlayerLayerをマスクに変化させたやつ入れ
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +73,9 @@ public class New2DEnemy : MonoBehaviour
         layerMask = 1 << layernum;
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+
+        enemy_size_x = transform.localScale.x;
+        enemy_size_y = transform.localScale.y;
     }
 
     // Update is called once per frame
@@ -76,7 +86,7 @@ public class New2DEnemy : MonoBehaviour
 		{
             // speed = 1.0f;
             sr.material = poison;
-            transform.localScale = new Vector2(-0.47f, 0.47f);
+            transform.localScale = new Vector2(-enemy_size_x, enemy_size_y);
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
             //下のコメントはずしたらZ区分になるよ
             //sr.sprite = deadenemy;
@@ -219,11 +229,11 @@ public class New2DEnemy : MonoBehaviour
 					//プレイヤーの向きに画像を合わせる
 					if( direction )
 					{
-						transform.localScale = new Vector2( 0.47f, 0.47f );
+						transform.localScale = new Vector2( enemy_size_x, enemy_size_y );
 					}
 					else
 					{
-						transform.localScale = new Vector2( -0.47f, 0.47f );
+						transform.localScale = new Vector2( -enemy_size_x, enemy_size_y );
 					}
 
                     if(patrollpoint)
