@@ -7,6 +7,8 @@ public class FixPlayerScript : MonoBehaviour
 	//自分のスプライトを保持する
 	SpriteRenderer myRenderer = null;
 
+	Sprite[] mySprite = new Sprite[ 6 ];
+
 	//プレイヤースピード
 	[SerializeField, HeaderAttribute ("プレイヤー移動"), Range( 0f, 0.5f )] float playerSpeed_Normal;
 
