@@ -73,6 +73,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 	}
 
+	[SerializeField] GameObject _AnimationController;
+	public GameObject AnimationController
+	{
+		get {
+			return _AnimationController;
+		}
+	}
+
 	/// <summary>
 	/// 関数群
 	/// </summary>
