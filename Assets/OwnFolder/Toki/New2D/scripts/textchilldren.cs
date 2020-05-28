@@ -24,18 +24,28 @@ public class textchilldren : MonoBehaviour
     {
         transform.position = new Vector2(enemy.transform.position.x, enemy.transform.position.y + 2);
 
-        if(script.find && script._poisonState != 3)
+        if(script._poisonState != 3)
         {
-            
-            if(script.attack)
+            if (script.range_level == 3f)
+            {
+                changetext.text = "!!";
+                changetext.color = Color.red;
+            }
+
+
+            else if (script.range_level == 2f || script.range_level == 2.5f)
             {
                 changetext.text = "!?";
                 changetext.color = Color.yellow;
             }
-            else
+            else if (script.range_level == 1f || script.range_level == 1.5f)
             {
                 changetext.text = "?";
                 changetext.color = Color.yellow;
+            }
+            else
+            {
+                changetext.text = "";
             }
         }
         else
