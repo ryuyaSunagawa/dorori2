@@ -409,6 +409,26 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245090, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -497,7 +517,7 @@ PrefabInstance:
     - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: range1
-      value: 12
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
@@ -528,7 +548,22 @@ PrefabInstance:
     - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: range3
-      value: 5
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: reaction
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: search_time
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: speed
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245095, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}

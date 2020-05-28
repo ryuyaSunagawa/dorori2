@@ -13,7 +13,7 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] private Sprite deadenemy;  //お遊びで作った死体スプライト
 
-    [SerializeField] private float speed = 2.0f;//敵の歩行スピード
+    [SerializeField] private float speed = 3.0f;//敵の歩行スピード
 
     [SerializeField] private GameObject left;   //左側の巡回目的地
     [SerializeField] private GameObject rihgt;  //右側の巡回目的地
@@ -33,7 +33,8 @@ public class New2DEnemy : MonoBehaviour
 
     private float reactioncount = 0.0f;         //プレイヤーを見つけた時の反応時間カウント
 
-    [SerializeField] private float reaction = 0.0f;//プレイヤーを見つけた時の反応時間
+    [SerializeField] private float reaction = 1.5f;//プレイヤーを見つけた時の反応時間
+
 
 	public int _poisonState = 0;
 	public int poisonState
@@ -50,13 +51,35 @@ public class New2DEnemy : MonoBehaviour
     Ray2D ray;                                      //敵のレイ
     RaycastHit2D hit;                               //レイが当たった奴の保存箱
 
-    [SerializeField] private float range1 = 12.0f;　//敵の発見段階lv1の距離 (？マークを出してゆっくり近づく)
+    public bool find = false;                      //プレイヤーを見つけたかフラグ
+
+    [SerializeField] private float range1 = 14.0f;　//敵の発見段階lv1の距離 (？マークを出してゆっくり近づく)
     [SerializeField] private float range2 = 10.0f;  //敵の発見段階lv2の距離 (!?マークを出してすごい形相で追っかける)
-    [SerializeField] private float range3 = 5.0f;   //敵の発見段階lv3の距離 (ぶっ殺死!!)
+    [SerializeField] private float range3 = 6.0f;   //敵の発見段階lv3の距離 (ぶっ殺死!!)
 
-    public bool find = false;                       //敵の発見段階lv1に入ったよのフラグ
+    private float start_range1;                     //range1の初期値が入ってるよ
+    private float start_range2;                     //range2の初期値が入ってるよ
+    private float start_range3;                     //range3の初期値が入ってるよ
 
-    public bool attack = false;                     //敵の発見段階lv2に入ったよのフラグ
+    // public bool range1_flg = false;                     //敵の発見段階lv1に入ったよのフラグ
+
+    // public bool range1_5flg = false;                    //range2の状態で逃げた状態のフラグ
+
+    // public bool range2_flg = false;                     //敵の発見段階lv2に入ったよのフラグ
+
+    // public bool range2_5flg = false;                    //range3の状態で逃げた状態のフラグ
+
+    // public bool orange_flg = false;                     //range2_5に一回入ったかフラグ
+
+    // public bool range3_flg = false;                     //敵の発見段階lv3に入ったよのフラグ
+
+    public float range_level = 0;
+
+    private float escape_playerx = 0.0f;                //プレイヤーが視界から脱出したときに座標を保存するとこ
+
+    private float search_count = 0.0f;                  //プレイヤーが視界から脱出したときに探す時間カウント
+    
+    [SerializeField] private float search_time = 2.5f;  //プレイヤーが視界から脱出したときに探す時間
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
@@ -76,13 +99,20 @@ public class New2DEnemy : MonoBehaviour
 
         enemy_size_x = transform.localScale.x;
         enemy_size_y = transform.localScale.y;
+
+        start_range1 = range1;      //range達の初期値を保存
+        start_range2 = range2;
+        start_range3 = range3;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-		if( _poisonState == 2 )
+        Debug.Log(range_level);
+        Debug.Log(find);
+        Debug.Log(range1);
+        if ( _poisonState == 2 )
 		{
             // speed = 1.0f;
             sr.material = poison;
@@ -134,11 +164,10 @@ public class New2DEnemy : MonoBehaviour
         }
 
         //まだプレイヤーを見つけれていならレイをとばす//
-        if (!patrol_only && find == false)
+        if (!patrol_only && !hit)
         {
             hit = Physics2D.Raycast(ray.origin, ray.direction, range1, layerMask);
         }
-
         
         Debug.DrawRay(ray.origin, ray.direction * range1, Color.red);
 
@@ -148,60 +177,202 @@ public class New2DEnemy : MonoBehaviour
         {
            Debug.Log(hit.collider.gameObject.name);
 
-            //レイが当たったのはプレイヤー？//
-            if(hit.collider.gameObject.name == "Player")
+            if (hit.collider.name == "Player")
             {
-                //プレイヤーをみつけた//
-                find = true;
+                if ((Vector2.Distance(hit.transform.position, transform.position)) < range1 || range_level == 1.5f || range_level == 2.5f)
+                {
+                    if(direction && transform.position.x > hit.transform.position.x)
+                    {
+                        find = true;
+                    }
+                    else if(!direction && transform.position.x < hit.transform.position.x)
+                    {
+                        find = true;
+                    }
+                    else
+                    {
+                        find = false;
+                    }
+                }
+                else
+                {
+                    find = false;
+                }
+            }
+            else
+            {
+                find = false;
+            }
+            
 
+            if (find)
+            {
+                //Debug.Log(Vector2.Distance(hit.transform.position, transform.position));
                 Debug.Log(hit.distance);
 
-
-                if(Vector2.Distance(hit.transform.position, transform.position) > range1)
+                if ((Vector2.Distance(hit.transform.position, transform.position)) < range3)
                 {
-                    //視認距離からでたら追跡をやめる
-                    find = false;
-                    reactioncount = 0.0f;
-                    attack = false;
+                    range_level = 3f;
                 }
-                else if (Vector2.Distance(hit.transform.position, transform.position) > range2 && attack == false)
-                { 
-                    //視認距離に入ったらゆっくり近づく
+                else if (range_level != 2.5f && (Vector2.Distance(hit.transform.position, transform.position)) < range2)
+                {
+                    reactioncount = 0.0f;
+                    range_level = 2f;
+                }
+                else if ((Vector2.Distance(hit.transform.position, transform.position)) <= range1)
+                {
+                    range_level = 1f;
+                }
+
+               
+
+
+                if (range_level == 3f)
+                {
+                    //range3
+                    //侵入者じゃけぇ!!
+
+                    if (transform.position.x < hit.transform.position.x)
+                    {
+                        rb.velocity = new Vector2(speed * 3.0f, rb.velocity.y);
+                    }
+                    else if (transform.position.x > hit.transform.position.x)
+                    {
+                        rb.velocity = new Vector2(-speed * 3.0f, rb.velocity.y);
+                    }
+
+                    if ((Vector2.Distance(hit.transform.position, transform.position)) > range1)
+                    {
+                        escape_playerx = hit.transform.position.x;
+                        range_level = 2.5f;
+                    }
+                }
+                else if (range_level == 2.5f)
+                {
+                    //range2.5
+                    //プレイヤーが視界から脱出したときにその地点に行って探す
+                    if (search_count < search_time && transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
+                    {
+                        search_count += Time.deltaTime;
+                        if (search_time < search_count)
+                        {
+                            range1 = start_range1;
+
+                            range2 = start_range1;
+
+                            range3 = start_range2;
+
+                            find = false;
+
+                        }
+                    }
+                    else if (transform.position.x < escape_playerx)
+                    {
+                        rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
+                    }
+                    else if (transform.position.x > escape_playerx)
+                    {
+                        rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                    }
+                }
+                else if (range_level == 2)
+                {
+                    //range2
+                    //誰かいるぞ!
+                    //黄色
+                    range2 = start_range1;
+
+
+                    if (range3 < start_range2)
+                    {
+                        range3 += (3 * Time.deltaTime);
+                    }
+
+                    //プレイヤーの方向に進む//
+                    if (transform.position.x < hit.transform.position.x)
+                    {
+                        rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
+                    }
+                    else if (transform.position.x > hit.transform.position.x)
+                    {
+                        rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                    }
+
+                    if ((Vector2.Distance(hit.transform.position, transform.position)) > range1)
+                    {
+                        escape_playerx = hit.transform.position.x;
+                        range_level = 1.5f;
+                    }
+                }
+                else if (range_level == 1.5f)
+                {
+                    //range1.5
+                    range3 = start_range3;
+
+                    //プレイヤーが視界から脱出したときにその地点に行って探す
+                    if (transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
+                    {
+                        search_count += Time.deltaTime;
+                        if (search_time < search_count)
+                        {
+                            range1 = start_range1;
+
+                            range2 = start_range2;
+
+                            range3 = start_range3;
+
+                            escape_playerx = 0.0f;
+                            search_count = 0.0f;
+
+                            range_level = 0;
+
+                            find = false;
+                            
+                        }
+                    }
+                    else if (transform.position.x < escape_playerx)
+                    {
+                        rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
+                    }
+                    else if (transform.position.x > escape_playerx)
+                    {
+                        rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                    }
+
+
+
+                }
+                else if (range_level == 1f)
+                {
+                    //range1
+                    //ん？、何かいね？
+                    //ピンク
                     reactioncount += Time.deltaTime;
 
                     if (reaction <= reactioncount)
                     {
-                        //プレイヤーの方向に進む//
-                        if (transform.position.x < hit.transform.position.x)
+                        if (range2 < start_range1)
                         {
-                            rb.velocity = new Vector2(speed / 2, rb.velocity.y);
+                            range2 += (5 * Time.deltaTime);
                         }
-                        else if (transform.position.x > hit.transform.position.x)
-                        {
-                            rb.velocity = new Vector2(-speed / 2, rb.velocity.y);
-                        }
+
                     }
-                }
-                else if(Vector2.Distance(hit.transform.position, transform.position) >= range3)
-                {
-                    //完全に見つけたら追いかける
-                    attack = true;
-                    //プレイヤーの方向に進む//
-                    if (transform.position.x < hit.transform.position.x)
+
+                    if ((Vector2.Distance(hit.transform.position, transform.position)) > range1)
                     {
-                        rb.velocity = new Vector2(speed * 1.5f, rb.velocity.y);
-                    }
-                    else if (transform.position.x > hit.transform.position.x)
-                    {
-                        rb.velocity = new Vector2(-speed * 1.5f, rb.velocity.y);
+                        reactioncount = 0.0f;
+
+                        range1 = start_range1;
+                        range2 = start_range2;
+
+                        range_level = 0;
+
+                        find = false;
                     }
                 }
-                else if(Vector2.Distance(hit.transform.position, transform.position) < range3)
-                {
-                    Destroy(hit.collider.gameObject);
-                }
-                
+
             }
+            
         }
 
 		///<summary>
@@ -211,7 +382,7 @@ public class New2DEnemy : MonoBehaviour
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
-			if( arrive && find == false )
+			if(arrive && (!find || range_level == 2.5f))
 			{
 
 				count += Time.deltaTime;
@@ -250,7 +421,7 @@ public class New2DEnemy : MonoBehaviour
 					count = 0.0f;
 				}
 			}//敵を見つけていない
-			else if( find == false )
+			else if(!find || range_level == 2.5f)
 			{
 				//巡回//
 				if( direction )
