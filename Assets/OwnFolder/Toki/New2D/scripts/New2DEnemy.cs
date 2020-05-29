@@ -61,19 +61,10 @@ public class New2DEnemy : MonoBehaviour
     private float start_range2;                     //range2の初期値が入ってるよ
     private float start_range3;                     //range3の初期値が入ってるよ
 
-    // public bool range1_flg = false;                     //敵の発見段階lv1に入ったよのフラグ
 
-    // public bool range1_5flg = false;                    //range2の状態で逃げた状態のフラグ
+    public float range_level = 0;                   //プレイヤーの発見段階
 
-    // public bool range2_flg = false;                     //敵の発見段階lv2に入ったよのフラグ
-
-    // public bool range2_5flg = false;                    //range3の状態で逃げた状態のフラグ
-
-    // public bool orange_flg = false;                     //range2_5に一回入ったかフラグ
-
-    // public bool range3_flg = false;                     //敵の発見段階lv3に入ったよのフラグ
-
-    public float range_level = 0;
+    public bool r2_5flg = false;                    //rangelevel2.5になったらrange2の距離を常時広がってる状況にするためのフラグ
 
     private float escape_playerx = 0.0f;                //プレイヤーが視界から脱出したときに座標を保存するとこ
 
@@ -89,9 +80,12 @@ public class New2DEnemy : MonoBehaviour
     int layernum;                                   //PlayerLayerのナンバー入れ
     int layerMask;                                  //PlayerLayerをマスクに変化させたやつ入れ
 
+    [SerializeField] GameObject Player;             //プレイヤー
+
     // Start is called before the first frame update
     void Start()
     {
+        
         layernum = LayerMask.NameToLayer("PlayerLayer");
         layerMask = 1 << layernum;
         rb = GetComponent<Rigidbody2D>();
@@ -100,9 +94,14 @@ public class New2DEnemy : MonoBehaviour
         enemy_size_x = transform.localScale.x;
         enemy_size_y = transform.localScale.y;
 
-        start_range1 = range1;      //range達の初期値を保存
-        start_range2 = range2;
-        start_range3 = range3;
+
+        start_range1 = range1 + (Player.transform.localScale.x / 2);      //range達の初期値を保存
+        start_range2 = range2 + (Player.transform.localScale.x / 2);
+        start_range3 = range3 + (Player.transform.localScale.x / 2);
+
+        range1 = start_range1;
+        range2 = start_range2;
+        range3 = start_range3;
     }
 
     // Update is called once per frame
@@ -181,6 +180,8 @@ public class New2DEnemy : MonoBehaviour
             {
                 if ((Vector2.Distance(hit.transform.position, transform.position)) < range1 || range_level == 1.5f || range_level == 2.5f)
                 {
+                    
+
                     if(direction && transform.position.x > hit.transform.position.x)
                     {
                         find = true;
@@ -192,17 +193,43 @@ public class New2DEnemy : MonoBehaviour
                     else
                     {
                         find = false;
+                        range_level = 0;
                     }
                 }
                 else
                 {
-                    find = false;
+                    if(range_level == 3f)
+                    {
+                        escape_playerx = hit.transform.position.x;
+                        
+                        find = true;
+                        range_level = 2.5f;
+                    }
+                    else if(range_level == 2f)
+                    {
+                        escape_playerx = hit.transform.position.x;
+
+                        find = true;
+                        if (!r2_5flg)
+                        {
+                            range_level = 1.5f;
+                        }
+                        else
+                        {
+                            range_level = 2.5f;
+                        }
+                       
+                    }
+                    else
+                    {
+                        find = false;
+                        range_level = 0;
+                        reactioncount = 0.0f;
+                    }
+                    
                 }
             }
-            else
-            {
-                find = false;
-            }
+           
             
 
             if (find)
@@ -214,12 +241,12 @@ public class New2DEnemy : MonoBehaviour
                 {
                     range_level = 3f;
                 }
-                else if (range_level != 2.5f && (Vector2.Distance(hit.transform.position, transform.position)) < range2)
+                else if (range_level != 3f &&(Vector2.Distance(hit.transform.position, transform.position)) < range2)
                 {
                     reactioncount = 0.0f;
                     range_level = 2f;
                 }
-                else if ((Vector2.Distance(hit.transform.position, transform.position)) <= range1)
+                else if (range_level != 2f && range_level != 2.5f && range_level != 3f &&(Vector2.Distance(hit.transform.position, transform.position)) <= range1)
                 {
                     range_level = 1f;
                 }
@@ -253,17 +280,30 @@ public class New2DEnemy : MonoBehaviour
                     //プレイヤーが視界から脱出したときにその地点に行って探す
                     if (search_count < search_time && transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
                     {
-                        search_count += Time.deltaTime;
-                        if (search_time < search_count)
+                        if (transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
                         {
-                            range1 = start_range1;
+                            search_count += Time.deltaTime;
+                            if (search_time < search_count)
+                            {
+                                if(!r2_5flg)
+                                {
+                                    start_range1 = start_range1 - (start_range1 / 5);
+                                }
+                                range1 = start_range1;
 
-                            range2 = start_range1;
+                                range2 = start_range1;
 
-                            range3 = start_range2;
+                                range3 = start_range2;
 
-                            find = false;
+                                search_count = 0.0f;
 
+                                range_level = 0;
+
+                                r2_5flg = true;
+
+                                find = false;
+
+                            }
                         }
                     }
                     else if (transform.position.x < escape_playerx)
@@ -298,11 +338,6 @@ public class New2DEnemy : MonoBehaviour
                         rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
                     }
 
-                    if ((Vector2.Distance(hit.transform.position, transform.position)) > range1)
-                    {
-                        escape_playerx = hit.transform.position.x;
-                        range_level = 1.5f;
-                    }
                 }
                 else if (range_level == 1.5f)
                 {
@@ -322,6 +357,7 @@ public class New2DEnemy : MonoBehaviour
                             range3 = start_range3;
 
                             escape_playerx = 0.0f;
+
                             search_count = 0.0f;
 
                             range_level = 0;
@@ -357,18 +393,6 @@ public class New2DEnemy : MonoBehaviour
                         }
 
                     }
-
-                    if ((Vector2.Distance(hit.transform.position, transform.position)) > range1)
-                    {
-                        reactioncount = 0.0f;
-
-                        range1 = start_range1;
-                        range2 = start_range2;
-
-                        range_level = 0;
-
-                        find = false;
-                    }
                 }
 
             }
@@ -382,7 +406,7 @@ public class New2DEnemy : MonoBehaviour
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
-			if(arrive && (!find || range_level == 2.5f))
+			if(arrive && !find)
 			{
 
 				count += Time.deltaTime;
@@ -421,7 +445,7 @@ public class New2DEnemy : MonoBehaviour
 					count = 0.0f;
 				}
 			}//敵を見つけていない
-			else if(!find || range_level == 2.5f)
+			else if(!find)
 			{
 				//巡回//
 				if( direction )

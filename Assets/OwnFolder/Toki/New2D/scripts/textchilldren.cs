@@ -31,14 +31,22 @@ public class textchilldren : MonoBehaviour
                 changetext.text = "!!";
                 changetext.color = Color.red;
             }
-
-
-            else if (script.range_level == 2f || script.range_level == 2.5f)
+            else if (script.r2_5flg || script.range_level == 2.5f)
+            {
+                changetext.text = "!?";
+                changetext.color = Color.red;
+            }
+            else if (script.range_level == 2f)
             {
                 changetext.text = "!?";
                 changetext.color = Color.yellow;
             }
-            else if (script.range_level == 1f || script.range_level == 1.5f)
+            else if(script.range_level == 1.5f)
+            {
+                changetext.text = "?";
+                changetext.color = Color.red;
+            }
+            else if (script.range_level == 1f)
             {
                 changetext.text = "?";
                 changetext.color = Color.yellow;
