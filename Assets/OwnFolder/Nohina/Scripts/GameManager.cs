@@ -82,6 +82,20 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	}
 
 	/// <summary>
+	/// プレイヤーが変化の術を使うときのフラグ
+	/// </summary>
+	bool _playerDisguiceMode = false;
+	public bool playerDisguiceMode
+	{
+		set {
+			_playerDisguiceMode = value;
+		}
+		get {
+			return _playerDisguiceMode;
+		}
+	}
+
+	/// <summary>
 	/// 関数群
 	/// </summary>
 
