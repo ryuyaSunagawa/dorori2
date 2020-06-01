@@ -1560,15 +1560,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c004cad07d8e4014285e73c321a8e7d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nowSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
-  normalSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
+  nowSprite: {fileID: 21300000, guid: 0aedf8d8a27e006499fe10bc37aea2af, type: 3}
+  normalSprite: {fileID: 21300000, guid: 0aedf8d8a27e006499fe10bc37aea2af, type: 3}
   attacked:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 7332fbb060518cf42aa304c3c589c0d9, type: 3}
+  - {fileID: 21300000, guid: 7b9bb5532f59b3e42abd961dbaf3d791, type: 3}
+  - {fileID: 21300000, guid: abdef90f64c55bf4c827344873bf779d, type: 3}
+  - {fileID: 21300000, guid: c607c5c24ad064149bbf06e157bae160, type: 3}
+  - {fileID: 21300000, guid: d2f7eb3d026573f4e964630af4ff74c0, type: 3}
+  - {fileID: 21300000, guid: 457a9b115216c02438fda857d38639e6, type: 3}
   walked:
   - {fileID: 21300000, guid: 18fc6a6fda455f541a2806041cd51a93, type: 3}
   - {fileID: 21300000, guid: 1d4c1426a9e8cd04aa40964e7a753f1f, type: 3}
@@ -1578,6 +1578,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a7316fcaf590d594aaa30a448d06401e, type: 3}
   - {fileID: 21300000, guid: 931ab22c49c1e0847b42e77bc2dc719d, type: 3}
   - {fileID: 21300000, guid: 1d4c1426a9e8cd04aa40964e7a753f1f, type: 3}
+  run:
+  - {fileID: 21300000, guid: d885be161587cc744b6b19cdc9c06e21, type: 3}
+  - {fileID: 21300000, guid: 7e51cd7bfc342b94195d9c0974a5827f, type: 3}
+  - {fileID: 21300000, guid: 93046a79225ad534b863636b3845d989, type: 3}
+  - {fileID: 21300000, guid: be38c3d53a8226a45badcb9ed3d68bae, type: 3}
+  - {fileID: 21300000, guid: 8874a53523265f74481eac149762f6b8, type: 3}
+  - {fileID: 21300000, guid: e3b78e9a6359391459f1da056ee175ce, type: 3}
+  - {fileID: 21300000, guid: f0da2a464af04f341b627ce30e8c4e7f, type: 3}
+  - {fileID: 21300000, guid: bb4a78b803ee592438492547a358a0ce, type: 3}
 --- !u!1 &1655543388
 GameObject:
   m_ObjectHideFlags: 0

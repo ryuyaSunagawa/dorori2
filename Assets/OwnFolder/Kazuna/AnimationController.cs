@@ -8,16 +8,19 @@ public class AnimationController : MonoBehaviour
 	int atk_flg = 0;
 	int wlk_flm = 0;
 	int wlk_flg = 0;
+    int run_flm = 0;
+    int run_flg = 0;
 
-	[SerializeField] Sprite nowSprite = null;
+    [SerializeField] Sprite nowSprite = null;
 
 	[SerializeField] Sprite normalSprite = null;
 
     [SerializeField] Sprite[] attacked = new Sprite[6];
 	[SerializeField] Sprite[] walked = new Sprite[8];
+    [SerializeField] Sprite[] run = new Sprite[8];
 
-	// Start is called before the first frame update
-	void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         
     }
@@ -128,4 +131,62 @@ public class AnimationController : MonoBehaviour
 
 		Debug.Log( wlk_flm );
 	}
+
+    public void Run(int useComp, out Sprite runSprite)
+    {
+        run_flg = useComp;
+
+        if (run_flm == 0 && run_flg == 1)
+        {
+            nowSprite = run[0];
+        }
+        else if (run_flm == 6 && run_flg == 1)
+        {
+            nowSprite = run[1];
+        }
+        else if (run_flm == 12 && run_flg == 1)
+        {
+            nowSprite = run[2];
+        }
+        else if (run_flm == 18 && run_flg == 1)
+        {
+            nowSprite = run[3];
+        }
+        else if (run_flm == 24 && run_flg == 1)
+        {
+            nowSprite = run[4];
+        }
+        else if (run_flm == 30 && run_flg == 1)
+        {
+            nowSprite = run[5];
+        }
+        else if (run_flm == 36 && run_flg == 1)
+        {
+            nowSprite = run[6];
+        }
+        else if (run_flm == 42 && run_flg == 1)
+        {
+            nowSprite = run[7];
+        }
+        else if (run_flm == 60 && run_flg == 1)
+        {
+
+            run_flm = -1;
+        }
+        else if (run_flg == 0)
+        {
+
+            run_flm = -1;
+            nowSprite = normalSprite;
+        }
+
+        if (run_flg == 1)
+            run_flm++;
+
+
+        runSprite = nowSprite;
+
+        Debug.Log(run_flm);
+
+    }
 }
