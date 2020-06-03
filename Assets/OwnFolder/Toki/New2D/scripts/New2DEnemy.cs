@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class New2DEnemy : MonoBehaviour
 {
+
     public bool patrol_only = false;            //パトロールだけさせる時用
 
     [SerializeField] private Material normal;   //通常のマテリアル
@@ -74,6 +75,12 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
+    public bool attackflg = false;
+
+    public bool walkflg = true;
+
+    public bool runflg = false;
+
     private float enemy_size_x;                     //敵の初期サイズX
     private float enemy_size_y;                     //敵の初期サイズY
 
@@ -81,6 +88,7 @@ public class New2DEnemy : MonoBehaviour
     int layerMask;                                  //PlayerLayerをマスクに変化させたやつ入れ
 
     [SerializeField] GameObject Player;             //プレイヤー
+
 
     // Start is called before the first frame update
     void Start()
@@ -102,15 +110,16 @@ public class New2DEnemy : MonoBehaviour
         range1 = start_range1;
         range2 = start_range2;
         range3 = start_range3;
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        Debug.Log(range_level);
-        Debug.Log(find);
-        Debug.Log(range1);
+        //Debug.Log(range_level);
+        //Debug.Log(find);
+        //Debug.Log(range1);
         if ( _poisonState == 2 )
 		{
             // speed = 1.0f;
@@ -174,7 +183,7 @@ public class New2DEnemy : MonoBehaviour
         //レイが何かに当たったか？//
         if (hit.collider && _poisonState != 2)
         {
-           Debug.Log(hit.collider.gameObject.name);
+           Debug.Log(attackflg);
 
             if (hit.collider.name == "Player")
             {
@@ -229,13 +238,17 @@ public class New2DEnemy : MonoBehaviour
                     
                 }
             }
+            if(attackflg || range_level == 3)
+            {
+                attackflg = true;
+            }
            
             
 
             if (find)
             {
                 //Debug.Log(Vector2.Distance(hit.transform.position, transform.position));
-                Debug.Log(hit.distance);
+                //Debug.Log(hit.distance);
 
                 if ((Vector2.Distance(hit.transform.position, transform.position)) < range3)
                 {
@@ -243,6 +256,7 @@ public class New2DEnemy : MonoBehaviour
                 }
                 else if (range_level != 3f &&(Vector2.Distance(hit.transform.position, transform.position)) < range2)
                 {
+                    walkflg = true;
                     reactioncount = 0.0f;
                     range_level = 2f;
                 }
@@ -268,10 +282,9 @@ public class New2DEnemy : MonoBehaviour
                         rb.velocity = new Vector2(-speed * 3.0f, rb.velocity.y);
                     }
 
-                    if ((Vector2.Distance(hit.transform.position, transform.position)) > range1)
+                    if ((Vector2.Distance(hit.transform.position, transform.position)) < (start_range3))
                     {
-                        escape_playerx = hit.transform.position.x;
-                        range_level = 2.5f;
+                        attackflg = true;
                     }
                 }
                 else if (range_level == 2.5f)
@@ -282,6 +295,7 @@ public class New2DEnemy : MonoBehaviour
                     {
                         if (transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
                         {
+                            walkflg = false;
                             search_count += Time.deltaTime;
                             if (search_time < search_count)
                             {
@@ -302,6 +316,8 @@ public class New2DEnemy : MonoBehaviour
                                 r2_5flg = true;
 
                                 find = false;
+
+                                walkflg = true;
 
                             }
                         }
@@ -347,6 +363,7 @@ public class New2DEnemy : MonoBehaviour
                     //プレイヤーが視界から脱出したときにその地点に行って探す
                     if (transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
                     {
+                        walkflg = false;
                         search_count += Time.deltaTime;
                         if (search_time < search_count)
                         {
@@ -363,6 +380,8 @@ public class New2DEnemy : MonoBehaviour
                             range_level = 0;
 
                             find = false;
+
+                            walkflg = true;
                             
                         }
                     }
@@ -383,12 +402,14 @@ public class New2DEnemy : MonoBehaviour
                     //range1
                     //ん？、何かいね？
                     //ピンク
+                    
                     reactioncount += Time.deltaTime;
-
                     if (reaction <= reactioncount)
                     {
+                        walkflg = false;
                         if (range2 < start_range1)
                         {
+                            walkflg = true;
                             range2 += (5 * Time.deltaTime);
                         }
 
@@ -398,7 +419,7 @@ public class New2DEnemy : MonoBehaviour
             }
             
         }
-
+        
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
@@ -408,7 +429,7 @@ public class New2DEnemy : MonoBehaviour
 			//目的地にいる、プレイヤーを見つけていない//
 			if(arrive && !find)
 			{
-
+                walkflg = false;
 				count += Time.deltaTime;
 				//数秒まつ
 				if( count >= waittime )
@@ -443,10 +464,12 @@ public class New2DEnemy : MonoBehaviour
                     arrive = false;
 					//frontcheck.check = false;
 					count = 0.0f;
+                    walkflg = true;
 				}
 			}//敵を見つけていない
 			else if(!find)
 			{
+                walkflg = true;
 				//巡回//
 				if( direction )
 				{
