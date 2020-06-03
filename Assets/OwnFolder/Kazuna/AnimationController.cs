@@ -129,7 +129,7 @@ public class AnimationController : MonoBehaviour
 
 		walkSprite = nowSprite;
 
-		Debug.Log( wlk_flm );
+		//Debug.Log( wlk_flm );
 	}
 
     public void Run(int useComp, out Sprite runSprite)
