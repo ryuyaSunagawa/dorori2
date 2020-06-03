@@ -126,6 +126,6 @@ public class AnimationController : MonoBehaviour
 
 		walkSprite = nowSprite;
 
-		Debug.Log( wlk_flm );
+		//Debug.Log( wlk_flm );
 	}
 }

@@ -5,66 +5,131 @@ using System;
 
 public class FixPlayerScript : MonoBehaviour
 {
-	//自分のスプライトを保持する
+	/*
+	 * プレイヤーSprite・Speed・Direct系変数
+	 */
+	/// <summary>
+	/// 自分のスプライト
+	/// </summary>
 	SpriteRenderer myRenderer = null;
 
-	//自分のスプライト
-	[SerializeField] Sprite nowSprite = null;
+	/// <summary>
+	/// 現在使用するスプライト
+	/// </summary>
+	Sprite nowSprite = null;
 
-	Sprite[] mySprite = new Sprite[ 6 ];
+	//ノーマルの画像
+	[SerializeField] Sprite normalSprite = null;
 
-	//プレイヤースピード
-	[SerializeField, HeaderAttribute ("プレイヤー移動"), Range( 0f, 0.5f )] float playerSpeed_Normal;
+	/// <summary>
+	/// プレイヤーの移動スピード
+	/// </summary>
+	[SerializeField, Header ("プレイヤー移動"), Range( 0f, 0.5f )] float playerSpeed_Normal;
 
-	//プレイヤーの隠れ先ポジション
+	/// <summary>
+	/// プレイヤーの移動先ポジション
+	/// </summary>
 	Vector3 _nextPosition;
 
-	//右向いてるか
-	bool directionRight = false;
+	/// <summary>
+	/// 左右どちらを向いているか
+	/// </summary>
+	bool directionRight = true;
+
+	//小走りが始まるスティック傾斜範囲
+	[SerializeField, Range( 0, 1 )] float stickRunRange = 0.5f;
+
+	/*
+	 * Animation系変数
+	 */
 
 	//隠れるアニメーション再生フラグ
 	bool hideAnimation = false;
 
-	//隠れるボタンが押されたか
+	/*
+	 * HideButton確認系フラグ・モード
+	 */
+	 /// <summary>
+	 /// HideButtonが押されたか&箱隠れモード
+	 /// </summary>
 	bool hideButton = false;
 
-	//現在は隠れているか
+	/// <summary>
+	/// 箱隠れキャンセル
+	/// </summary>
+	bool hideBackCancelFlg = false;
+
+	/// <summary>
+	/// 変化モードが呼び出されたか
+	/// </summary>
+	bool disguiseFlg = false;
+
+	/// <summary>
+	/// 現在の隠れ状態
+	/// </summary>
 	bool nowHide = false;
 
-	//隠れるボタンのクールタイム
+	/// <summary>
+	/// HideButtonのクールタイム
+	/// </summary>
 	float hideWaitTime = 0f;
+
+	/// <summary>
+	/// HideButtonの長押しフレーム数
+	/// </summary>
+	float hidePushFrame = 0;
 
 	//瞬歩で移動できる距離
 	[SerializeField, Range( 0, 30f ) ] float momentaryRange = 0f;
 
-	//現在の階層
-	[SerializeField, Space( 10 )] int stair = 0;
+	/*
+	 * 変化系変数
+	 */
+	/// <summary>
+	/// 変化を使用しているときのモード( 0 = 使用していない, 1 = 初期化終了, 2 = 使用終了処理 )
+	/// </summary>
+	int disguiseMode = 0;
 
-	//小走りが始まるスティック傾斜範囲
-	[SerializeField, Range( 0, 1 )] float stickRunRange = 0.5f;
+	/// <summary>
+	/// 変化制限時間
+	/// </summary>
+	float disguiseTimeCount = 0f;
+
+	/// <summary>
+	/// 変化のタイムリミット
+	/// </summary>
+	[SerializeField, Range( 0f, 1.5f ), Header("変化制限時間")] float disguiceTimeLimit = 0f;
+
+	/// <summary>
+	/// 変化時画像
+	/// </summary>
+	[SerializeField] Sprite disguiseSprite = null;
+
+	/*
+	 * UnityEvent
+	 */
 
 	// Start is called before the first frame update
 	void Start()
     {
 		myRenderer = GetComponent<SpriteRenderer>();
+		nowSprite = normalSprite;
     }
 
     // Update is called once per frame
     void Update()
     {
-		//myRenderer.sprite = nowSprite;
-
 		//隠れるボタンの押離判定
 		HideStateVerify();
 
 		//アニメーションの再生
 		HideAnimator();
 
-		//キャラ画像の方向
-		SpriteDirect();
-
 		//瞬歩
 		MomentaryMove();
+
+		//変化
+		DisguiseMode();
 
 		//スプライトを管理
 		myRenderer.sprite = nowSprite;
@@ -75,7 +140,11 @@ public class FixPlayerScript : MonoBehaviour
 		//プレイヤーの移動
 		if( nowHide == false )
 		{
+			//プレイヤーの移動
 			MovePlayer();
+
+			//キャラ画像の方向
+			SpriteDirect();
 		}
 	}
 
@@ -89,17 +158,17 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( ( horizontal >= 0.1f && horizontal <= stickRunRange ) || ( horizontal <= -( 0.1f ) && horizontal >= -( stickRunRange ) ) )
 		{
-			GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 1, out nowSprite );
+			//GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 1, out nowSprite );
 			transform.Translate( horizontal * playerSpeed_Normal, 0f, 0f );
 		}
 		else if( horizontal > stickRunRange || horizontal < -( stickRunRange ) )
 		{
-			GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 1, out nowSprite );
+			//GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 1, out nowSprite );
 			transform.Translate( Math.Sign( horizontal ) * playerSpeed_Normal, 0f, 0f );
 		}
 		else
 		{
-			GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 0, out nowSprite );
+			//GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 0, out nowSprite );
 		}
 	}
 
@@ -108,16 +177,26 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void SpriteDirect()
 	{
+		//スティック
 		float horizonRaw = Input.GetAxisRaw( "Horizontal" );
+
 		if( horizonRaw < 0 )
 		{
-			myRenderer.flipX = false;
 			directionRight = false;
 		}
 		else if( horizonRaw > 0 )
 		{
-			myRenderer.flipX = true;
 			directionRight = true;
+		}
+		
+		//Spriteのflipを調整
+		if( directionRight == false )
+		{
+			myRenderer.flipX = false;
+		}
+		else if( directionRight == true )
+		{
+			myRenderer.flipX = true;
 		}
 	}
 
@@ -131,13 +210,38 @@ public class FixPlayerScript : MonoBehaviour
 			hideWaitTime += Time.deltaTime;
 		}
 
-		if( Input.GetButtonDown( "Hide" ) )
+		//隠れていない状態でHideButtonフラグを立てる
+		if( Input.GetButtonDown( "Hide" ) && nowHide == false )
 		{
 			hideButton = true;
 		}
+		//隠れている状態の解除
+		else if( Input.GetButtonDown( "Hide" ) && nowHide == true )
+		{
+			hideButton = true;
+			hideBackCancelFlg = true;
+		}
+		//UpしたときにhideButtonフラグを消す
 		else if( Input.GetButtonUp( "Hide" ) )
 		{
 			hideButton = false;
+			hideBackCancelFlg = false;
+		}
+
+		//一定フレーム押されていたら変化
+		if( Input.GetButton( "Hide" ) && hideButton == true && ( hidePushFrame += Time.deltaTime ) >= 0.7f )
+		{
+			hideButton = false;
+			disguiseFlg = true;
+			hidePushFrame = 0f;
+		}
+
+		//変化の解除
+		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 1 ) && Input.GetButtonDown( "Hide" ) )
+		{
+			disguiseFlg = true;
+			hideButton = false;
+			disguiseMode = 2;
 		}
 	}
 
@@ -150,11 +254,13 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( hideWaitTime > 1f )
 		{
+			//箱隠れ処理
 			if( collision.tag == "BackHideTrigger" && hideButton == true && nowHide == false )
 			{
 				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 3 );
 			}
-			else if( collision.tag == "BackHideTrigger" && hideButton == true && nowHide == true )
+			//箱隠れ解除処理
+			else if( collision.tag == "BackHideTrigger" && hideBackCancelFlg == true && nowHide == true )
 			{
 				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 0 );
 			}
@@ -174,6 +280,8 @@ public class FixPlayerScript : MonoBehaviour
 		hideWaitTime = 0f;
 		hideAnimation = true;
 		nowHide = !nowHide;
+		hideButton = false;
+		hideBackCancelFlg = false;
 	}
 
 	/// <summary>
@@ -201,14 +309,16 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void MomentaryMove()
 	{
-		float now = transform.position.x;
-		float x = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
 		if( Input.GetButtonDown( "Moove" ) )
 		{
 			StartCoroutine( "MomentaryMoveProcess" );
 		}
 	}
 
+	/// <summary>
+	/// 瞬歩(移動処理)
+	/// </summary>
+	/// <returns></returns>
 	IEnumerator MomentaryMoveProcess()
 	{
 		float now = transform.position.x;
@@ -236,4 +346,31 @@ public class FixPlayerScript : MonoBehaviour
 		yield return null;
 	}
 
+	/// <summary>
+	/// 変化の術
+	/// </summary>
+	void DisguiseMode()
+	{
+		//初期設定
+		if( disguiseMode == 0 && disguiseFlg == true )
+		{
+			nowSprite = disguiseSprite;
+			disguiseMode = 1;
+		}
+
+		//使用時処理
+		if( disguiseMode == 1 )
+		{
+			disguiseTimeCount += Time.deltaTime;
+		}
+
+		//使用終了
+		if( disguiseMode == 2 && disguiseFlg == true )
+		{
+			nowSprite = normalSprite;
+			disguiseMode = 0;
+			disguiseFlg = false;
+			disguiseTimeCount = 0f;
+		}
+	}
 }
