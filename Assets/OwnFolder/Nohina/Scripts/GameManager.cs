@@ -96,6 +96,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	}
 
 	/// <summary>
+	/// プレイヤーに攻撃が当たった時のフラグ
+	/// </summary>
+	public bool playerDeathFlg { set; get; } = false;
+
+	/// <summary>
 	/// 関数群
 	/// </summary>
 
@@ -144,6 +149,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 
 		return false;
+	}
+
+	private void Update()
+	{
+		
 	}
 
 }

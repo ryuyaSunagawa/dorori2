@@ -323,24 +323,38 @@ public class FixPlayerScript : MonoBehaviour
 	{
 		float now = transform.position.x;
 		float x = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+
+		double nowFloor = 1f;
+		double nextFloor = 0f;
+
 		if( directionRight == true )
 		{
 			Vector3 nextMovePosition = new Vector3( now + ( x * 4 ), transform.position.y, transform.position.z );
 
-			while( transform.position.x != nextMovePosition.x )
+			while( nowFloor != nextFloor )
 			{
 				transform.position = Vector2.MoveTowards( transform.position, nextMovePosition, 2 );
+
+				nowFloor = Math.Floor( transform.position.x * 1000 ) / 1000;
+				nextFloor = Math.Floor( nextMovePosition.x * 1000 ) / 1000;
+
 				yield return new WaitForSeconds( Time.deltaTime );
+				Debug.Log( nowFloor + ", " + nextFloor );
 			}
 		}
 		else if( directionRight == false )
 		{
 			Vector3 nextMovePosition = new Vector3( now - ( x * 4 ), transform.position.y, transform.position.z );
 
-			while( transform.position.x != nextMovePosition.x )
+			while( nowFloor != nextFloor )
 			{
 				transform.position = Vector2.MoveTowards( transform.position, nextMovePosition, 2 );
+
+				nowFloor = Math.Floor( transform.position.x * 1000 ) / 1000;
+				nextFloor = Math.Floor( nextMovePosition.x * 1000 ) / 1000;
+
 				yield return new WaitForSeconds( Time.deltaTime );
+				Debug.Log( nowFloor + ", " + nextFloor );
 			}
 		}
 		yield return null;
