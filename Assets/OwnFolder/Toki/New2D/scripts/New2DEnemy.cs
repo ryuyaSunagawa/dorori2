@@ -77,6 +77,12 @@ public class New2DEnemy : MonoBehaviour
 
     public bool attackflg = false;
 
+    private float atk_motion_time = 0.8f;
+
+    private float atk_motion_count = 0.0f;
+
+    public bool lets_attack = false;
+
     public bool walkflg = true;
 
     public bool runflg = false;
@@ -88,6 +94,8 @@ public class New2DEnemy : MonoBehaviour
     int layerMask;                                  //PlayerLayerをマスクに変化させたやつ入れ
 
     [SerializeField] GameObject Player;             //プレイヤー
+
+    [SerializeField] GameManager game_manager;
 
 
     // Start is called before the first frame update
@@ -187,11 +195,23 @@ public class New2DEnemy : MonoBehaviour
 
             if (hit.collider.name == "Player")
             {
-                if ((Vector2.Distance(hit.transform.position, transform.position)) < range1 || range_level == 1.5f || range_level == 2.5f)
+                if ((Vector2.Distance(hit.transform.position, transform.position)) < range1 || range_level == 1.5f || range_level == 2.5f || attackflg)
                 {
-                    
 
-                    if(direction && transform.position.x > hit.transform.position.x)
+                    if (attackflg)
+                    {
+                        atk_motion_count += Time.deltaTime;
+                        if (atk_motion_count >= atk_motion_time)
+                        {
+                            lets_attack = true;
+                        }
+                    }
+                    else
+                    {
+                        atk_motion_count = 0.0f;
+                        walkflg = true;
+                    }
+                    if (direction && transform.position.x > hit.transform.position.x)
                     {
                         find = true;
                     }
@@ -207,7 +227,13 @@ public class New2DEnemy : MonoBehaviour
                 }
                 else
                 {
-                    if(range_level == 3f)
+                    if(!attackflg)
+                    {
+                        atk_motion_count = 0.0f;
+                        walkflg = true;
+                    }
+
+                    if (range_level == 3f)
                     {
                         escape_playerx = hit.transform.position.x;
                         
@@ -238,10 +264,7 @@ public class New2DEnemy : MonoBehaviour
                     
                 }
             }
-            if(attackflg || range_level == 3)
-            {
-                attackflg = true;
-            }
+            
            
             
 
@@ -250,13 +273,16 @@ public class New2DEnemy : MonoBehaviour
                 //Debug.Log(Vector2.Distance(hit.transform.position, transform.position));
                 //Debug.Log(hit.distance);
 
-                if ((Vector2.Distance(hit.transform.position, transform.position)) < range3)
+                if ((Vector2.Distance(hit.transform.position, transform.position)) < range3 || attackflg)
                 {
                     range_level = 3f;
                 }
                 else if (range_level != 3f &&(Vector2.Distance(hit.transform.position, transform.position)) < range2)
                 {
-                    walkflg = true;
+                    if (!attackflg)
+                    {
+                        walkflg = true;
+                    }
                     reactioncount = 0.0f;
                     range_level = 2f;
                 }
@@ -272,18 +298,21 @@ public class New2DEnemy : MonoBehaviour
                 {
                     //range3
                     //侵入者じゃけぇ!!
-
-                    if (transform.position.x < hit.transform.position.x)
+                    if (!attackflg)
                     {
-                        rb.velocity = new Vector2(speed * 3.0f, rb.velocity.y);
-                    }
-                    else if (transform.position.x > hit.transform.position.x)
-                    {
-                        rb.velocity = new Vector2(-speed * 3.0f, rb.velocity.y);
+                        if (transform.position.x < hit.transform.position.x)
+                        {
+                            rb.velocity = new Vector2(speed * 3.0f, rb.velocity.y);
+                        }
+                        else if (transform.position.x > hit.transform.position.x)
+                        {
+                            rb.velocity = new Vector2(-speed * 3.0f, rb.velocity.y);
+                        }
                     }
 
                     if ((Vector2.Distance(hit.transform.position, transform.position)) < (start_range3))
                     {
+                        walkflg = false;
                         attackflg = true;
                     }
                 }
@@ -409,7 +438,6 @@ public class New2DEnemy : MonoBehaviour
                         walkflg = false;
                         if (range2 < start_range1)
                         {
-                            walkflg = true;
                             range2 += (5 * Time.deltaTime);
                         }
 

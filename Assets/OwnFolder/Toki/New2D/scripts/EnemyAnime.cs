@@ -85,7 +85,9 @@ public class EnemyAnime : MonoBehaviour
         {
             atk_flg = 0;
             atk_flm = 0;
-            //enemyscript.attackflg = false;
+            enemyscript.attackflg = false;
+            enemyscript.lets_attack = false;
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
         }
         if (atk_flg == 1)
             atk_flm++;

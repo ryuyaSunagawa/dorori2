@@ -20,14 +20,15 @@ public class EnemyTrigger : MonoBehaviour
         
     }
    
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         Debug.Log(Enemyscript.range_level);
         if(other.gameObject.layer == 13)
         {
-            if (Enemyscript.attackflg)
+            if (Enemyscript.lets_attack)
             {
                 Destroy(other.gameObject);
+                
             }
             
         }
