@@ -10,11 +10,20 @@ public class textchilldren : MonoBehaviour
 
     [SerializeField] private New2DEnemy script;
 
+    [SerializeField] private Sprite red_reaction;
+
+    [SerializeField] private Sprite red_question;
+
+    [SerializeField] private Sprite yellow_question;
+
+    SpriteRenderer reaction_renderer;
+
     private Text changetext;
 
     // Start is called before the first frame update
     void Start()
     {
+        reaction_renderer = GetComponent<SpriteRenderer>();
         changetext = GetComponent<Text>();
         changetext.fontSize = 35;
     }
@@ -28,32 +37,27 @@ public class textchilldren : MonoBehaviour
         {
             if (script.range_level == 3f)
             {
-                changetext.text = "!!";
-                changetext.color = Color.red;
+                reaction_renderer.sprite = red_reaction;
             }
             else if (script.r2_5flg || script.range_level == 2.5f)
             {
-                changetext.text = "!?";
-                changetext.color = Color.red;
+                reaction_renderer.sprite = red_reaction;
             }
             else if (script.range_level == 2f)
             {
-                changetext.text = "!?";
-                changetext.color = Color.yellow;
+                reaction_renderer.sprite = red_question;
             }
             else if(script.range_level == 1.5f)
             {
-                changetext.text = "?";
-                changetext.color = Color.red;
+                reaction_renderer.sprite = red_question;
             }
             else if (script.range_level == 1f)
             {
-                changetext.text = "?";
-                changetext.color = Color.yellow;
+                reaction_renderer.sprite = yellow_question;
             }
             else
             {
-                changetext.text = "";
+                reaction_renderer.sprite = null;
             }
         }
         else

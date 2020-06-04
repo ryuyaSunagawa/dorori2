@@ -52,7 +52,7 @@ public class New2DEnemy : MonoBehaviour
     Ray2D ray;                                      //敵のレイ
     RaycastHit2D hit;                               //レイが当たった奴の保存箱
 
-    public bool find = false;                      //プレイヤーを見つけたかフラグ
+    [HideInInspector]public bool find = false;                      //プレイヤーを見つけたかフラグ
 
     [SerializeField] private float range1 = 14.0f;　//敵の発見段階lv1の距離 (？マークを出してゆっくり近づく)
     [SerializeField] private float range2 = 10.0f;  //敵の発見段階lv2の距離 (!?マークを出してすごい形相で追っかける)
@@ -63,9 +63,9 @@ public class New2DEnemy : MonoBehaviour
     private float start_range3;                     //range3の初期値が入ってるよ
 
 
-    public float range_level = 0;                   //プレイヤーの発見段階
+    [HideInInspector]public float range_level = 0;                   //プレイヤーの発見段階
 
-    public bool r2_5flg = false;                    //rangelevel2.5になったらrange2の距離を常時広がってる状況にするためのフラグ
+    [HideInInspector]public bool r2_5flg = false;                    //rangelevel2.5になったらrange2の距離を常時広がってる状況にするためのフラグ
 
     private float escape_playerx = 0.0f;                //プレイヤーが視界から脱出したときに座標を保存するとこ
 
@@ -75,17 +75,17 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    public bool attackflg = false;
+    [HideInInspector]public bool attackflg = false;
 
     private float atk_motion_time = 0.8f;
 
     private float atk_motion_count = 0.0f;
 
-    public bool lets_attack = false;
+    [HideInInspector]public bool lets_attack = false;
 
-    public bool walkflg = true;
+    [HideInInspector]public bool walkflg = true;
 
-    public bool runflg = false;
+    [HideInInspector]public bool runflg = false;
 
     private float enemy_size_x;                     //敵の初期サイズX
     private float enemy_size_y;                     //敵の初期サイズY
@@ -95,7 +95,7 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] GameObject Player;             //プレイヤー
 
-    [SerializeField] GameManager game_manager;
+    [SerializeField] public GameManager game_manager;
 
 
     // Start is called before the first frame update
@@ -200,6 +200,7 @@ public class New2DEnemy : MonoBehaviour
 
                     if (attackflg)
                     {
+                        walkflg = false;
                         atk_motion_count += Time.deltaTime;
                         if (atk_motion_count >= atk_motion_time)
                         {
@@ -447,6 +448,8 @@ public class New2DEnemy : MonoBehaviour
             }
             
         }
+
+        Debug.Log(game_manager.playerDeathFlg);
         
 		///<summary>
 		///投げ待ち時にパトロールを止める
