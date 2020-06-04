@@ -40,6 +40,11 @@ public class FixPlayerScript : MonoBehaviour
 	[SerializeField, Range( 0, 1 )] float stickRunRange = 0.5f;
 
 	/*
+	 * 攻撃系変数
+	 */
+	BoxCollider2D[] b2d = new BoxCollider2D[ 2 ];
+		
+	/*
 	 * Animation系変数
 	 */
 
@@ -78,6 +83,8 @@ public class FixPlayerScript : MonoBehaviour
 	/// HideButtonの長押しフレーム数
 	/// </summary>
 	float hidePushFrame = 0;
+
+	bool attackFlg = false;
 
 	/*
 	 * 瞬歩系変数
@@ -119,6 +126,8 @@ public class FixPlayerScript : MonoBehaviour
     {
 		myRenderer = GetComponent<SpriteRenderer>();
 		nowSprite = normalSprite;
+
+		b2d = GetComponents<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -135,6 +144,9 @@ public class FixPlayerScript : MonoBehaviour
 
 		//変化
 		DisguiseMode();
+
+		//攻撃
+		AttackProcess();
 
 		//死んだとき
 		if( GameManager.Instance.playerDeathFlg )
@@ -269,14 +281,31 @@ public class FixPlayerScript : MonoBehaviour
 			if( collision.tag == "BackHideTrigger" && hideButton == true && nowHide == false )
 			{
 				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 3 );
+				gameObject.layer = 15;
+				GameManager.Instance.playerHideFlg = true;
 			}
 			//箱隠れ解除処理
 			else if( collision.tag == "BackHideTrigger" && hideBackCancelFlg == true && nowHide == true )
 			{
 				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 0 );
+				GameManager.Instance.playerHideFlg = true;
+				gameObject.layer = 13;
 			}
 		}
 
+		if( collision.tag == "Enemy" )
+		{
+			attackFlg = true;
+		}
+
+	}
+
+	private void OnTriggerExit2D( Collider2D collision )
+	{
+		if( collision.tag == "Enemy" )
+		{
+			attackFlg = false;
+		}
 	}
 
 	/// <summary>
@@ -408,6 +437,17 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			Destroy( this.gameObject );
 			GameManager.Instance.playerDeathFlg = false;
+		}
+	}
+
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void AttackProcess()
+	{
+		if( attackFlg == true && Input.GetButtonDown( "Touch" ) )
+		{
+			Destroy( GameManager.Instance.getenemyObj.gameObject );
 		}
 	}
 }
