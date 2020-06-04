@@ -29,7 +29,6 @@ public class EnemyTrigger : MonoBehaviour
             {
                 //Destroy(other.gameObject);
                 Enemyscript.game_manager.playerDeathFlg = true;
-                
             }
             
         }
