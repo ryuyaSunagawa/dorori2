@@ -87,6 +87,8 @@ public class New2DEnemy : MonoBehaviour
 
     [HideInInspector]public bool runflg = false;
 
+    [HideInInspector] public bool angflg = false;
+
     private float enemy_size_x;                     //敵の初期サイズX
     private float enemy_size_y;                     //敵の初期サイズY
 
@@ -94,6 +96,8 @@ public class New2DEnemy : MonoBehaviour
     int layerMask;                                  //PlayerLayerをマスクに変化させたやつ入れ
 
     [SerializeField] GameObject Player;             //プレイヤー
+
+    private FixPlayerScript P_script;
 
     [SerializeField] public GameManager game_manager;
 
@@ -118,6 +122,8 @@ public class New2DEnemy : MonoBehaviour
         range1 = start_range1;
         range2 = start_range2;
         range3 = start_range3;
+
+        P_script = Player.GetComponent<FixPlayerScript>();
 
     }
 
@@ -432,11 +438,11 @@ public class New2DEnemy : MonoBehaviour
                     //range1
                     //ん？、何かいね？
                     //ピンク
-                    
+                    walkflg = false;
                     reactioncount += Time.deltaTime;
                     if (reaction <= reactioncount)
                     {
-                        walkflg = false;
+                        
                         if (range2 < start_range1)
                         {
                             range2 += (5 * Time.deltaTime);

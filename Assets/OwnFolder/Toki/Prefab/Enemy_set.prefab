@@ -216,7 +216,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3233039390595448054}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.87, y: 6.84, z: 0}
+  m_LocalPosition: {x: 0.87, y: 6.84, z: -10.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 168529390838106643}
@@ -457,7 +457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Enemyscript: {fileID: 8391389297752971476}
---- !u!114 &7782304806797639712
+--- !u!114 &6872013145299734827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -466,18 +466,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 8391389297752971472}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66472bcd0906eda408138c826c67bdea, type: 3}
+  m_Script: {fileID: 11500000, guid: 497dabd1fa012294db1e3a6a3098f2da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nowSprite: {fileID: 0}
   normalSprite: {fileID: 21300000, guid: c19171cefe1db6f478791d1d782b1608, type: 3}
   attacked:
+  - {fileID: 21300000, guid: 935c65271afc11947a7f2979f3743277, type: 3}
+  - {fileID: 21300000, guid: 0b4a58547b9517b448da4285467f74d7, type: 3}
+  - {fileID: 21300000, guid: 7ab0f7c8303ecbd469906900ca73dbbe, type: 3}
   - {fileID: 21300000, guid: b3805a7eb12a2f147bc681fc4726320f, type: 3}
+  - {fileID: 21300000, guid: 95f621d73fb09da4ea7a722fe294babd, type: 3}
   - {fileID: 21300000, guid: 546b4a2ff9c15634a805d64e866a1a7e, type: 3}
   - {fileID: 21300000, guid: 8c21aa78b1cf52046a70ad22929b6a93, type: 3}
+  - {fileID: 21300000, guid: 1f197ce2c8a5a614b9f63bee552265dd, type: 3}
   - {fileID: 21300000, guid: db943d6986b2e364baa9ba0181d6c7e8, type: 3}
   - {fileID: 21300000, guid: f7e0c0c79a4d2284992910d3f4217a7b, type: 3}
   - {fileID: 21300000, guid: 4daf192c59150e94b991371c2f89ce36, type: 3}
+  - {fileID: 21300000, guid: eb231f21fd5b3064d9f7c1088e27041f, type: 3}
+  - {fileID: 21300000, guid: 076b03aede571ae4daa374109f75f3cb, type: 3}
+  - {fileID: 21300000, guid: dc30a76baa3fc654ba5827259e2b9784, type: 3}
+  - {fileID: 21300000, guid: 796389b57e5441c4c8bf1dde5dcf8e33, type: 3}
+  - {fileID: 21300000, guid: 1df1c82fdd5d95842b2acadad57aca2c, type: 3}
+  - {fileID: 21300000, guid: a2aa3c240146f96479166af8bcd03783, type: 3}
+  - {fileID: 21300000, guid: b57e7e0d1447cd3488512d24754141ba, type: 3}
+  - {fileID: 21300000, guid: 9f10adcf71b2eb5489fb497ddce15304, type: 3}
   walked:
   - {fileID: 21300000, guid: c19171cefe1db6f478791d1d782b1608, type: 3}
   - {fileID: 21300000, guid: 5c836b2c66bc5cd4686dd1099b5a45f1, type: 3}
@@ -486,16 +499,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c1f69d66310e2134b84c40a4e40fca2b, type: 3}
   - {fileID: 21300000, guid: 5338452e3a2056143b17f54ce781e8f3, type: 3}
   - {fileID: 21300000, guid: 1ebeb3c1caed6bc41a95a442be0cae7c, type: 3}
-  - {fileID: 21300000, guid: 5338452e3a2056143b17f54ce781e8f3, type: 3}
-  run:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  angry:
+  - {fileID: 21300000, guid: 9d0a950666564c54182bfa5b7b0e10fa, type: 3}
+  - {fileID: 21300000, guid: 566f5ae1bb4fa8a448ade51b05154c6f, type: 3}
+  - {fileID: 21300000, guid: 566f5ae1bb4fa8a448ade51b05154c6f, type: 3}
+  - {fileID: 21300000, guid: 56ecf4801e7fb5c45bc4d9fab64588c8, type: 3}
+  - {fileID: 21300000, guid: 26cf542a77a799c419b9334c9db8d8fa, type: 3}
+  - {fileID: 21300000, guid: 3060984ab36c9f141aafa07b7492b9b7, type: 3}
+  - {fileID: 21300000, guid: 5be4a5d19ac2ced47aa9724b1da22bdc, type: 3}
 --- !u!1001 &168529392169195255
 PrefabInstance:
   m_ObjectHideFlags: 0

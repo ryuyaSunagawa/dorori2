@@ -24,14 +24,12 @@ public class textchilldren : MonoBehaviour
     void Start()
     {
         reaction_renderer = GetComponent<SpriteRenderer>();
-        changetext = GetComponent<Text>();
-        changetext.fontSize = 35;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector2(enemy.transform.position.x, enemy.transform.position.y + 2);
+        transform.position = new Vector2(enemy.transform.position.x, enemy.transform.position.y + 4);
 
         if(script._poisonState != 3)
         {
