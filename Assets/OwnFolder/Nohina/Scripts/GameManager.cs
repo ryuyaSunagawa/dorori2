@@ -106,6 +106,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	public int playerDeathNum { set; get; } = 0;
 
 	/// <summary>
+	/// プレイヤーが隠れ状態かどうか
+	/// </summary>
+	public bool playerHideFlg { set; get; } = false;
+
+	/// <summary>
 	/// 関数群
 	/// </summary>
 
