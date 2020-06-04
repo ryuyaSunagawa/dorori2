@@ -6073,23 +6073,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nowSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
   normalSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
-  attacked:
+  attackSprite:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  walked:
-  - {fileID: 21300000, guid: 18fc6a6fda455f541a2806041cd51a93, type: 3}
-  - {fileID: 21300000, guid: 1d4c1426a9e8cd04aa40964e7a753f1f, type: 3}
-  - {fileID: 21300000, guid: 931ab22c49c1e0847b42e77bc2dc719d, type: 3}
-  - {fileID: 21300000, guid: a7316fcaf590d594aaa30a448d06401e, type: 3}
-  - {fileID: 21300000, guid: 809628c1c589e9847a641f720dc58f7d, type: 3}
-  - {fileID: 21300000, guid: a7316fcaf590d594aaa30a448d06401e, type: 3}
-  - {fileID: 21300000, guid: 931ab22c49c1e0847b42e77bc2dc719d, type: 3}
-  - {fileID: 21300000, guid: 1d4c1426a9e8cd04aa40964e7a753f1f, type: 3}
-  run:
+  walkSprite:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  runSprite:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -6769,10 +6769,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1994425433}
+  - component: {fileID: 1994425430}
   - component: {fileID: 1994425432}
   - component: {fileID: 1994425431}
   - component: {fileID: 1994425429}
-  - component: {fileID: 1994425430}
+  - component: {fileID: 1994425434}
   m_Layer: 13
   m_Name: Player
   m_TagString: Untagged
@@ -6907,3 +6908,42 @@ Transform:
   m_Father: {fileID: 1850507475}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1994425434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994425428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc01db452bd271344b4c61b0a2b79931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nowSprite: {fileID: 0}
+  normalSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
+  attackSprite:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  walkSprite:
+  - {fileID: 21300000, guid: 18fc6a6fda455f541a2806041cd51a93, type: 3}
+  - {fileID: 21300000, guid: 1d4c1426a9e8cd04aa40964e7a753f1f, type: 3}
+  - {fileID: 21300000, guid: 931ab22c49c1e0847b42e77bc2dc719d, type: 3}
+  - {fileID: 21300000, guid: a7316fcaf590d594aaa30a448d06401e, type: 3}
+  - {fileID: 21300000, guid: 809628c1c589e9847a641f720dc58f7d, type: 3}
+  - {fileID: 21300000, guid: a7316fcaf590d594aaa30a448d06401e, type: 3}
+  - {fileID: 21300000, guid: 931ab22c49c1e0847b42e77bc2dc719d, type: 3}
+  - {fileID: 21300000, guid: 1d4c1426a9e8cd04aa40964e7a753f1f, type: 3}
+  runSprite:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

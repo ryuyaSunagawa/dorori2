@@ -2,35 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationController : MonoBehaviour
+public class PlayerAnimationScript : MonoBehaviour
 {
 	int atk_flm = 0;
 	int atk_flg = 0;
 	int wlk_flm = 0;
 	int wlk_flg = 0;
-    int runSprite_flm = 0;
-    int runSprite_flg = 0;
+	int runSprite_flm = 0;
+	int runSprite_flg = 0;
 
-    [SerializeField] Sprite nowSprite = null;
+	/// <summary>
+	/// 現在のスプライト
+	/// </summary>
+	[SerializeField] Sprite nowSprite = null;
 
+	/// <summary>
+	/// ノーマル(立ち絵)のスプライト
+	/// </summary>
 	[SerializeField] Sprite normalSprite = null;
 
-    [SerializeField] Sprite[] attackSprite = new Sprite[6];
-	[SerializeField] Sprite[] walkSprite = new Sprite[8];
-    [SerializeField] Sprite[] runSprite = new Sprite[8];
+	[SerializeField, Header( "攻撃アニメーション" )] Sprite[] attackSprite = new Sprite[6];
+	[SerializeField, Header( "歩行アニメーション" )] Sprite[] walkSprite = new Sprite[8];
+	[SerializeField, Header( "走行アニメーション" )] Sprite[] runSprite = new Sprite[8];
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+	/// <summary>
+	/// プレイヤーのアタックアニメーション
+	/// </summary>
 	public void Attack()
 	{
 		if( Input.GetKeyDown( KeyCode.Space ) )
@@ -71,11 +68,11 @@ public class AnimationController : MonoBehaviour
 		Debug.Log( atk_flm );
 	}
 
-
 	/// <summary>
-	/// 歩くアニメーション
+	/// プレイヤー歩行アニメーション
 	/// </summary>
-	/// <param name="useComp">使用するときに1、使用し終わったら0を代入</param>
+	/// <param name="useComp">使用中か</param>
+	/// <param name="walkSpriteSprite">代入するSprite変数</param>
 	public void Walk( int useComp, out Sprite walkSpriteSprite )
 	{
 		wlk_flg = useComp;
@@ -130,61 +127,66 @@ public class AnimationController : MonoBehaviour
 		walkSpriteSprite = nowSprite;
 	}
 
-    public void Run(int useComp, out Sprite runSpriteSprite)
-    {
-        runSprite_flg = useComp;
+	/// <summary>
+	/// プレイヤー走行アニメーション
+	/// </summary>
+	/// <param name="useComp">使用中であれば1</param>
+	/// <param name="runSpriteSprite">代入するスプライト変数</param>
+	public void Run( int useComp, out Sprite runSpriteSprite )
+	{
+		runSprite_flg = useComp;
 
-        if (runSprite_flm == 0 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[0];
-        }
-        else if (runSprite_flm == 6 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[1];
-        }
-        else if (runSprite_flm == 12 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[2];
-        }
-        else if (runSprite_flm == 18 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[3];
-        }
-        else if (runSprite_flm == 24 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[4];
-        }
-        else if (runSprite_flm == 30 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[5];
-        }
-        else if (runSprite_flm == 36 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[6];
-        }
-        else if (runSprite_flm == 42 && runSprite_flg == 1)
-        {
-            nowSprite = runSprite[7];
-        }
-        else if (runSprite_flm == 60 && runSprite_flg == 1)
-        {
+		if( runSprite_flm == 0 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 0 ];
+		}
+		else if( runSprite_flm == 6 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 1 ];
+		}
+		else if( runSprite_flm == 12 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 2 ];
+		}
+		else if( runSprite_flm == 18 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 3 ];
+		}
+		else if( runSprite_flm == 24 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 4 ];
+		}
+		else if( runSprite_flm == 30 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 5 ];
+		}
+		else if( runSprite_flm == 36 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 6 ];
+		}
+		else if( runSprite_flm == 42 && runSprite_flg == 1 )
+		{
+			nowSprite = runSprite[ 7 ];
+		}
+		else if( runSprite_flm == 60 && runSprite_flg == 1 )
+		{
 
-            runSprite_flm = -1;
-        }
-        else if (runSprite_flg == 0)
-        {
+			runSprite_flm = -1;
+		}
+		else if( runSprite_flg == 0 )
+		{
 
-            runSprite_flm = -1;
-            nowSprite = normalSprite;
-        }
+			runSprite_flm = -1;
+			nowSprite = normalSprite;
+		}
 
-        if (runSprite_flg == 1)
-            runSprite_flm++;
+		if( runSprite_flg == 1 )
+			runSprite_flm++;
 
 
-        runSpriteSprite = nowSprite;
+		runSpriteSprite = nowSprite;
 
-        Debug.Log(runSprite_flm);
+		Debug.Log( runSprite_flm );
 
-    }
+	}
 }

@@ -169,17 +169,17 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( ( horizontal >= 0.1f && horizontal <= stickRunRange ) || ( horizontal <= -( 0.1f ) && horizontal >= -( stickRunRange ) ) )
 		{
-			//GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 1, out nowSprite );
+			GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			transform.Translate( horizontal * playerSpeed_Normal, 0f, 0f );
 		}
 		else if( horizontal > stickRunRange || horizontal < -( stickRunRange ) )
 		{
-			//GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 1, out nowSprite );
+			GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			transform.Translate( Math.Sign( horizontal ) * playerSpeed_Normal, 0f, 0f );
 		}
 		else
 		{
-			//GameManager.Instance.AnimationController.GetComponent<AnimationController>().Walk( 0, out nowSprite );
+			GetComponent<PlayerAnimationScript>().Walk( 0, out nowSprite );
 		}
 	}
 
