@@ -27,8 +27,8 @@ public class EnemyTrigger : MonoBehaviour
         {
             if (Enemyscript.lets_attack)
             {
-                //Destroy(other.gameObject);
-                Enemyscript.game_manager.playerDeathFlg = true;
+                
+                GameManager.Instance.playerDeathFlg = true;
             }
             
         }

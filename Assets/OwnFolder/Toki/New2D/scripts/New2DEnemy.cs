@@ -101,6 +101,10 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] public GameManager game_manager;
 
+    [SerializeField] private bool Hide_past = false;        //1フレーム前のhideflg（現在のhideflgと前のhideflgを比べて隠れたタイミングをとらえる）
+
+    [SerializeField] private bool Hide_Timeng = true;      //発見された状態で隠れたか、その前に隠れていたか
+
 
     // Start is called before the first frame update
     void Start()
@@ -201,6 +205,9 @@ public class New2DEnemy : MonoBehaviour
 
             if (hit.collider.name == "Player")
             {
+
+               
+                //プレイヤーがrange1内にいるまたは、ranelevelが1.5または、rangelevelが2.5fまたは、敵が攻撃動作にはいってる
                 if ((Vector2.Distance(hit.transform.position, transform.position)) < range1 || range_level == 1.5f || range_level == 2.5f || attackflg)
                 {
 
@@ -218,6 +225,8 @@ public class New2DEnemy : MonoBehaviour
                         atk_motion_count = 0.0f;
                         walkflg = true;
                     }
+                    
+                    
                     if (direction && transform.position.x > hit.transform.position.x)
                     {
                         find = true;
@@ -231,6 +240,8 @@ public class New2DEnemy : MonoBehaviour
                         find = false;
                         range_level = 0;
                     }
+
+                    
                 }
                 else
                 {
@@ -271,9 +282,25 @@ public class New2DEnemy : MonoBehaviour
                     
                 }
             }
-            
-           
-            
+
+            if (GameManager.Instance.playerHideFlg)
+            {
+                HideTimingCheck();
+
+                if(Hide_Timeng)
+                {
+                    find = false;
+                }
+
+            }
+            else
+            {
+                Hide_past = false;
+                Hide_Timeng = true;
+            }
+
+
+
 
             if (find)
             {
@@ -532,6 +559,30 @@ public class New2DEnemy : MonoBehaviour
 
 			}
 		}
+
+        //hideflgがfalseの時、アップデートが終わるときに現在のhideflgを保存しておく
+        
+            
+    }
+
+    /// <summary>
+    /// プレイヤーが隠れたタイミングをチェックする
+    /// </summary>
+    private void HideTimingCheck()
+    {
+        if(!Hide_past)
+        {
+            if(range_level <= 1.5f)
+            {
+                Hide_Timeng = true;
+            }
+            else
+            {
+                Hide_Timeng = false;
+            }
+        }
+
+        Hide_past = GameManager.Instance.playerHideFlg;
     }
 
 	private void OnCollisionEnter2D( Collision2D collision )
