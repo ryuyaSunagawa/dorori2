@@ -79,8 +79,13 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	float hidePushFrame = 0;
 
-	//瞬歩で移動できる距離
-	[SerializeField, Range( 0, 30f ) ] float momentaryRange = 0f;
+	/*
+	 * 瞬歩系変数
+	 */
+	/// <summary>
+	/// 瞬歩のレンジ
+	/// </summary>
+	[SerializeField, Range( 0, 30f ) ] float moveDelta = 2f;
 
 	/*
 	 * 変化系変数
@@ -130,6 +135,12 @@ public class FixPlayerScript : MonoBehaviour
 
 		//変化
 		DisguiseMode();
+
+		//死んだとき
+		if( GameManager.Instance.playerDeathFlg )
+		{
+			DeathProcess();
+		}
 
 		//スプライトを管理
 		myRenderer.sprite = nowSprite;
@@ -333,7 +344,7 @@ public class FixPlayerScript : MonoBehaviour
 
 			while( nowFloor != nextFloor )
 			{
-				transform.position = Vector2.MoveTowards( transform.position, nextMovePosition, 2 );
+				transform.position = Vector2.MoveTowards( transform.position, nextMovePosition, moveDelta );
 
 				nowFloor = Math.Floor( transform.position.x * 1000 ) / 1000;
 				nextFloor = Math.Floor( nextMovePosition.x * 1000 ) / 1000;
@@ -348,7 +359,7 @@ public class FixPlayerScript : MonoBehaviour
 
 			while( nowFloor != nextFloor )
 			{
-				transform.position = Vector2.MoveTowards( transform.position, nextMovePosition, 2 );
+				transform.position = Vector2.MoveTowards( transform.position, nextMovePosition, moveDelta );
 
 				nowFloor = Math.Floor( transform.position.x * 1000 ) / 1000;
 				nextFloor = Math.Floor( nextMovePosition.x * 1000 ) / 1000;
@@ -385,6 +396,18 @@ public class FixPlayerScript : MonoBehaviour
 			disguiseMode = 0;
 			disguiseFlg = false;
 			disguiseTimeCount = 0f;
+		}
+	}
+
+	/// <summary>
+	/// 死んだときの処理
+	/// </summary>
+	void DeathProcess()
+	{
+		if( GameManager.Instance.playerDeathNum++ >= 3 )
+		{
+			Destroy( this.gameObject );
+			GameManager.Instance.playerDeathFlg = false;
 		}
 	}
 }

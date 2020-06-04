@@ -101,6 +101,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	public bool playerDeathFlg { set; get; } = false;
 
 	/// <summary>
+	/// プレイヤーの残機数
+	/// </summary>
+	public int playerDeathNum { set; get; } = 0;
+
+	/// <summary>
 	/// 関数群
 	/// </summary>
 
