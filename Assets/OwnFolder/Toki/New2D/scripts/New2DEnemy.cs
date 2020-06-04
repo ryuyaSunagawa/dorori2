@@ -106,8 +106,8 @@ public class New2DEnemy : MonoBehaviour
     [SerializeField] private bool Hide_Timeng = true;      //発見された状態で隠れたか、その前に隠れていたか
 
 
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
         
         layernum = LayerMask.NameToLayer("PlayerLayer");
