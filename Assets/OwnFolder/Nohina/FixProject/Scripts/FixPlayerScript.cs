@@ -181,17 +181,40 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( ( horizontal >= 0.1f && horizontal <= stickRunRange ) || ( horizontal <= -( 0.1f ) && horizontal >= -( stickRunRange ) ) )
 		{
-			GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
+			if( disguiseMode == 0 )
+			{
+				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
+			}
+			else if( disguiseMode == 1 )
+			{
+				nowSprite = disguiseSprite;
+			}
+
 			transform.Translate( horizontal * playerSpeed_Normal, 0f, 0f );
 		}
 		else if( horizontal > stickRunRange || horizontal < -( stickRunRange ) )
 		{
-			GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
+			if( disguiseMode == 0 )
+			{
+				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
+			}
+			else if( disguiseMode == 1 )
+			{
+				nowSprite = disguiseSprite;
+			}
+
 			transform.Translate( Math.Sign( horizontal ) * playerSpeed_Normal, 0f, 0f );
 		}
 		else
 		{
-			GetComponent<PlayerAnimationScript>().Walk( 0, out nowSprite );
+			if( disguiseMode == 0 )
+			{
+				GetComponent<PlayerAnimationScript>().Walk( 0, out nowSprite );
+			}
+			else if( disguiseMode == 1 )
+			{
+				nowSprite = disguiseSprite;
+			}
 		}
 	}
 
@@ -254,13 +277,13 @@ public class FixPlayerScript : MonoBehaviour
 		//一定フレーム押されていたら変化
 		if( Input.GetButton( "Hide" ) && hideButton == true && ( hidePushFrame += Time.deltaTime ) >= 0.7f )
 		{
-			hideButton = false;
 			disguiseFlg = true;
+			hideButton = false;
 			hidePushFrame = 0f;
 		}
 
 		//変化の解除
-		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 1 ) && Input.GetButtonDown( "Hide" ) )
+		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 1 ) && ( Input.GetButtonDown( "Hide" ) || Input.GetButtonDown( "Hide" ) ) )
 		{
 			disguiseFlg = true;
 			hideButton = false;
@@ -288,7 +311,7 @@ public class FixPlayerScript : MonoBehaviour
 			else if( collision.tag == "BackHideTrigger" && hideBackCancelFlg == true && nowHide == true )
 			{
 				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 0 );
-				GameManager.Instance.playerHideFlg = true;
+				GameManager.Instance.playerHideFlg = false;
 				gameObject.layer = 13;
 			}
 		}
