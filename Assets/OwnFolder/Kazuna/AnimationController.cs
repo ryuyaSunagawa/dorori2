@@ -68,7 +68,6 @@ public class AnimationController : MonoBehaviour
 		}
 		if( atk_flg == 1 )
 			atk_flm++;
-		Debug.Log( atk_flm );
 	}
 
 
@@ -128,8 +127,6 @@ public class AnimationController : MonoBehaviour
 
 
 		walkSprite = nowSprite;
-
-		Debug.Log( wlk_flm );
 	}
 
     public void Run(int useComp, out Sprite runSprite)
@@ -185,8 +182,5 @@ public class AnimationController : MonoBehaviour
 
 
         runSprite = nowSprite;
-
-        Debug.Log(run_flm);
-
     }
 }
