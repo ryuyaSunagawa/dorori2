@@ -431,7 +431,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.067669496, y: -1.2751482}
+  m_Offset: {x: 0.08886606, y: -1.2751482}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -442,7 +442,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.27863613, y: 0.5280142}
+  m_Size: {x: 0.236243, y: 0.5280142}
   m_EdgeRadius: 0
 --- !u!114 &8652057204542021561
 MonoBehaviour:
@@ -507,6 +507,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 26cf542a77a799c419b9334c9db8d8fa, type: 3}
   - {fileID: 21300000, guid: 3060984ab36c9f141aafa07b7492b9b7, type: 3}
   - {fileID: 21300000, guid: 5be4a5d19ac2ced47aa9724b1da22bdc, type: 3}
+  suspiciousSprite: {fileID: 21300000, guid: 64d29d3a815793a4e8f41e1e8bafdb50, type: 3}
 --- !u!1001 &168529392169195255
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -563,7 +564,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c19171cefe1db6f478791d1d782b1608,
+      objectReference: {fileID: 21300000, guid: 9d0a950666564c54182bfa5b7b0e10fa,
         type: 3}
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
@@ -750,6 +751,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245148, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: m_LinearDrag
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8512516389048878608, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}

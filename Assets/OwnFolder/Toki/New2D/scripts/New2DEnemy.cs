@@ -77,9 +77,9 @@ public class New2DEnemy : MonoBehaviour
 
     [HideInInspector]public bool attackflg = false;
 
-    private float atk_motion_time = 0.8f;
+    //[HideInInspector]public float atk_motion_time = 0.6f;
 
-    private float atk_motion_count = 0.0f;
+    //private float atk_motion_count = 0.0f;
 
     [HideInInspector]public bool lets_attack = false;
 
@@ -105,6 +105,7 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] private bool Hide_Timeng = true;      //発見された状態で隠れたか、その前に隠れていたか
 
+    [HideInInspector] public bool suspicious = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -214,15 +215,15 @@ public class New2DEnemy : MonoBehaviour
                     if (attackflg)
                     {
                         walkflg = false;
-                        atk_motion_count += Time.deltaTime;
-                        if (atk_motion_count >= atk_motion_time)
+                        //atk_motion_count += Time.deltaTime;
+                        /*if (atk_motion_count >= atk_motion_time)
                         {
                             lets_attack = true;
-                        }
+                        }*/
                     }
                     else
                     {
-                        atk_motion_count = 0.0f;
+                        //atk_motion_count = 0.0f;
                         walkflg = true;
                     }
                     
@@ -247,7 +248,7 @@ public class New2DEnemy : MonoBehaviour
                 {
                     if(!attackflg)
                     {
-                        atk_motion_count = 0.0f;
+                        //atk_motion_count = 0.0f;
                         walkflg = true;
                     }
 
@@ -275,6 +276,7 @@ public class New2DEnemy : MonoBehaviour
                     }
                     else
                     {
+                        suspicious = false;
                         find = false;
                         range_level = 0;
                         reactioncount = 0.0f;
@@ -290,6 +292,7 @@ public class New2DEnemy : MonoBehaviour
                 if(Hide_Timeng)
                 {
                     find = false;
+                    range_level = 0;
                 }
 
             }
@@ -317,6 +320,7 @@ public class New2DEnemy : MonoBehaviour
                     {
                         walkflg = true;
                     }
+                    suspicious = false;
                     reactioncount = 0.0f;
                     range_level = 2f;
                 }
@@ -344,7 +348,7 @@ public class New2DEnemy : MonoBehaviour
                         }
                     }
 
-                    if ((Vector2.Distance(hit.transform.position, transform.position)) < (start_range3))
+                    if ((Vector2.Distance(hit.transform.position, transform.position)) < (start_range3 / 1.5))
                     {
                         walkflg = false;
                         attackflg = true;
@@ -385,13 +389,16 @@ public class New2DEnemy : MonoBehaviour
                             }
                         }
                     }
-                    else if (transform.position.x < escape_playerx)
-                    {
-                        rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
-                    }
-                    else if (transform.position.x > escape_playerx)
-                    {
-                        rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                    else if(!attackflg)
+                    { 
+                        if (transform.position.x < escape_playerx)
+                        {
+                            rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
+                        }
+                        else if (transform.position.x > escape_playerx)
+                        {
+                            rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                        }
                     }
                 }
                 else if (range_level == 2)
@@ -408,13 +415,16 @@ public class New2DEnemy : MonoBehaviour
                     }
 
                     //プレイヤーの方向に進む//
-                    if (transform.position.x < hit.transform.position.x)
+                    if (!attackflg)
                     {
-                        rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
-                    }
-                    else if (transform.position.x > hit.transform.position.x)
-                    {
-                        rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                        if (transform.position.x < hit.transform.position.x)
+                        {
+                            rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
+                        }
+                        else if (transform.position.x > hit.transform.position.x)
+                        {
+                            rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                        }
                     }
 
                 }
@@ -448,13 +458,16 @@ public class New2DEnemy : MonoBehaviour
                             
                         }
                     }
-                    else if (transform.position.x < escape_playerx)
-                    {
-                        rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
-                    }
-                    else if (transform.position.x > escape_playerx)
-                    {
-                        rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                    else if (!attackflg)
+                    { 
+                        if (transform.position.x < escape_playerx)
+                        {
+                            rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
+                        }
+                        else if (transform.position.x > escape_playerx)
+                        {
+                            rb.velocity = new Vector2(-speed * 2.0f, rb.velocity.y);
+                        }
                     }
 
 
@@ -465,6 +478,8 @@ public class New2DEnemy : MonoBehaviour
                     //range1
                     //ん？、何かいね？
                     //ピンク
+                    //sr.sprite = ;
+                    suspicious = true;
                     walkflg = false;
                     reactioncount += Time.deltaTime;
                     if (reaction <= reactioncount)
@@ -482,7 +497,7 @@ public class New2DEnemy : MonoBehaviour
             
         }
 
-        Debug.Log(game_manager.playerDeathFlg);
+        Debug.Log(walkflg);
         
 		///<summary>
 		///投げ待ち時にパトロールを止める
@@ -491,7 +506,7 @@ public class New2DEnemy : MonoBehaviour
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
-			if(arrive && !find)
+			if(arrive && !find && !attackflg)
 			{
                 walkflg = false;
 				count += Time.deltaTime;
@@ -531,7 +546,7 @@ public class New2DEnemy : MonoBehaviour
                     walkflg = true;
 				}
 			}//敵を見つけていない
-			else if(!find)
+			else if(!find && !attackflg)
 			{
                 walkflg = true;
 				//巡回//
