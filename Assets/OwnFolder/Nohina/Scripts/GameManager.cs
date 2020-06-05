@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using System.IO;
 using System.Linq;
@@ -110,6 +111,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// </summary>
 	public bool playerHideFlg { set; get; } = false;
 
+	[SerializeField] GameObject buildTimeText = null;
+
 	/// <summary>
 	/// 関数群
 	/// </summary>
@@ -159,6 +162,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 
 		return false;
+	}
+
+	private void Start()
+	{
+		DateTime buildTime = DateTime.Now;
 	}
 
 	private void Update()
