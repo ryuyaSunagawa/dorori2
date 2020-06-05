@@ -23,7 +23,7 @@ public class EnemyTrigger : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         Debug.Log(Enemyscript.range_level);
-        if(other.gameObject.layer == 13)
+        if(other.gameObject.layer == 13 || other.gameObject.layer == 15)
         {
             if (Enemyscript.lets_attack)
             {
