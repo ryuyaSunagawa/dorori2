@@ -20,6 +20,7 @@ public class EnemyAnime2 : MonoBehaviour
     [SerializeField] Sprite[] attacked = new Sprite[19];
     [SerializeField] Sprite[] walked = new Sprite[7];
     [SerializeField] Sprite[] angry = new Sprite[7];
+    [Space][SerializeField] Sprite suspiciousSprite;
 
 
     // Start is called before the first frame update
@@ -36,38 +37,42 @@ public class EnemyAnime2 : MonoBehaviour
         {
             AttackOnEnemy(1);
         }
-        else
-        {
-            atk_flm = 0;
-        }
+       
 
         ///////////敵の歩くアニメーション起動///////////////
-        if (enemyscript.walkflg)
+        else if (enemyscript.walkflg)
         {
             WalkOnEnemy(1);
         }
-        else
-        {
-            wlk_flm = 0;
-        }
+        
 
         ////////////敵の走るアニメーション起動///////////////
-        if (enemyscript.runflg)
+        else if (enemyscript.runflg)
         {
             RunOnEnemy(1);
         }
-        else
-        {
-            run_flm = 0;
-        }
+        
 
         ////////////敵の威嚇アニメーション起動///////////////
-        if(enemyscript.angflg)
+        else if(enemyscript.angflg)
         {
             AngryOnEnemy(1);
         }
+        
+
+        /////////////////敵の注視の一枚絵/////////////////////
+        else if(enemyscript.suspicious)
+        {
+            SuspiciousOnEnemy();
+        }
+
+        ///なんもなければとりあえずデフォ画像へ
         else
         {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
+            atk_flm = 0;
+            wlk_flm = 0;
+            run_flm = 0;
             ang_flm = 0;
         }
 
@@ -108,6 +113,7 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (atk_flm == 34 && atk_flg == 1)
         {
+            enemyscript.lets_attack = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[8];
         }
         else if (atk_flm == 39 && atk_flg == 1)
@@ -120,6 +126,7 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (atk_flm == 52 && atk_flg == 1)
         {
+            enemyscript.lets_attack = false;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[11];
         }
         else if (atk_flm == 56 && atk_flg == 1)
@@ -155,7 +162,6 @@ public class EnemyAnime2 : MonoBehaviour
             atk_flg = 0;
             atk_flm = 0;
             enemyscript.attackflg = false;
-            enemyscript.lets_attack = false;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
         }
         if (atk_flg == 1)
@@ -296,6 +302,11 @@ public class EnemyAnime2 : MonoBehaviour
         }
         if (ang_flg == 1)
             ang_flm++;
+    }
+
+    void SuspiciousOnEnemy()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().sprite = suspiciousSprite;
     }
 
 }
