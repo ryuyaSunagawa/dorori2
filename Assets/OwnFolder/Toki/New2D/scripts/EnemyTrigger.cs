@@ -17,14 +17,24 @@ public class EnemyTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Enemyscript.lets_attack)
+        {
+            if(GameManager.Instance.playerHideFlg)
+            {
+                GameManager.Instance.playerDeathFlg = true;
+            }
+        }
     }
    
     private void OnTriggerStay2D(Collider2D other)
     {
-        Debug.Log(Enemyscript.range_level);
+
         if(other.gameObject.layer == 13 || other.gameObject.layer == 15)
         {
+            if(Enemyscript.angryflg)
+            {
+                GameManager.Instance.playerMooveFlg = false;
+            }
             if (Enemyscript.lets_attack)
             {
                 
