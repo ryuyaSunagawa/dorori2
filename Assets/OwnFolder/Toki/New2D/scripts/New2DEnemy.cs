@@ -75,19 +75,17 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    [HideInInspector]public bool attackflg = false;
+    [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
 
-    //[HideInInspector]public float atk_motion_time = 0.6f;
+    [HideInInspector]public bool lets_attack = false;   //攻撃の判定出すときのフラグ
 
-    //private float atk_motion_count = 0.0f;
+    [HideInInspector] public bool attack_avoid = false; //敵の攻撃を回避できるフレームのフラグ
 
-    [HideInInspector]public bool lets_attack = false;
+    [HideInInspector]public bool walkflg = true;        //歩いてる時のフラグ(アニメーションの引き金)
 
-    [HideInInspector]public bool walkflg = true;
+    [HideInInspector]public bool runflg = false;        //走ってる時のフラグ(アニメーションの引き金)
 
-    [HideInInspector]public bool runflg = false;
-
-    [HideInInspector] public bool angflg = false;
+    [HideInInspector] public bool angryflg = false;       //敵の瞬歩弾きのフラグ(アニメーションの引き金)
 
     private float enemy_size_x;                     //敵の初期サイズX
     private float enemy_size_y;                     //敵の初期サイズY
@@ -101,13 +99,16 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] public GameManager game_manager;
 
-    [SerializeField] private bool Hide_past = false;        //1フレーム前のhideflg（現在のhideflgと前のhideflgを比べて隠れたタイミングをとらえる）
+    private bool Hide_past = false;        //1フレーム前のhideflg（現在のhideflgと前のhideflgを比べて隠れたタイミングをとらえる）
 
-    [SerializeField] private bool Hide_Timeng = true;       //発見された状態で隠れたか、その前に隠れていたか
+    private bool Hide_Timeing = true;       //発見された状態で隠れたか、その前に隠れていたか
 
     [HideInInspector] public bool suspicious = false;       //ピンクでプレイヤーを発見したときの止まって注視のフラグ
 
-    [HideInInspector] public bool Angryflg = false;
+    private bool Syunpo_past = false;                       //1フレーム前の瞬歩
+
+    private bool Syunpo_Timeing = true;                    //成功する瞬歩か、失敗する瞬歩か
+
 
 	// Start is called before the first frame update
 	void Start()
@@ -203,7 +204,7 @@ public class New2DEnemy : MonoBehaviour
         //レイが何かに当たったか？//
         if (hit.collider && _poisonState != 2)
         {
-           Debug.Log(attackflg);
+           
 
             if (hit.collider.name == "Player")
             {
@@ -216,19 +217,26 @@ public class New2DEnemy : MonoBehaviour
                     if (attackflg)
                     {
                         walkflg = false;
-                        //atk_motion_count += Time.deltaTime;
-                        /*if (atk_motion_count >= atk_motion_time)
-                        {
-                            lets_attack = true;
-                        }*/
+                        
                     }
                     else
                     {
                         //atk_motion_count = 0.0f;
                         walkflg = true;
                     }
-                    
-                    
+
+                    if(angryflg)
+                    {
+                        attackflg = false;
+                        walkflg = false;
+                    }
+                    else
+                    {
+                        walkflg = true;
+                    }
+        
+
+
                     if (direction && transform.position.x > hit.transform.position.x)
                     {
                         find = true;
@@ -247,7 +255,7 @@ public class New2DEnemy : MonoBehaviour
                 }
                 else
                 {
-                    if(!attackflg)
+                    if(!attackflg && !angryflg)
                     {
                         //atk_motion_count = 0.0f;
                         walkflg = true;
@@ -286,11 +294,12 @@ public class New2DEnemy : MonoBehaviour
                 }
             }
 
+            ///////隠れるとの連携//////////////////
             if (GameManager.Instance.playerHideFlg)
             {
                 HideTimingCheck();
 
-                if(Hide_Timeng)
+                if(Hide_Timeing)
                 {
                     find = false;
                     range_level = 0;
@@ -300,7 +309,7 @@ public class New2DEnemy : MonoBehaviour
             else
             {
                 Hide_past = false;
-                Hide_Timeng = true;
+                Hide_Timeing = true;
             }
 
 
@@ -308,8 +317,8 @@ public class New2DEnemy : MonoBehaviour
 
             if (find)
             {
-                //Debug.Log(Vector2.Distance(hit.transform.position, transform.position));
-                //Debug.Log(hit.distance);
+
+               
 
                 if ((Vector2.Distance(hit.transform.position, transform.position)) < range3 || attackflg)
                 {
@@ -330,7 +339,28 @@ public class New2DEnemy : MonoBehaviour
                     range_level = 1f;
                 }
 
-               
+
+                //////////瞬歩との連携////////////////
+                if (GameManager.Instance.playerMooveFlg)
+                {
+                    SyunpoTimingCheck();
+
+                    range_level = 0f;
+                    walkflg = false;
+
+                    if (!Syunpo_Timeing)
+                    {
+                        attackflg = false;
+                        angryflg = true;
+                    }
+                }
+                else
+                {
+                    Syunpo_past = false;
+                    Syunpo_Timeing = true;
+                }
+
+
 
 
                 if (range_level == 3f)
@@ -498,7 +528,8 @@ public class New2DEnemy : MonoBehaviour
             
         }
 
-        Debug.Log(walkflg);
+        Debug.Log(GameManager.Instance.playerMooveFlg);
+        Debug.Log(angryflg);
         
 		///<summary>
 		///投げ待ち時にパトロールを止める
@@ -507,7 +538,7 @@ public class New2DEnemy : MonoBehaviour
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
-			if(arrive && !find && !attackflg)
+			if(arrive && !find && !attackflg && !angryflg)
 			{
                 walkflg = false;
 				count += Time.deltaTime;
@@ -547,7 +578,7 @@ public class New2DEnemy : MonoBehaviour
                     walkflg = true;
 				}
 			}//敵を見つけていない
-			else if(!find && !attackflg)
+			else if(!find && !attackflg && !angryflg)
 			{
                 walkflg = true;
 				//巡回//
@@ -576,7 +607,6 @@ public class New2DEnemy : MonoBehaviour
 			}
 		}
 
-        //hideflgがfalseの時、アップデートが終わるときに現在のhideflgを保存しておく
         
             
     }
@@ -590,15 +620,39 @@ public class New2DEnemy : MonoBehaviour
         {
             if(range_level <= 1.5f)
             {
-                Hide_Timeng = true;
+                Hide_Timeing = true;
             }
             else
             {
-                Hide_Timeng = false;
+                Hide_Timeing = false;
             }
         }
 
         Hide_past = GameManager.Instance.playerHideFlg;
+    }
+
+    /// <summary>
+    /// 瞬歩を発動タイミングをチェック
+    /// </summary>
+    private void SyunpoTimingCheck()
+    {
+        if(!Syunpo_past)
+        {
+            if(range_level <= 1.5f)
+            {
+                Syunpo_Timeing = true;
+            }
+            else if(range_level == 3 && attack_avoid)
+            {
+                Syunpo_Timeing = true;
+            }
+            else
+            {
+                Syunpo_Timeing = false;
+            }
+        }
+
+        Syunpo_past = GameManager.Instance.playerMooveFlg;
     }
 
 	private void OnCollisionEnter2D( Collision2D collision )
