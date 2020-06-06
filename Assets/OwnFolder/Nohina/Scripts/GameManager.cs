@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
@@ -104,7 +105,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// プレイヤーの残機数
 	/// </summary>
-	public int playerDeathNum { set; get; } = 0;
+	public int playerDeathNum { set; get; } = 4;
 
 	/// <summary>
 	/// プレイヤーが隠れ状態かどうか
@@ -115,6 +116,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// プレイヤーの瞬歩移動
 	/// </summary>
 	public bool playerMooveFlg
+	{
+		set;
+		get;
+	} = false;
+
+	/// <summary>
+	/// リスポーンフラグ
+	/// </summary>
+	public bool playerRespawnFlg
 	{
 		set;
 		get;
@@ -180,7 +190,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 	private void Update()
 	{
-		
+		if( Input.GetButtonDown( "Option" ) )
+		{
+			SceneManager.LoadScene( SceneManager.GetActiveScene().name );
+		}
 	}
 
 }

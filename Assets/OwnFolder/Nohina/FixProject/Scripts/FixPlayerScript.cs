@@ -39,6 +39,12 @@ public class FixPlayerScript : MonoBehaviour
 	//小走りが始まるスティック傾斜範囲
 	[SerializeField, Range( 0, 1 )] float stickRunRange = 0.5f;
 
+	//身代わりオブジェクト
+	[SerializeField, Header( "身代わり木" )] GameObject sacrificeObject = null;
+
+	//リスポーン場所
+	[SerializeField, Range( 0f, 15f ), Header( "リスポーン場所の距離" )] float respawnDistance = 5f;
+
 	/*
 	 * 攻撃系変数
 	 */
@@ -360,6 +366,17 @@ public class FixPlayerScript : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void AttackProcess()
+	{
+		if( attackFlg == true && Input.GetButtonDown( "Touch" ) )
+		{
+			Destroy( GameManager.Instance.getenemyObj.gameObject );
+		}
+	}
+
+	/// <summary>
 	/// 次の隠・現座標に移動
 	/// </summary>
 	void MoveToNextPosition()
@@ -403,7 +420,6 @@ public class FixPlayerScript : MonoBehaviour
 				nextFloor = Math.Floor( nextMovePosition.x * 1000 ) / 1000;
 
 				yield return new WaitForSeconds( Time.deltaTime );
-				Debug.Log( nowFloor + ", " + nextFloor );
 			}
 		}
 		else if( directionRight == false )
@@ -418,7 +434,6 @@ public class FixPlayerScript : MonoBehaviour
 				nextFloor = Math.Floor( nextMovePosition.x * 1000 ) / 1000;
 
 				yield return new WaitForSeconds( Time.deltaTime );
-				Debug.Log( nowFloor + ", " + nextFloor );
 			}
 		}
 
@@ -455,25 +470,72 @@ public class FixPlayerScript : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 死んだときの処理
+	/// 攻撃されたときの処理
 	/// </summary>
 	void DeathProcess()
 	{
-		if( GameManager.Instance.playerDeathNum++ >= 3 )
+		//DeathFlgがたった時のリスポーン処理
+		if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum-- > 0 )
+		{
+			GameManager.Instance.playerDeathNum--;
+			GameManager.Instance.playerDeathFlg = false;
+			GameManager.Instance.playerRespawnFlg = true;
+			gameObject.layer = 17;
+			print( "ahan" );
+		}
+		//DeathFlgがたった時の死亡処理
+		else if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum-- == 0 )
 		{
 			Destroy( this.gameObject );
 			GameManager.Instance.playerDeathFlg = false;
+			gameObject.layer = 13;
+		}
+
+		if( GameManager.Instance.playerRespawnFlg == true )
+		{
+			StartCoroutine( "RespawnProcess" );
 		}
 	}
 
 	/// <summary>
-	/// 攻撃処理
+	/// リスポーン処理
 	/// </summary>
-	void AttackProcess()
+	IEnumerator RespawnProcess()
 	{
-		if( attackFlg == true && Input.GetButtonDown( "Touch" ) )
+		//身代わりオブジェクトを作る
+		sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
+		sacrificeObject.SetActive( true );
+
+		//敵ポジションとの差分によりリスポーン場所を決定する
+		float enemyPosition = GameManager.Instance.getenemyObj.position.x;
+		float distance = transform.position.x - enemyPosition;
+
+		bool respawnDirectRight = false;
+
+		if( distance >= 0 )
 		{
-			Destroy( GameManager.Instance.getenemyObj.gameObject );
+			respawnDirectRight = true;
 		}
+
+		float now = transform.position.x;
+		float x = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+
+		//右側リスポーン
+		if( respawnDirectRight == true )
+		{
+			transform.position = new Vector3( now + respawnDistance, transform.position.y, transform.position.z );
+		}
+		//左側リスポーン
+		else if( respawnDirectRight == false )
+		{
+			transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
+		}
+		
+		gameObject.layer = 13;
+		GameManager.Instance.playerRespawnFlg = false;
+
+		Debug.Log( "null" );
+
+		yield return null;
 	}
 }

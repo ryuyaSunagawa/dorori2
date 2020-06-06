@@ -32,8 +32,8 @@ TagManager:
   - EnemyLayer
   - NeutralHideLayer
   - DeadmanLayer
-  - 
-  - 
+  - RespawnLayer
+  - SacrificeLayer
   - 
   - 
   - 
