@@ -6,10 +6,11 @@
 		_PoisonTex("Texture", 2D) = "white"{}
 		_Color("Color", Color) = (1,1,1,1)
 		_ScrollY("Scrool Y", float) = 0
+
     }
     SubShader
     {
-        Tags {"Queue" = "Transparent" "RenderType"="Transparent" }
+		Tags {"Queue" = "Transparent"}// "RenderType" = "Transparent" }
         LOD 100
 		Cull Off
 		Blend SrcAlpha OneMinusSrcAlpha
@@ -19,7 +20,7 @@
             CGPROGRAM	//開始の合図
             #pragma vertex vert		//頂点シェーダの関数名
             #pragma fragment frag	//フラグメントシェーダの関数名
-            // make fog work
+            //make fog work
             #pragma multi_compile_fog//コンパイル時にフォグがオンになっているかで自動で切り替える
 
             #include "UnityCG.cginc"
@@ -56,6 +57,8 @@
             v2f vert (appdata v)	//頂点シェーダからフラグメントシェーダにデータを渡す
             {
                 v2f o;
+
+				v.vertex.y -= _Time * 10;
 				
                 o.vertex = UnityObjectToClipPos(v.vertex);	//座標変換する処理
 				
@@ -73,10 +76,10 @@
                 fixed4 color_main = tex2D(_MainTex, i.uv_main);	//場所とテクスチャ
 				fixed4 color_poison = tex2D(_PoisonTex, i.uv_poison + scroll);
 
-				fixed4 col = color_main + color_poison;
+				fixed4 col = color_main * color_poison;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
-                return col * _Color;
+				return col * _Color;
             }
             ENDCG	//終了合図
         }

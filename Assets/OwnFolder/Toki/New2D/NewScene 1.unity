@@ -907,6 +907,7 @@ MonoBehaviour:
   enemyObj: {fileID: 1236232143}
   _playerStairState: 0
   _AnimationController: {fileID: 1716426868}
+  buildTimeText: {fileID: 0}
 --- !u!4 &1050402181
 Transform:
   m_ObjectHideFlags: 0

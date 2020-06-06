@@ -103,9 +103,11 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] private bool Hide_past = false;        //1フレーム前のhideflg（現在のhideflgと前のhideflgを比べて隠れたタイミングをとらえる）
 
-    [SerializeField] private bool Hide_Timeng = true;      //発見された状態で隠れたか、その前に隠れていたか
+    [SerializeField] private bool Hide_Timeng = true;       //発見された状態で隠れたか、その前に隠れていたか
 
-    [HideInInspector] public bool suspicious = false;
+    [HideInInspector] public bool suspicious = false;       //ピンクでプレイヤーを発見したときの止まって注視のフラグ
+
+    [HideInInspector] public bool Angryflg = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -128,8 +130,7 @@ public class New2DEnemy : MonoBehaviour
         range2 = start_range2;
         range3 = start_range3;
 
-        P_script = Player.GetComponent<FixPlayerScript>();
-
+        P_script = Player.GetComponent<FixPlayerScript>(); 
     }
 
     // Update is called once per frame
