@@ -111,6 +111,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// </summary>
 	public bool playerHideFlg { set; get; } = false;
 
+	/// <summary>
+	/// プレイヤーの瞬歩移動
+	/// </summary>
+	public bool playerMooveFlg
+	{
+		set;
+		get;
+	} = false;
+
 	[SerializeField] GameObject buildTimeText = null;
 
 	/// <summary>

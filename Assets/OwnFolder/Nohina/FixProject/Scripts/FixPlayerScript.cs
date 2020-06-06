@@ -375,6 +375,7 @@ public class FixPlayerScript : MonoBehaviour
 		if( Input.GetButtonDown( "Moove" ) )
 		{
 			StartCoroutine( "MomentaryMoveProcess" );
+			GameManager.Instance.playerMooveFlg = true;
 		}
 	}
 
@@ -420,7 +421,9 @@ public class FixPlayerScript : MonoBehaviour
 				Debug.Log( nowFloor + ", " + nextFloor );
 			}
 		}
+
 		yield return null;
+		GameManager.Instance.playerMooveFlg = false;
 	}
 
 	/// <summary>
