@@ -289,7 +289,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 
 		//変化の解除
-		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 1 ) && ( Input.GetButtonDown( "Hide" ) || Input.GetButtonDown( "Hide" ) ) )
+		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 1 ) && ( Input.GetButtonDown( "Hide" ) || Input.GetButtonDown( "Touch" ) ) )
 		{
 			disguiseFlg = true;
 			hideButton = false;
