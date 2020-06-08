@@ -213,6 +213,7 @@ public class New2DEnemy : MonoBehaviour
                 //プレイヤーがrange1内にいるまたは、ranelevelが1.5または、rangelevelが2.5fまたは、敵が攻撃動作にはいってる
                 if ((Vector2.Distance(hit.transform.position, transform.position)) < range1 || range_level == 1.5f || range_level == 2.5f || attackflg)
                 {
+                    suspicious = false;
 
                     if (attackflg)
                     {
@@ -255,6 +256,7 @@ public class New2DEnemy : MonoBehaviour
                 }
                 else
                 {
+                    suspicious = false;
                     if(!attackflg && !angryflg)
                     {
                         //atk_motion_count = 0.0f;

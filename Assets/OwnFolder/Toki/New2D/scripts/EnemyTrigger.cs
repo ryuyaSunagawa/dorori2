@@ -21,6 +21,7 @@ public class EnemyTrigger : MonoBehaviour
         {
             if(GameManager.Instance.playerHideFlg)
             {
+                GameManager.Instance.playerHideFlg = false;
                 GameManager.Instance.playerDeathFlg = true;
             }
         }
