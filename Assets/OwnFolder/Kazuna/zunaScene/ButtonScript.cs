@@ -14,4 +14,8 @@ public class ButtonScript : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
         UnityEngine.Application.Quit();
     }
+    public void OnClickTitleBack()
+    {
+        SceneManager.LoadScene("Starting");
+    }
 }
