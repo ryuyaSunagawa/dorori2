@@ -68,7 +68,6 @@ public class AnimationController : MonoBehaviour
 		}
 		if( atk_flg == 1 )
 			atk_flm++;
-		Debug.Log( atk_flm );
 	}
 
 
@@ -127,7 +126,11 @@ public class AnimationController : MonoBehaviour
 			wlk_flm++;
 
 
+<<<<<<< HEAD
 		walkSpriteSprite = nowSprite;
+=======
+		walkSprite = nowSprite;
+>>>>>>> kazuna
 	}
 
     public void Run(int useComp, out Sprite runSpriteSprite)
@@ -182,9 +185,13 @@ public class AnimationController : MonoBehaviour
             runSprite_flm++;
 
 
+<<<<<<< HEAD
         runSpriteSprite = nowSprite;
 
         Debug.Log(runSprite_flm);
 
+=======
+        runSprite = nowSprite;
+>>>>>>> kazuna
     }
 }
