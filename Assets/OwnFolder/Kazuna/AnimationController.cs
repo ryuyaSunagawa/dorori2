@@ -75,7 +75,7 @@ public class AnimationController : MonoBehaviour
 	/// 歩くアニメーション
 	/// </summary>
 	/// <param name="useComp">使用するときに1、使用し終わったら0を代入</param>
-	public void Walk( int useComp, out Sprite walkSpriteSprite )
+	public void Walk( int useComp, out Sprite outWalkSprite )
 	{
 		wlk_flg = useComp;
 
@@ -124,16 +124,11 @@ public class AnimationController : MonoBehaviour
 
 		if( wlk_flg == 1 )
 			wlk_flm++;
-
-
-<<<<<<< HEAD
-		walkSpriteSprite = nowSprite;
-=======
-		walkSprite = nowSprite;
->>>>>>> kazuna
+		
+		outWalkSprite = nowSprite;
 	}
 
-    public void Run(int useComp, out Sprite runSpriteSprite)
+    public void Run(int useComp, out Sprite outRunSprite)
     {
         runSprite_flg = useComp;
 
@@ -184,14 +179,6 @@ public class AnimationController : MonoBehaviour
         if (runSprite_flg == 1)
             runSprite_flm++;
 
-
-<<<<<<< HEAD
-        runSpriteSprite = nowSprite;
-
-        Debug.Log(runSprite_flm);
-
-=======
-        runSprite = nowSprite;
->>>>>>> kazuna
+        outRunSprite = nowSprite;
     }
 }
