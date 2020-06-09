@@ -203,13 +203,13 @@ public class PlayerAnimationScript : MonoBehaviour
 
 	public int PlayerDeathAnimation( int useComp, out Sprite outDeathSprite )
 	{
-		deathAnimationFrame++;
-		if( ( ++deathAnimationFrame % 10 ) == 0 )
+		deathAnimationFrame += 2;
+		if( ( deathAnimationFrame % 8 ) == 0 )
 		{
-			nowSprite = deathSprite[ deathAnimationFrame / 10 ];
+			nowSprite = deathSprite[ ( deathAnimationFrame / 8 ) ];
 		}
 
-		if( deathAnimationFrame >= 120 || useComp == 0 )
+		if( deathAnimationFrame >= 96 || useComp == 0 )
 		{
 			outDeathSprite = normalSprite;
 

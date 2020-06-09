@@ -43,12 +43,7 @@ public class FixPlayerScript : MonoBehaviour
 	[SerializeField, Header( "身代わり木" )] GameObject sacrificeObject = null;
 
 	//リスポーン場所
-	[SerializeField, Range( 0f, 15f ), Header( "リスポーン場所の距離" )] float respawnDistance = 5f;
-
-	/*
-	 * 攻撃系変数
-	 */
-	BoxCollider2D[] b2d = new BoxCollider2D[ 2 ];
+	[SerializeField, Range( 0f, 25f ), Header( "リスポーン場所の距離" )] float respawnDistance = 10f;
 		
 	/*
 	 * Animation系変数
@@ -131,13 +126,16 @@ public class FixPlayerScript : MonoBehaviour
 	 * UnityEvent
 	 */
 
+	private void Awake()
+	{
+		gameObject.layer = 13;
+	}
+
 	// Start is called before the first frame update
 	void Start()
     {
 		myRenderer = GetComponent<SpriteRenderer>();
 		nowSprite = normalSprite;
-
-		b2d = GetComponents<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -171,7 +169,7 @@ public class FixPlayerScript : MonoBehaviour
 	private void FixedUpdate()
 	{
 		//プレイヤーの移動
-		if( nowHide == false )
+		if( nowHide == false && !GameManager.Instance.playerRespawnFlg && !GameManager.Instance.playerAttackNowFlg && !GameManager.Instance.playerDeathFlg )
 		{
 			//プレイヤーの移動
 			MovePlayer();
@@ -505,18 +503,16 @@ public class FixPlayerScript : MonoBehaviour
 			GameManager.Instance.playerDeathFlg = false;
 			GameManager.Instance.playerRespawnFlg = true;
 			gameObject.layer = 17;
+
+			StartCoroutine( "RespawnProcess" );
 		}
 		//DeathFlgがたった時の死亡処理
-		else if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum-- == 0 )
+		else if( GameManager.Instance.playerDeathNum-- == 0 )
 		{
-			Destroy( this.gameObject );
+			//Destroy( this.gameObject );
 			GameManager.Instance.playerDeathFlg = false;
-			gameObject.layer = 13;
-		}
 
-		if( GameManager.Instance.playerRespawnFlg == true )
-		{
-			StartCoroutine( "RespawnProcess" );
+			StartCoroutine( "DeadProcess" );
 		}
 	}
 
@@ -526,10 +522,6 @@ public class FixPlayerScript : MonoBehaviour
 	IEnumerator RespawnProcess()
 	{
 		int respawnAnimationFrame = 0;
-
-		//身代わりオブジェクトを作る
-		sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
-		sacrificeObject.SetActive( true );
 
 		//敵ポジションとの差分によりリスポーン場所を決定する
 		float enemyPosition = GameManager.Instance.getenemyObj.position.x;
@@ -545,11 +537,22 @@ public class FixPlayerScript : MonoBehaviour
 		float now = transform.position.x;
 		float x = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
 
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+		if( respawnDirectRight == true )
+		{
+			rb.AddForce( new Vector2( 7f, 6f ), ForceMode2D.Impulse );
+		}
+		else if( respawnDirectRight == false )
+		{
+			rb.AddForce( new Vector2( -7f, 6f ), ForceMode2D.Impulse );
+		}
+
 		do
 		{
 			respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 1, out nowSprite );
 
-			if( respawnAnimationFrame == 100 )
+			if( respawnAnimationFrame >= 70 )
 			{
 				//身代わりオブジェクトを作る
 				sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
@@ -561,11 +564,19 @@ public class FixPlayerScript : MonoBehaviour
 					transform.position = new Vector3( now + respawnDistance, transform.position.y, transform.position.z );
 					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
 
+					//身代わりオブジェクトを作る
+					sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
+					sacrificeObject.GetComponent<sacrifice>().directRight = true;
+					sacrificeObject.SetActive( true );
+
+					rb.velocity = Vector2.zero;
+					rb.angularVelocity = 0f;
+
 					gameObject.layer = 13;
 					GameManager.Instance.playerRespawnFlg = false;
 
+
 					yield return null;
-					print( "ahan" );
 				}
 				//左側リスポーン
 				else if( respawnDirectRight == false )
@@ -573,19 +584,68 @@ public class FixPlayerScript : MonoBehaviour
 					transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
 					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
 
+					//身代わりオブジェクトを作る
+					sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
+					sacrificeObject.GetComponent<sacrifice>().directRight = false;
+					sacrificeObject.SetActive( true );
+
 					gameObject.layer = 13;
 					GameManager.Instance.playerRespawnFlg = false;
 
+					rb.velocity = Vector2.zero;
+					rb.angularVelocity = 0f;
+
 					yield return null;
-					print( "ahan2" );
 				}
 			}
-
-			print( "ahan3" );
+			
 			yield return new WaitForSeconds( Time.deltaTime );
-		} while( respawnAnimationFrame < 120 );
+		} while( respawnAnimationFrame < 96 );
+		
+		yield return null;
+	}
 
-		print( "ahan4" );
+	IEnumerator DeadProcess()
+	{
+		int deathAnimationFrame = 0;
+
+		//敵ポジションとの差分によりリスポーン場所を決定する
+		float enemyPosition = GameManager.Instance.getenemyObj.position.x;
+		float distance = transform.position.x - enemyPosition;
+
+		bool respawnDirectRight = false;
+
+		if( distance >= 0 )
+		{
+			respawnDirectRight = true;
+		}
+
+		float now = transform.position.x;
+		float x = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+		if( respawnDirectRight == true )
+		{
+			rb.AddForce( new Vector2( 7f, 6f ), ForceMode2D.Impulse );
+		}
+		else if( respawnDirectRight == false )
+		{
+			rb.AddForce( new Vector2( -7f, 6f ), ForceMode2D.Impulse );
+		}
+
+		do
+		{
+			deathAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 1, out nowSprite );
+
+			if( deathAnimationFrame >= 96 )
+			{
+				Destroy( this.gameObject );
+			}
+			
+			yield return new WaitForSeconds( Time.deltaTime );
+		} while( deathAnimationFrame < 96 );
+		
 		yield return null;
 	}
 }

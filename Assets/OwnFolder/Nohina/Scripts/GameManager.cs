@@ -230,6 +230,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		{
 			SceneManager.LoadScene( SceneManager.GetActiveScene().name );
 		}
+
+		print( playerDeathNum );
 	}
 
 }
