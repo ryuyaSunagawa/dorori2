@@ -6,6 +6,7 @@
 		_PoisonTex("Texture", 2D) = "white"{}
 		_Color("Color", Color) = (1,1,1,1)
 		_ScrollY("Scrool Y", float) = 0
+		_Down("Down" ,float) = 10
 
     }
     SubShader
@@ -54,11 +55,19 @@
 
 			float _ScrollY;
 
+			float _Down;
+
             v2f vert (appdata v)	//頂点シェーダからフラグメントシェーダにデータを渡す
             {
                 v2f o;
 
-				v.vertex.y -= _Time * 10;
+				_Down -= _Time * 100;
+				if (_Down < v.vertex.y)
+				{
+					v.vertex.y -= 0.5f;
+				}
+
+				
 				
                 o.vertex = UnityObjectToClipPos(v.vertex);	//座標変換する処理
 				
