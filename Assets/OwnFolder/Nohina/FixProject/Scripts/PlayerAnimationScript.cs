@@ -11,6 +11,9 @@ public class PlayerAnimationScript : MonoBehaviour
 	int runSprite_flm = 0;
 	int runSprite_flg = 0;
 
+	int deathAnimationFrame = 0;
+
+
 	/// <summary>
 	/// 現在のスプライト
 	/// </summary>
@@ -24,48 +27,56 @@ public class PlayerAnimationScript : MonoBehaviour
 	[SerializeField, Header( "攻撃アニメーション" )] Sprite[] attackSprite = new Sprite[6];
 	[SerializeField, Header( "歩行アニメーション" )] Sprite[] walkSprite = new Sprite[8];
 	[SerializeField, Header( "走行アニメーション" )] Sprite[] runSprite = new Sprite[8];
+	[SerializeField, Header( "死亡アニメーション" )] Sprite[] deathSprite = new Sprite[ 12 ];
 
 	/// <summary>
 	/// プレイヤーのアタックアニメーション
 	/// </summary>
-	public void Attack()
+	public int Attack( int useComp, out Sprite outAttackprite )
 	{
-		if( Input.GetKeyDown( KeyCode.Space ) )
-		{
-			atk_flg = 1;
-		}
+
+		atk_flg = useComp;
+
 		if( atk_flm == 0 && atk_flg == 1 )
 		{
-			this.gameObject.GetComponent<SpriteRenderer>().sprite = attackSprite[ 0 ];
+			nowSprite = attackSprite[ 0 ];
 		}
 		else if( atk_flm == 10 && atk_flg == 1 )
 		{
-			this.gameObject.GetComponent<SpriteRenderer>().sprite = attackSprite[ 1 ];
+			nowSprite = attackSprite[ 1 ];
 		}
 		else if( atk_flm == 25 && atk_flg == 1 )
 		{
-			this.gameObject.GetComponent<SpriteRenderer>().sprite = attackSprite[ 2 ];
+			nowSprite = attackSprite[ 2 ];
 		}
 		else if( atk_flm == 35 && atk_flg == 1 )
 		{
-			this.gameObject.GetComponent<SpriteRenderer>().sprite = attackSprite[ 3 ];
+			nowSprite = attackSprite[ 3 ];
 		}
 		else if( atk_flm == 40 && atk_flg == 1 )
 		{
-			this.gameObject.GetComponent<SpriteRenderer>().sprite = attackSprite[ 4 ];
+			nowSprite = attackSprite[ 4 ];
 		}
 		else if( atk_flm == 45 && atk_flg == 1 )
 		{
-			this.gameObject.GetComponent<SpriteRenderer>().sprite = attackSprite[ 5 ];
+			nowSprite = attackSprite[ 5 ];
 		}
 		else if( atk_flm == 55 && atk_flg == 1 )
 		{
 			atk_flg = 0;
 			atk_flm = 0;
 		}
+		else if( atk_flg == 0 )
+		{
+			nowSprite = normalSprite;
+		}
+
 		if( atk_flg == 1 )
 			atk_flm++;
-		Debug.Log( atk_flm );
+
+		outAttackprite = nowSprite;
+
+		return atk_flm;
 	}
 
 	/// <summary>
@@ -188,5 +199,27 @@ public class PlayerAnimationScript : MonoBehaviour
 
 		Debug.Log( runSprite_flm );
 
+	}
+
+	public int PlayerDeathAnimation( int useComp, out Sprite outDeathSprite )
+	{
+		deathAnimationFrame++;
+		if( ( ++deathAnimationFrame % 10 ) == 0 )
+		{
+			nowSprite = deathSprite[ deathAnimationFrame / 10 ];
+		}
+
+		if( deathAnimationFrame >= 120 || useComp == 0 )
+		{
+			outDeathSprite = normalSprite;
+
+			deathAnimationFrame = 0;
+
+			return 120;
+		}
+
+		outDeathSprite = nowSprite;
+
+		return deathAnimationFrame;
 	}
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
@@ -130,7 +131,30 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		get;
 	} = false;
 
+	/// <summary>
+	/// プレイヤーアタック時のフラグ
+	/// </summary>
+	public bool playerAttackNowFlg
+	{
+		set;
+		get;
+	} = false;
+
+	/// <summary>
+	/// プレイヤーのアニメーションステートっていう夢の話
+	/// </summary>
+	public int playerState
+	{
+		set;
+		get;
+	} = 0;
+
+	[SerializeField] GameObject framerateDrawText = null;
+
 	[SerializeField] GameObject buildTimeText = null;
+
+	float timeElapsed = 0f;
+	int frameSize = 0;
 
 	/// <summary>
 	/// 関数群
@@ -186,10 +210,22 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	private void Start()
 	{
 		DateTime buildTime = DateTime.Now;
+		Application.targetFrameRate = 60;
 	}
 
 	private void Update()
 	{
+		timeElapsed += Time.deltaTime;
+		frameSize++;
+
+		if( timeElapsed >= 1.0f )
+		{
+			framerateDrawText.GetComponent<Text>().text = "FPS: " + frameSize;
+
+			timeElapsed = 0f;
+			frameSize = 0;
+		}
+
 		if( Input.GetButtonDown( "Option" ) )
 		{
 			SceneManager.LoadScene( SceneManager.GetActiveScene().name );

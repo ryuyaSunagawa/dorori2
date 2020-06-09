@@ -56,6 +56,7 @@ public class EnemyAnime2 : MonoBehaviour
         ////////////敵の威嚇アニメーション起動///////////////
         else if(enemyscript.angryflg)
         {
+            atk_flm = 0;
             AngryOnEnemy(1);
         }
         

@@ -34,7 +34,7 @@ public class EnemyTrigger : MonoBehaviour
         {
             if(Enemyscript.angryflg)
             {
-                GameManager.Instance.playerMooveFlg = false;
+                GameManager.Instance.playerHideFlg = false;
             }
             if (Enemyscript.lets_attack)
             {

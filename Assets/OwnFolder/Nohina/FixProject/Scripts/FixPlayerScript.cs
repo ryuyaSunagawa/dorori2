@@ -92,6 +92,10 @@ public class FixPlayerScript : MonoBehaviour
 
 	bool attackFlg = false;
 
+	bool attackNowFlg = false;
+
+	Sprite attackingSprite = null;
+
 	/*
 	 * 瞬歩系変数
 	 */
@@ -187,7 +191,7 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( ( horizontal >= 0.1f && horizontal <= stickRunRange ) || ( horizontal <= -( 0.1f ) && horizontal >= -( stickRunRange ) ) )
 		{
-			if( disguiseMode == 0 )
+			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false )
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			}
@@ -200,7 +204,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 		else if( horizontal > stickRunRange || horizontal < -( stickRunRange ) )
 		{
-			if( disguiseMode == 0 )
+			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false )
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			}
@@ -213,7 +217,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 		else
 		{
-			if( disguiseMode == 0 )
+			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false )
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 0, out nowSprite );
 			}
@@ -329,6 +333,10 @@ public class FixPlayerScript : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// アタック範囲を抜けたら
+	/// </summary>
+	/// <param name="collision"></param>
 	private void OnTriggerExit2D( Collider2D collision )
 	{
 		if( collision.tag == "Enemy" )
@@ -370,9 +378,25 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void AttackProcess()
 	{
+		int attackFrame = 0;
+
 		if( attackFlg == true && Input.GetButtonDown( "Touch" ) )
 		{
+			GameManager.Instance.playerAttackNowFlg = true;
+		}
+		
+		if( GameManager.Instance.playerAttackNowFlg == true )
+		{
+			attackFrame = GetComponent<PlayerAnimationScript>().Attack( 1, out nowSprite );
+		}
+
+		if( attackFrame == 55 )
+		{
 			Destroy( GameManager.Instance.getenemyObj.gameObject );
+
+			attackFlg = false;
+			GameManager.Instance.playerAttackNowFlg = false;
+			attackFrame = 0;
 		}
 	}
 
@@ -481,7 +505,6 @@ public class FixPlayerScript : MonoBehaviour
 			GameManager.Instance.playerDeathFlg = false;
 			GameManager.Instance.playerRespawnFlg = true;
 			gameObject.layer = 17;
-			print( "ahan" );
 		}
 		//DeathFlgがたった時の死亡処理
 		else if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum-- == 0 )
@@ -502,6 +525,8 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	IEnumerator RespawnProcess()
 	{
+		int respawnAnimationFrame = 0;
+
 		//身代わりオブジェクトを作る
 		sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
 		sacrificeObject.SetActive( true );
@@ -520,22 +545,47 @@ public class FixPlayerScript : MonoBehaviour
 		float now = transform.position.x;
 		float x = gameObject.GetComponent<SpriteRenderer>().bounds.size.x;
 
-		//右側リスポーン
-		if( respawnDirectRight == true )
+		do
 		{
-			transform.position = new Vector3( now + respawnDistance, transform.position.y, transform.position.z );
-		}
-		//左側リスポーン
-		else if( respawnDirectRight == false )
-		{
-			transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
-		}
-		
-		gameObject.layer = 13;
-		GameManager.Instance.playerRespawnFlg = false;
+			respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 1, out nowSprite );
 
-		Debug.Log( "null" );
+			if( respawnAnimationFrame == 100 )
+			{
+				//身代わりオブジェクトを作る
+				sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
+				sacrificeObject.SetActive( true );
 
+				//右側リスポーン
+				if( respawnDirectRight == true )
+				{
+					transform.position = new Vector3( now + respawnDistance, transform.position.y, transform.position.z );
+					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
+
+					gameObject.layer = 13;
+					GameManager.Instance.playerRespawnFlg = false;
+
+					yield return null;
+					print( "ahan" );
+				}
+				//左側リスポーン
+				else if( respawnDirectRight == false )
+				{
+					transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
+					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
+
+					gameObject.layer = 13;
+					GameManager.Instance.playerRespawnFlg = false;
+
+					yield return null;
+					print( "ahan2" );
+				}
+			}
+
+			print( "ahan3" );
+			yield return new WaitForSeconds( Time.deltaTime );
+		} while( respawnAnimationFrame < 120 );
+
+		print( "ahan4" );
 		yield return null;
 	}
 }
