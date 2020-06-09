@@ -6,7 +6,7 @@
 		_PoisonTex("Texture", 2D) = "white"{}
 		_Color("Color", Color) = (1,1,1,1)
 		_ScrollY("Scrool Y", float) = 0
-		_Down("Down" ,float) = 10
+		_Down("Down" ,float) = 5
 
     }
     SubShader
@@ -61,13 +61,11 @@
             {
                 v2f o;
 
-				_Down -= _Time * 100;
+				_Down -= _Time.y * 0.6;
 				if (_Down < v.vertex.y)
 				{
-					v.vertex.y -= 0.5f;
+					v.vertex.y -= (_Time.y * 0.6);
 				}
-
-				
 				
                 o.vertex = UnityObjectToClipPos(v.vertex);	//座標変換する処理
 				

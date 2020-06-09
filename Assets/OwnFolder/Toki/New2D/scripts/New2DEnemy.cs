@@ -109,9 +109,13 @@ public class New2DEnemy : MonoBehaviour
 
     private bool Syunpo_Timeing = true;                    //成功する瞬歩か、失敗する瞬歩か
 
+    private bool Disguice_Past = false;                     //1フレーム前の変化
 
-	// Start is called before the first frame update
-	void Start()
+    private bool Disguice_Timing = true;                    //ばれる変化か、ばれない変化か
+
+
+    // Start is called before the first frame update
+    void Start()
     {
         
         layernum = LayerMask.NameToLayer("PlayerLayer");
@@ -248,6 +252,21 @@ public class New2DEnemy : MonoBehaviour
                     }
                     else
                     {
+                        if(find && Syunpo_Timeing &&GameManager.Instance.playerMooveFlg)
+                        {
+                            if (direction)
+                            {
+                                transform.localScale = new Vector2(-enemy_size_x, enemy_size_y);
+                                direction = false;
+                                patrollpoint = false;
+                            }
+                            else if(!direction)
+                            {
+                                transform.localScale = new Vector2(enemy_size_x, enemy_size_y);
+                                direction = true;
+                                patrollpoint = true;
+                            }
+                        }
                         find = false;
                         range_level = 0;
                     }
@@ -312,6 +331,24 @@ public class New2DEnemy : MonoBehaviour
             {
                 Hide_past = false;
                 Hide_Timeing = true;
+            }
+
+
+            ///////変化との連携////////////////////
+            if(GameManager.Instance.playerDisguiceMode)
+            {
+                DisguiceTimingCheck();
+
+                if(Disguice_Timing)
+                {
+                    find = false;
+                    range_level = 0f;
+                }
+            }
+            else
+            {
+                Disguice_Past = false;
+                Disguice_Timing = true;
             }
 
 
@@ -583,6 +620,7 @@ public class New2DEnemy : MonoBehaviour
 			else if(!find && !attackflg && !angryflg)
 			{
                 walkflg = true;
+
 				//巡回//
 				if( direction )
 				{
@@ -657,7 +695,24 @@ public class New2DEnemy : MonoBehaviour
         Syunpo_past = GameManager.Instance.playerMooveFlg;
     }
 
-	private void OnCollisionEnter2D( Collision2D collision )
+    private void  DisguiceTimingCheck()
+    {
+        if(!Disguice_Past)
+        {
+            if(range_level <= 2.5f)
+            {
+                Disguice_Timing = true;
+            }
+            else
+            {
+                Disguice_Timing = false;
+            }
+        }
+
+        Disguice_Past = GameManager.Instance.playerDisguiceMode;
+    }
+
+    private void OnCollisionEnter2D( Collision2D collision )
 	{
 		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2) )
 		{
