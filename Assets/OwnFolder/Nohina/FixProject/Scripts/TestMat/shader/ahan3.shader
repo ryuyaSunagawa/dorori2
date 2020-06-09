@@ -11,6 +11,10 @@ Shader "Sprites/ahan3"
 		[HideInInspector]_Flip( "Flip", Vector ) = ( 1,1,1,1 )
 		[PerRendererData]_AlphaTex( "External Alpha", 2D ) = "white" {}
 		[PerRendererData]_EnableExternalAlpha( "Enable External Alpha", Float ) = 0
+
+		_Alpha( "Alpha", Float ) = 0
+
+		//_MainTex( "Texture", 2D ) = "white" {}
 	}
 
 		SubShader
@@ -41,40 +45,23 @@ Shader "Sprites/ahan3"
 				#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 				#include "UnitySprites.cginc"
 
-				struct v2fCustom
-				{
-					float4 vertex	: SV_POSITION;
-					fixed4 color : COLOR;
-					float2 texcoord	: TEXCOORD0;
-					float  alpha : TEXCOORD1;
-					UNITY_VERTEX_OUTPUT_STEREO
-				};
+				//float _Alpha;
 
-				v2fCustom vert( appdata_t IN )
-				{
-					v2fCustom OUT;
+				//v2f ert( appdata_t IN )
+				//{
+				//	v2f OUT;
 
-					UNITY_SETUP_INSTANCE_ID( IN );
-					UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO( OUT );
+				//	OUT.vertex = UnityObjectToClipPos( OUT.vertex );
 
-					OUT.vertex = UnityFlipSprite( IN.vertex, _Flip );
-					OUT.vertex = UnityObjectToClipPos( OUT.vertex );
-					OUT.texcoord = IN.texcoord;
-					OUT.color = IN.color * _Color * _RendererColor;
+				//	return OUT;
+				//}
 
-					return OUT;
-				}
+				//fixed4 SpriteFrag( v2fCustom IN ) : SV_Target
+				//{
+				//	fixed4 c = SampleSpriteTexture( IN.texcoord ) * IN.color;
 
-				fixed4 frag( v2fCustom IN ) : SV_Target
-				{
-					fixed4 c = SampleSpriteTexture( IN.texcoord ) * IN.color;
-
-					//c.a *= saturate( length() );
-
-					c.rgb *= c.a;
-
-					return c;
-				}
+				//	return c;
+				//}
 
 			ENDCG
 			}
