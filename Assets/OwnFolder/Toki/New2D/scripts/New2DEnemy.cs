@@ -26,7 +26,7 @@ public class New2DEnemy : MonoBehaviour
 
     SpriteRenderer sr;                          //敵のスプライトレンダラー
 
-    private bool direction = true;              //false:右, true:左
+    [HideInInspector] public bool direction = true;              //false:右, true:左
 
     private float count = 0.0f;                 //巡回地点についた時の待ち時間カウント
 
@@ -53,6 +53,8 @@ public class New2DEnemy : MonoBehaviour
     RaycastHit2D hit;                               //レイが当たった奴の保存箱
 
     [HideInInspector]public bool find = false;                      //プレイヤーを見つけたかフラグ
+
+    [HideInInspector] public bool tomadoi = false;                  //瞬歩でかわされたら少し止まって振り返る処理フラグ
 
     [SerializeField] private float range1 = 14.0f;　//敵の発見段階lv1の距離 (？マークを出してゆっくり近づく)
     [SerializeField] private float range2 = 10.0f;  //敵の発見段階lv2の距離 (!?マークを出してすごい形相で追っかける)
@@ -93,7 +95,7 @@ public class New2DEnemy : MonoBehaviour
     int layernum;                                   //PlayerLayerのナンバー入れ
     int layerMask;                                  //PlayerLayerをマスクに変化させたやつ入れ
 
-    [SerializeField] GameObject Player;             //プレイヤー
+    [SerializeField] public GameObject Player;             //プレイヤー
 
     private FixPlayerScript P_script;
 
@@ -108,6 +110,10 @@ public class New2DEnemy : MonoBehaviour
     private bool Syunpo_past = false;                       //1フレーム前の瞬歩
 
     private bool Syunpo_Timeing = true;                    //成功する瞬歩か、失敗する瞬歩か
+
+    [SerializeField] private float tomadoi_time = 2.0f;     //敵が瞬歩によってプレイヤーを見失た時とまる時間
+
+    private float tomadoi_count = 0.0f;                     //↑のカウント用
 
     private bool Disguice_Past = false;                     //1フレーム前の変化
 
@@ -239,8 +245,14 @@ public class New2DEnemy : MonoBehaviour
                     {
                         walkflg = true;
                     }
-        
 
+
+                    if (settaiflg)
+                    {
+                        find = false;
+                        walkflg = false;
+                        range_level = 0f;
+                    }
 
                     if (direction && transform.position.x > hit.transform.position.x)
                     {
@@ -252,20 +264,10 @@ public class New2DEnemy : MonoBehaviour
                     }
                     else
                     {
+                        ////瞬歩によって後ろに回られた場合戸惑いフラグをtrueにする
                         if(find && Syunpo_Timeing &&GameManager.Instance.playerMooveFlg)
                         {
-                            if (direction)
-                            {
-                                transform.localScale = new Vector2(-enemy_size_x, enemy_size_y);
-                                direction = false;
-                                patrollpoint = false;
-                            }
-                            else if(!direction)
-                            {
-                                transform.localScale = new Vector2(enemy_size_x, enemy_size_y);
-                                direction = true;
-                                patrollpoint = true;
-                            }
+                            tomadoi = true;
                         }
                         find = false;
                         range_level = 0;
@@ -275,12 +277,14 @@ public class New2DEnemy : MonoBehaviour
                 }
                 else
                 {
+                    
                     suspicious = false;
                     if(!attackflg && !angryflg)
                     {
                         //atk_motion_count = 0.0f;
                         walkflg = true;
                     }
+
 
                     if (range_level == 3f)
                     {
@@ -352,8 +356,33 @@ public class New2DEnemy : MonoBehaviour
             }
 
 
+            ///////瞬歩によってプレイヤを見失ったらしばらくとまる処理//////////
+            if(tomadoi)
+            {
+                walkflg = false;
+                tomadoi_count += Time.deltaTime;
+                if (tomadoi_count > tomadoi_time)
+                {
+                    if (direction)
+                    {
+                        transform.localScale = new Vector2(-enemy_size_x, enemy_size_y);
+                        direction = false;
+                        patrollpoint = false;
+                    }
+                    else if (!direction)
+                    {
+                        transform.localScale = new Vector2(enemy_size_x, enemy_size_y);
+                        direction = true;
+                        patrollpoint = true;
+                    }
+
+                    tomadoi = false;
+                    tomadoi_count = 0.0f;
+                }
+            }
 
 
+            ////////プレイヤーを発見した場合の遷移処理///////////////////
             if (find)
             {
 
@@ -567,13 +596,13 @@ public class New2DEnemy : MonoBehaviour
             
         }
 
-        Debug.Log(GameManager.Instance.playerMooveFlg);
-        Debug.Log(angryflg);
+        Debug.Log(GameManager.Instance.playerDisguiceMode);
+        //Debug.Log(settaiflg);
         
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
-		if( _poisonState != 1  && _poisonState != 2)
+		if(!settaiflg && _poisonState != 2 && !tomadoi)
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
@@ -714,11 +743,23 @@ public class New2DEnemy : MonoBehaviour
 
     private void OnCollisionEnter2D( Collision2D collision )
 	{
+        
 		if( collision.transform.tag == "Enemy" && ( _poisonState == 1 || _poisonState == 2) )
 		{
 			collision.transform.GetComponent<New2DEnemy>().poisonState = 2;
 		}
         
 	}
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if(GameManager.Instance.playerAttackNowFlg)
+        {
+            settaiflg = true;
+            walkflg = false;
+            find = false;
+            range_level = 0f;
+        }
+    }
 
 }

@@ -456,7 +456,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 103a542e0420a7542914991d7e314816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Enemyscript: {fileID: 8391389297752971476}
+  enemy: {fileID: 8391389297752971472}
+  script: {fileID: 0}
 --- !u!114 &6872013145299734827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,11 +503,30 @@ MonoBehaviour:
   angry:
   - {fileID: 21300000, guid: 9d0a950666564c54182bfa5b7b0e10fa, type: 3}
   - {fileID: 21300000, guid: 566f5ae1bb4fa8a448ade51b05154c6f, type: 3}
-  - {fileID: 21300000, guid: 566f5ae1bb4fa8a448ade51b05154c6f, type: 3}
+  - {fileID: 21300000, guid: a3c71daf17d67ed4982ba5b3a6633e33, type: 3}
   - {fileID: 21300000, guid: 56ecf4801e7fb5c45bc4d9fab64588c8, type: 3}
   - {fileID: 21300000, guid: 26cf542a77a799c419b9334c9db8d8fa, type: 3}
   - {fileID: 21300000, guid: 3060984ab36c9f141aafa07b7492b9b7, type: 3}
   - {fileID: 21300000, guid: 5be4a5d19ac2ced47aa9724b1da22bdc, type: 3}
+  death:
+  - {fileID: 21300000, guid: fa838cc44e61465428f9cbc8924c80cb, type: 3}
+  - {fileID: 21300000, guid: 4c689c1978396fd42a7d3dda4321956a, type: 3}
+  - {fileID: 21300000, guid: 9ebb93fa08e75f2468f7908d89c4d842, type: 3}
+  - {fileID: 21300000, guid: 5afae5f24dbc49d4f928ca8f2eb19786, type: 3}
+  - {fileID: 21300000, guid: 7de4307c1399a7243b3f4d90b16615d6, type: 3}
+  - {fileID: 21300000, guid: cf49c14c44ecbfe49a8e84629af6d4f9, type: 3}
+  - {fileID: 21300000, guid: 4713a4ae6155b514ba1dc801df69390a, type: 3}
+  - {fileID: 21300000, guid: 88ad0b94292197b4383e9d46fa16e293, type: 3}
+  - {fileID: 21300000, guid: b2612f10c77a90e47b31ffab9d773cb4, type: 3}
+  - {fileID: 21300000, guid: 6e1f6e0db13b4e54f96086210e6d640a, type: 3}
+  - {fileID: 21300000, guid: 342cd88eec4b8f9408970f7b5a16dcf1, type: 3}
+  - {fileID: 21300000, guid: 1148cef327bcc7740b23f23d31c043c1, type: 3}
+  - {fileID: 21300000, guid: 2a2b4ecc5c207be45a551fe3ccb745ca, type: 3}
+  - {fileID: 21300000, guid: 248e9878336e0824a99bddbf83e2cfff, type: 3}
+  - {fileID: 21300000, guid: 4d99c58e7cc9faa4ea32365a2f7f2476, type: 3}
+  - {fileID: 21300000, guid: 006e7ebbeeef2b6479b44062b7b62d3b, type: 3}
+  - {fileID: 21300000, guid: ba0f51d4ecf22474b977b4073cd1a6ee, type: 3}
+  - {fileID: 21300000, guid: 9511cf190686882468c6dfc7013b4348, type: 3}
   suspiciousSprite: {fileID: 21300000, guid: 64d29d3a815793a4e8f41e1e8bafdb50, type: 3}
 --- !u!1001 &168529392169195255
 PrefabInstance:
@@ -548,23 +568,23 @@ PrefabInstance:
     - target: {fileID: 8512516387051245088, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
-      value: 8
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245088, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.y
-      value: 8
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 8e46ec44a6e055b479f305e0ab107b3a, type: 2}
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 9d0a950666564c54182bfa5b7b0e10fa,
+      objectReference: {fileID: 21300000, guid: c19171cefe1db6f478791d1d782b1608,
         type: 3}
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
@@ -594,12 +614,12 @@ PrefabInstance:
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_Size.x
-      value: 8
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_Size.y
-      value: 8
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245090, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}

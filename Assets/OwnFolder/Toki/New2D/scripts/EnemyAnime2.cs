@@ -20,6 +20,7 @@ public class EnemyAnime2 : MonoBehaviour
     [SerializeField] Sprite[] attacked = new Sprite[19];
     [SerializeField] Sprite[] walked = new Sprite[7];
     [SerializeField] Sprite[] angry = new Sprite[7];
+    [SerializeField] Sprite[] death = new Sprite[18];
     [Space][SerializeField] Sprite suspiciousSprite;
 
 
