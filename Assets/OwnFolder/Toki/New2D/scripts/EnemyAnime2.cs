@@ -7,6 +7,7 @@ public class EnemyAnime2 : MonoBehaviour
 
     private New2DEnemy enemyscript;
 
+    int death_flm = 0;
     int atk_flm = 0;
     int wlk_flm = 0;
     int run_flm = 0;
@@ -17,9 +18,11 @@ public class EnemyAnime2 : MonoBehaviour
 
     [SerializeField] Sprite normalSprite = null;
 
+    [SerializeField] Sprite[] death = new Sprite[18];
     [SerializeField] Sprite[] attacked = new Sprite[19];
     [SerializeField] Sprite[] walked = new Sprite[7];
     [SerializeField] Sprite[] angry = new Sprite[7];
+    
     [Space][SerializeField] Sprite suspiciousSprite;
 
 
@@ -32,8 +35,15 @@ public class EnemyAnime2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //////////敵の死亡アニメーション///////////////////
+        if(enemyscript.deathflg)
+        {
+            DeathOnEnemy(1);
+        }
+
+
         //////////敵の攻撃のアニメーション起動//////////////
-        if (enemyscript.attackflg)
+        else if (enemyscript.attackflg)
         {
             AttackOnEnemy(1);
         }
@@ -78,6 +88,91 @@ public class EnemyAnime2 : MonoBehaviour
         }
 
     }
+    void DeathOnEnemy(int death_flg)
+    {
+        if(death_flm == 0 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[0];
+        }
+        else if (death_flm == 3 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[1];
+        }
+        else if (death_flm == 6 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[2];
+        }
+        else if (death_flm == 9 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[3];
+        }
+        else if (death_flm == 12 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[4];
+        }
+        else if (death_flm == 15 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[5];
+        }
+        else if (death_flm == 18 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[6];
+        }
+        else if (death_flm == 21 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[7];
+        }
+        else if (death_flm == 24 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[8];
+        }
+        else if (death_flm == 27 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[9];
+        }
+        else if (death_flm == 30 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[10];
+        }
+        else if (death_flm == 33 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[11];
+        }
+        else if (death_flm == 36 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[12];
+        }
+        else if (death_flm == 39 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[13];
+        }
+        else if (death_flm == 42 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[14];
+        }
+        else if (death_flm == 45 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[15];
+        }
+        else if (death_flm == 48 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[16];
+        }
+        else if (death_flm == 51 && death_flg == 1)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = death[17];
+        }
+        else if(death_flm == 54 && death_flg == 1)
+        {
+            death_flm = 0;
+            death_flg = 0;
+        }
+        if(death_flg == 1)
+        {
+            death_flm++;
+        }
+    }
+
     void AttackOnEnemy(int atk_flg)
     {
         if (atk_flm == 0 && atk_flg == 1)

@@ -7,17 +7,20 @@ using UnityEngine;
 public class EnemyTrigger : MonoBehaviour
 {
 
-     [SerializeField] private New2DEnemy Enemyscript;
+
+    [SerializeField] private GameObject enemy;
+    private New2DEnemy script;
 
     // Start is called before the first frame update
     void Start()
     {
+        script = enemy.GetComponent<New2DEnemy>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Enemyscript.lets_attack)
+        if(script.lets_attack)
         {
             if(GameManager.Instance.playerHideFlg)
             {
@@ -32,11 +35,16 @@ public class EnemyTrigger : MonoBehaviour
 
         if(other.gameObject.layer == 13 || other.gameObject.layer == 15)
         {
-            if(Enemyscript.angryflg)
+            
+            if(script.angryflg)
             {
-                GameManager.Instance.playerHideFlg = false;
+                
+                
+                GameManager.Instance.playerMooveFlg = false;
+                GameManager.Instance.playerDeathFlg = true;
             }
-            if (Enemyscript.lets_attack)
+
+            if (script.lets_attack)
             {
                 
                 GameManager.Instance.playerDeathFlg = true;
@@ -47,10 +55,10 @@ public class EnemyTrigger : MonoBehaviour
         {
            
 
-            if (Enemyscript.gameObject.layer == 2)
+            if (script.gameObject.layer == 2)
             {
                
-                Enemyscript.gameObject.GetComponent<New2DEnemy>().poisonState = 2;
+                script.gameObject.GetComponent<New2DEnemy>().poisonState = 2;
             }
         }
     }

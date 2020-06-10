@@ -60,8 +60,10 @@
             v2f vert (appdata v)	//頂点シェーダからフラグメントシェーダにデータを渡す
             {
                 v2f o;
-
-				_Down -= _Time.y * 0.6;
+				if (_Down > 0)
+				{
+					_Down -= _Time.y * 0.6;
+				}
 				if (_Down < v.vertex.y)
 				{
 					v.vertex.y -= (_Time.y * 0.6);
