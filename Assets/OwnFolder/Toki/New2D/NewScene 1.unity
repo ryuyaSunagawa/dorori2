@@ -803,6 +803,11 @@ PrefabInstance:
       propertyPath: game_manager
       value: 
       objectReference: {fileID: 1050402180}
+    - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
+        type: 3}
+      propertyPath: deathflg
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8391389297752971479, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: m_IsTrigger
