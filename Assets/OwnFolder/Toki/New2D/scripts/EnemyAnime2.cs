@@ -162,11 +162,7 @@ public class EnemyAnime2 : MonoBehaviour
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[17];
         }
-        else if(death_flm == 54 && death_flg == 1)
-        {
-            death_flm = 0;
-            death_flg = 0;
-        }
+        
         if(death_flg == 1)
         {
             death_flm++;

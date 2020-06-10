@@ -62,11 +62,11 @@
                 v2f o;
 				if (_Down > 0)
 				{
-					_Down -= _Time.y * 0.6;
+					_Down -= _Time.y * 0.5;
 				}
 				if (_Down < v.vertex.y)
 				{
-					v.vertex.y -= (_Time.y * 0.6);
+					v.vertex.y -= (_Time.y * 0.3);
 				}
 				
                 o.vertex = UnityObjectToClipPos(v.vertex);	//座標変換する処理

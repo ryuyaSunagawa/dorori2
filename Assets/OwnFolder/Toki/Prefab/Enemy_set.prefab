@@ -578,7 +578,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 8e46ec44a6e055b479f305e0ab107b3a, type: 2}
+      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 8512516387051245089, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_Sprite
@@ -765,6 +765,11 @@ PrefabInstance:
         type: 3}
       propertyPath: speed
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: deathflg
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245095, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
