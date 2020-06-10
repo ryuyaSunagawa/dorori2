@@ -12,9 +12,6 @@ Shader "Sprites/Gradient_Alpha"
 
 			_GradientAlpha1( "Alpha 1", Range( 0, 1 ) ) = 0
 			_GradientAlpha2( "Alpha 2", Range( 0, 1 ) ) = 1
-			_GradientScale( "Scale", Range( 0, 2 ) ) = 1
-			_GradientAngle( "Angle", Range( 0, 360 ) ) = 0
-			_GradientOffset( "Offset", Range( -1, 1 ) ) = 0
 	}
 
 		SubShader
@@ -75,15 +72,6 @@ Shader "Sprites/Gradient_Alpha"
 					OUT.texcoord = IN.texcoord;
 					OUT.color = IN.color * _Color * _RendererColor;
 
-					// グラデーションの角度に合わせてスプライト頂点を回転、オフセット分だけ移動、
-					// スケールで割った際のX座標を求め、さらに範囲を-1～1 → 0～1に変える
-					float theta = _GradientAngle * UNITY_PI / 180;
-					OUT.alpha = ( ( dot( float2( cos( theta ), -sin( theta ) ), IN.vertex.xy ) + _GradientOffset * 2 ) / _GradientScale ) + 0.5;
-
-					#ifdef PIXELSNAP_ON
-					OUT.vertex = UnityPixelSnap( OUT.vertex );
-					#endif
-
 					return OUT;
 				}
 
@@ -91,11 +79,11 @@ Shader "Sprites/Gradient_Alpha"
 				{
 					fixed4 c = SampleSpriteTexture( IN.texcoord ) * IN.color;
 
-				// プロパティから設定したアルファ1とアルファ2をバーテックスシェーダーで求めた比率で
-				// 混合し、0～1におさめてアルファに乗算する
-				c.a *= saturate( lerp( _GradientAlpha1, _GradientAlpha2, IN.alpha ) );
+					// プロパティから設定したアルファ1とアルファ2をバーテックスシェーダーで求めた比率で
+					// 混合し、0～1におさめてアルファに乗算する
+					c.a *= saturate( _GradientAlpha1 - ( length( 0.5 - IN.texcoord ) * _GradientAlpha2 ) );
 
-				c.rgb *= c.a;
+					c.rgb *= c.a;
 
 				return c;
 			}

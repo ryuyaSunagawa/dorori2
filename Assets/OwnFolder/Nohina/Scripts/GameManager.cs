@@ -141,6 +141,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	} = false;
 
 	/// <summary>
+	/// プレイヤー変化フラグ
+	/// </summary>
+	public bool playerDisguiceFlg
+	{
+		set;
+		get;
+	} = false;
+
+	/// <summary>
 	/// プレイヤーのアニメーションステートっていう夢の話
 	/// </summary>
 	public int playerState
@@ -152,6 +161,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	[SerializeField] GameObject framerateDrawText = null;
 
 	[SerializeField] GameObject buildTimeText = null;
+
+	/// <summary>
+	/// 敵のステート
+	/// </summary>
+	public int enemyState
+	{
+		set;
+		get;
+	} = 0;
 
 	float timeElapsed = 0f;
 	int frameSize = 0;
@@ -232,6 +250,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 
 		print( playerDeathNum );
+
+
 	}
 
 }

@@ -215,7 +215,7 @@ public class PlayerAnimationScript : MonoBehaviour
 
 			deathAnimationFrame = 0;
 
-			return 120;
+			return 96;
 		}
 
 		outDeathSprite = nowSprite;

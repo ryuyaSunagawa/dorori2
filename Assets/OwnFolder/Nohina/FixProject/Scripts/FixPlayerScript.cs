@@ -44,6 +44,8 @@ public class FixPlayerScript : MonoBehaviour
 
 	//リスポーン場所
 	[SerializeField, Range( 0f, 25f ), Header( "リスポーン場所の距離" )] float respawnDistance = 10f;
+
+	bool deathAnimationFlg = false;
 		
 	/*
 	 * Animation系変数
@@ -189,7 +191,7 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( ( horizontal >= 0.1f && horizontal <= stickRunRange ) || ( horizontal <= -( 0.1f ) && horizontal >= -( stickRunRange ) ) )
 		{
-			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false )
+			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false && deathAnimationFlg == false )
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			}
@@ -202,7 +204,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 		else if( horizontal > stickRunRange || horizontal < -( stickRunRange ) )
 		{
-			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false )
+			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false && deathAnimationFlg == false )
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			}
@@ -215,7 +217,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 		else
 		{
-			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false )
+			if( disguiseMode == 0 && GameManager.Instance.playerAttackNowFlg == false && GameManager.Instance.playerRespawnFlg == false && deathAnimationFlg == false )
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 0, out nowSprite );
 			}
@@ -378,7 +380,7 @@ public class FixPlayerScript : MonoBehaviour
 	{
 		int attackFrame = 0;
 
-		if( attackFlg == true && Input.GetButtonDown( "Touch" ) )
+		if( attackFlg == true && Input.GetButtonDown( "Touch" ) && deathAnimationFlg == false )
 		{
 			GameManager.Instance.playerAttackNowFlg = true;
 		}
@@ -496,10 +498,11 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void DeathProcess()
 	{
+		GameManager.Instance.playerDeathNum--;
+
 		//DeathFlgがたった時のリスポーン処理
-		if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum-- > 0 )
+		if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum > 0 )
 		{
-			GameManager.Instance.playerDeathNum--;
 			GameManager.Instance.playerDeathFlg = false;
 			GameManager.Instance.playerRespawnFlg = true;
 			gameObject.layer = 17;
@@ -507,10 +510,12 @@ public class FixPlayerScript : MonoBehaviour
 			StartCoroutine( "RespawnProcess" );
 		}
 		//DeathFlgがたった時の死亡処理
-		else if( GameManager.Instance.playerDeathNum-- == 0 )
+		else if( GameManager.Instance.playerDeathNum <= 0 )
 		{
 			//Destroy( this.gameObject );
 			GameManager.Instance.playerDeathFlg = false;
+			deathAnimationFlg = true;
+			gameObject.layer = 17;
 
 			StartCoroutine( "DeadProcess" );
 		}
@@ -607,6 +612,7 @@ public class FixPlayerScript : MonoBehaviour
 
 	IEnumerator DeadProcess()
 	{
+		//Destroy( this.gameObject );
 		int deathAnimationFrame = 0;
 
 		//敵ポジションとの差分によりリスポーン場所を決定する
@@ -637,15 +643,18 @@ public class FixPlayerScript : MonoBehaviour
 		do
 		{
 			deathAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 1, out nowSprite );
+			print( deathAnimationFrame );
 
 			if( deathAnimationFrame >= 96 )
 			{
+				deathAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
+				print( "ahandeath" );
 				Destroy( this.gameObject );
 			}
-			
+
 			yield return new WaitForSeconds( Time.deltaTime );
 		} while( deathAnimationFrame < 96 );
-		
+
 		yield return null;
 	}
 }
