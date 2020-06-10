@@ -293,6 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enablePosition: {x: 0, y: 0, z: 0}
+  directRight: 0
 --- !u!60 &420054650
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -785,7 +786,7 @@ PrefabInstance:
     - target: {fileID: 8391389297752971435, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: m_Constraints
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}

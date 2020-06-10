@@ -77,6 +77,8 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
+    [HideInInspector] public bool deathflg = true;      //死亡フラグ
+
     [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
 
     [HideInInspector]public bool lets_attack = false;   //攻撃の判定出すときのフラグ
@@ -210,9 +212,18 @@ public class New2DEnemy : MonoBehaviour
         
         Debug.DrawRay(ray.origin, ray.direction * range1, Color.red);
 
+        if(deathflg)
+        {
+            walkflg = false;
+            runflg = false;
+            attackflg = false;
+            angryflg = false;
+            range_level = 0.0f;
+        }
+
 
         //レイが何かに当たったか？//
-        if (hit.collider && _poisonState != 2)
+        if (hit.collider && !deathflg)
         {
            
 
@@ -228,6 +239,7 @@ public class New2DEnemy : MonoBehaviour
                     if (attackflg)
                     {
                         walkflg = false;
+                        runflg = false;
                         
                     }
                     else
@@ -240,6 +252,7 @@ public class New2DEnemy : MonoBehaviour
                     {
                         attackflg = false;
                         walkflg = false;
+                        runflg = false;
                     }
                     else
                     {
@@ -251,6 +264,7 @@ public class New2DEnemy : MonoBehaviour
                     {
                         find = false;
                         walkflg = false;
+                        runflg = false;
                         range_level = 0f;
                     }
 
@@ -360,6 +374,7 @@ public class New2DEnemy : MonoBehaviour
             if(tomadoi)
             {
                 walkflg = false;
+                runflg = false;
                 tomadoi_count += Time.deltaTime;
                 if (tomadoi_count > tomadoi_time)
                 {
@@ -396,7 +411,8 @@ public class New2DEnemy : MonoBehaviour
                 {
                     if (!attackflg)
                     {
-                        walkflg = true;
+                        walkflg = false;
+                        runflg = true;
                     }
                     suspicious = false;
                     reactioncount = 0.0f;
@@ -415,6 +431,7 @@ public class New2DEnemy : MonoBehaviour
 
                     range_level = 0f;
                     walkflg = false;
+                    runflg = false;
 
                     if (!Syunpo_Timeing)
                     {
@@ -437,6 +454,7 @@ public class New2DEnemy : MonoBehaviour
                     //侵入者じゃけぇ!!
                     if (!attackflg)
                     {
+                        runflg = true;
                         if (transform.position.x < hit.transform.position.x)
                         {
                             rb.velocity = new Vector2(speed * 3.0f, rb.velocity.y);
@@ -450,6 +468,7 @@ public class New2DEnemy : MonoBehaviour
                     if ((Vector2.Distance(hit.transform.position, transform.position)) < (start_range3 / 1.5))
                     {
                         walkflg = false;
+                        runflg = false;
                         attackflg = true;
                     }
                 }
@@ -462,6 +481,7 @@ public class New2DEnemy : MonoBehaviour
                         if (transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
                         {
                             walkflg = false;
+                            runflg = false;
                             search_count += Time.deltaTime;
                             if (search_time < search_count)
                             {
@@ -489,7 +509,9 @@ public class New2DEnemy : MonoBehaviour
                         }
                     }
                     else if(!attackflg)
-                    { 
+                    {
+                        walkflg = false;
+                        runflg = true;
                         if (transform.position.x < escape_playerx)
                         {
                             rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
@@ -516,6 +538,8 @@ public class New2DEnemy : MonoBehaviour
                     //プレイヤーの方向に進む//
                     if (!attackflg)
                     {
+                        walkflg = false;
+                        runflg = true;
                         if (transform.position.x < hit.transform.position.x)
                         {
                             rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
@@ -558,7 +582,9 @@ public class New2DEnemy : MonoBehaviour
                         }
                     }
                     else if (!attackflg)
-                    { 
+                    {
+                        walkflg = false;
+                        runflg = true;
                         if (transform.position.x < escape_playerx)
                         {
                             rb.velocity = new Vector2(speed * 2.0f, rb.velocity.y);
@@ -602,7 +628,7 @@ public class New2DEnemy : MonoBehaviour
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
-		if(!settaiflg && _poisonState != 2 && !tomadoi)
+		if(!settaiflg && !deathflg && !tomadoi)
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
@@ -643,11 +669,13 @@ public class New2DEnemy : MonoBehaviour
                     arrive = false;
 					//frontcheck.check = false;
 					count = 0.0f;
+                    runflg = false;
                     walkflg = true;
 				}
 			}//敵を見つけていない
 			else if(!find && !attackflg && !angryflg)
 			{
+                runflg = false;
                 walkflg = true;
 
 				//巡回//
@@ -756,6 +784,7 @@ public class New2DEnemy : MonoBehaviour
         if(GameManager.Instance.playerAttackNowFlg)
         {
             settaiflg = true;
+            runflg = false;
             walkflg = false;
             find = false;
             range_level = 0f;
