@@ -77,7 +77,9 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    [HideInInspector] public bool deathflg = true;      //死亡フラグ
+    [HideInInspector] public bool deathflg = false;      //死亡フラグ
+
+    [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
     [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
 
@@ -214,16 +216,21 @@ public class New2DEnemy : MonoBehaviour
 
         if(deathflg)
         {
+            Debug.Log("trueなってんで");
             walkflg = false;
             runflg = false;
             attackflg = false;
             angryflg = false;
             range_level = 0.0f;
+            if(meltdowner)
+            {
+                sr.material = poison;
+            }
         }
 
 
         //レイが何かに当たったか？//
-        if (hit.collider && !deathflg)
+        if (hit.collider && !deathflg && !GameManager.Instance.playerRespawnFlg)
         {
            
 
@@ -267,6 +274,7 @@ public class New2DEnemy : MonoBehaviour
                         runflg = false;
                         range_level = 0f;
                     }
+
 
                     if (direction && transform.position.x > hit.transform.position.x)
                     {
@@ -628,7 +636,7 @@ public class New2DEnemy : MonoBehaviour
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
-		if(!settaiflg && !deathflg && !tomadoi)
+		if(!settaiflg && !deathflg && !tomadoi && !GameManager.Instance.playerRespawnFlg)
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
