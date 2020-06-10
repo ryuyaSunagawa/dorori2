@@ -413,7 +413,7 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void MomentaryMove()
 	{
-		if( Input.GetButtonDown( "Moove" ) )
+		if( Input.GetButtonDown( "Moove" ) && !( disguiseMode == 1 ) )
 		{
 			StartCoroutine( "MomentaryMoveProcess" );
 			GameManager.Instance.playerMooveFlg = true;
