@@ -628,10 +628,31 @@ public class New2DEnemy : MonoBehaviour
                 }
 
             }
+
+            if(attackflg)
+            {
+                GameManager.Instance.enemyState = 4;
+            }
+            else if(range_level == 3)
+            {
+                GameManager.Instance.enemyState = 3;
+            }
+            else if(range_level == 2)
+            {
+                GameManager.Instance.enemyState = 2;
+            }
+            else if(range_level == 1)
+            {
+                GameManager.Instance.enemyState = 1;
+            }
+            else
+            {
+                GameManager.Instance.enemyState = 0;
+            }
             
         }
 
-        Debug.Log(GameManager.Instance.playerDisguiceMode);
+        Debug.Log(GameManager.Instance.enemyState);
         //Debug.Log(settaiflg);
         
 		///<summary>
