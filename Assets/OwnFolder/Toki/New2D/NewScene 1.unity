@@ -806,7 +806,7 @@ PrefabInstance:
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: deathflg
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8391389297752971479, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
@@ -1101,7 +1101,7 @@ MonoBehaviour:
   normalSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
   playerSpeed_Normal: 0.285
   stickRunRange: 0.5
-  sacrificeObject: {fileID: 0}
+  sacrificeObject: {fileID: 1047771022}
   respawnDistance: 5
   moveDelta: 2
   disguiceTimeLimit: 0

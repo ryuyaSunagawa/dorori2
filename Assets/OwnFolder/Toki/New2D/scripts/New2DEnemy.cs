@@ -216,7 +216,7 @@ public class New2DEnemy : MonoBehaviour
 
         if(deathflg)
         {
-            Debug.Log("trueなってんで");
+            //Debug.Log("trueなってんで");
             walkflg = false;
             runflg = false;
             attackflg = false;
@@ -227,6 +227,7 @@ public class New2DEnemy : MonoBehaviour
                 sr.material = poison;
             }
         }
+        
 
 
         //レイが何かに当たったか？//

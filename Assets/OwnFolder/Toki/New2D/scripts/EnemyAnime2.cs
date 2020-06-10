@@ -41,6 +41,13 @@ public class EnemyAnime2 : MonoBehaviour
             DeathOnEnemy(1);
         }
 
+        ////////////敵の威嚇アニメーション起動///////////////
+        else if (enemyscript.angryflg)
+        {
+            atk_flm = 0;
+            AngryOnEnemy(1);
+        }
+
 
         //////////敵の攻撃のアニメーション起動//////////////
         else if (enemyscript.attackflg)
@@ -60,14 +67,6 @@ public class EnemyAnime2 : MonoBehaviour
         else if (enemyscript.runflg)
         {
             RunOnEnemy(1);
-        }
-        
-
-        ////////////敵の威嚇アニメーション起動///////////////
-        else if(enemyscript.angryflg)
-        {
-            atk_flm = 0;
-            AngryOnEnemy(1);
         }
         
 
@@ -392,6 +391,7 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (ang_flg == 0)
         {
+            enemyscript.angryflg = false;
             ang_flm = 0;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
         }
