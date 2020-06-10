@@ -60,13 +60,13 @@
             v2f vert (appdata v)	//頂点シェーダからフラグメントシェーダにデータを渡す
             {
                 v2f o;
-				if (_Down > 0)
+				if (_Down > -1)
 				{
 					_Down -= _Time.y * 0.5;
 				}
 				if (_Down < v.vertex.y)
 				{
-					v.vertex.y -= (_Time.y * 0.3);
+					v.vertex.y -= (_Time.y * 0.1);
 				}
 				
                 o.vertex = UnityObjectToClipPos(v.vertex);	//座標変換する処理

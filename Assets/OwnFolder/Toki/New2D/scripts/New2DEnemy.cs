@@ -77,7 +77,7 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    [HideInInspector] public bool deathflg = false;      //死亡フラグ
+     public bool deathflg = true;      //死亡フラグ
 
     [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
