@@ -10,6 +10,8 @@ public class AnimationController : MonoBehaviour
 	int wlk_flg = 0;
     int run_flm = 0;
     int run_flg = 0;
+    int wlk_speed_flg=0;
+    float StickTilt;
 
     [SerializeField] Sprite nowSprite = null;
 
@@ -78,56 +80,112 @@ public class AnimationController : MonoBehaviour
 	public void Walk( int useComp, out Sprite walkSprite )
 	{
 		wlk_flg = useComp;
+        StickTilt=Input.GetAxis("Horizontal");
+        if(StickTilt >= 0.3f && StickTilt <= 0.4f)
+        {
+            wlk_speed_flg = 1;
+        }
+        else
+        {
+            wlk_speed_flg = 0;
+        }
+        switch (wlk_speed_flg)
+        {
+            case 0:
+                if (wlk_flm == 0 && wlk_flg == 1)
+                {
+                    nowSprite = walked[0];
+                }
+                else if (wlk_flm == 8 && wlk_flg == 1)
+                {
+                    nowSprite = walked[1];
+                }
+                else if (wlk_flm == 16 && wlk_flg == 1)
+                {
+                    nowSprite = walked[2];
+                }
+                else if (wlk_flm == 24 && wlk_flg == 1)
+                {
+                    nowSprite = walked[3];
+                }
+                else if (wlk_flm == 32 && wlk_flg == 1)
+                {
+                    nowSprite = walked[4];
+                }
+                else if (wlk_flm == 40 && wlk_flg == 1)
+                {
+                    nowSprite = walked[5];
+                }
+                else if (wlk_flm == 48 && wlk_flg == 1)
+                {
+                    nowSprite = walked[6];
+                }
+                else if (wlk_flm == 56 && wlk_flg == 1)
+                {
+                    nowSprite = walked[7];
+                }
+                else if (wlk_flm == 60 && wlk_flg == 1)
+                {
 
-		if( wlk_flm == 0 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 0 ];
-		}
-		else if( wlk_flm == 8 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 1 ];
-		}
-		else if( wlk_flm == 16 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 2 ];
-		}
-		else if( wlk_flm == 24 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 3 ];
-		}
-		else if( wlk_flm == 32 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 4 ];
-		}
-		else if( wlk_flm == 40 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 5 ];
-		}
-		else if( wlk_flm == 48 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 6 ];
-		}
-		else if( wlk_flm == 56 && wlk_flg == 1 )
-		{
-			nowSprite = walked[ 7 ];
-		}
-		else if( wlk_flm == 60 && wlk_flg == 1 )
-		{
+                    wlk_flm = -1;
+                }
+                else if (wlk_flg == 0)
+                {
+                    wlk_flm = -1;
+                    nowSprite = normalSprite;
+                }
+                break;
 
-			wlk_flm = -1;
-		}
-		else if( wlk_flg == 0 )
-		{
-			wlk_flm = -1;
-			nowSprite = normalSprite;
-		}
+            case 1:
+                if (wlk_flm == 0 && wlk_flg == 1)
+                {
+                    nowSprite = walked[0];
+                }
+                else if (wlk_flm == 6 && wlk_flg == 1)
+                {
+                    nowSprite = walked[1];
+                }
+                else if (wlk_flm == 12 && wlk_flg == 1)
+                {
+                    nowSprite = walked[2];
+                }
+                else if (wlk_flm == 18 && wlk_flg == 1)
+                {
+                    nowSprite = walked[3];
+                }
+                else if (wlk_flm == 24 && wlk_flg == 1)
+                {
+                    nowSprite = walked[4];
+                }
+                else if (wlk_flm == 30 && wlk_flg == 1)
+                {
+                    nowSprite = walked[5];
+                }
+                else if (wlk_flm == 36 && wlk_flg == 1)
+                {
+                    nowSprite = walked[6];
+                }
+                else if (wlk_flm == 42 && wlk_flg == 1)
+                {
+                    nowSprite = walked[7];
+                }
+                else if (wlk_flm == 48 && wlk_flg == 1)
+                {
 
-		if( wlk_flg == 1 )
-			wlk_flm++;
-
-
-		walkSprite = nowSprite;
-	}
+                    wlk_flm = -1;
+                }
+                else if (wlk_flg == 0)
+                {
+                    wlk_flm = -1;
+                    nowSprite = normalSprite;
+                }
+                break;
+        }
+        
+        if (wlk_flg == 1)
+            wlk_flm++;
+        walkSprite = nowSprite;
+    }
 
     public void Run(int useComp, out Sprite runSprite)
     {
