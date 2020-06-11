@@ -70,7 +70,7 @@ public class FixPlayerScript : MonoBehaviour
 	/// <summary>
 	/// 変化モードが呼び出されたか
 	/// </summary>
-	bool disguiseFlg = false;
+	[SerializeField] bool disguiseFlg = false;
 
 	/// <summary>
 	/// 現在の隠れ状態
@@ -101,6 +101,16 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	[SerializeField, Range( 0, 30f ) ] float moveDelta = 2f;
 
+	/// <summary>
+	/// 瞬歩のタイマー
+	/// </summary>
+	float mooveTimer = 0f;
+
+	/// <summary>
+	/// 瞬歩クールタイム
+	/// </summary>
+	[SerializeField, Range( 0, 5f ), Header( "瞬歩クールタイム" )] float mooveCoolTime = 0f;
+
 	/*
 	 * 変化系変数
 	 */
@@ -124,6 +134,8 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	[SerializeField] Sprite disguiseSprite = null;
 
+	[SerializeField] Transform enemyTrigger = null;
+
 	/*
 	 * UnityEvent
 	 */
@@ -131,6 +143,7 @@ public class FixPlayerScript : MonoBehaviour
 	private void Awake()
 	{
 		gameObject.layer = 13;
+		mooveTimer = mooveCoolTime;
 	}
 
 	// Start is called before the first frame update
@@ -282,6 +295,7 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			hideButton = false;
 			hideBackCancelFlg = false;
+			hidePushFrame = 0f;
 		}
 
 		//一定フレーム押されていたら変化
@@ -331,6 +345,14 @@ public class FixPlayerScript : MonoBehaviour
 			attackFlg = true;
 		}
 
+	}
+
+	private void OnCollisionEnter2D( Collision2D collision )
+	{
+		if( collision.collider.tag == "Enemy" )
+		{
+			disguiseMode = 2;
+		}
 	}
 
 	/// <summary>
@@ -413,10 +435,16 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void MomentaryMove()
 	{
-		if( Input.GetButtonDown( "Moove" ) && !( disguiseMode == 1 ) )
+		if( mooveTimer <= mooveCoolTime )
+		{
+			mooveTimer += Time.deltaTime;
+		}
+
+		if( !GameManager.Instance.playerMooveFlg && Input.GetButtonDown( "Moove" ) && mooveTimer >= mooveCoolTime && !( disguiseMode == 1 ) && !nowHide )
 		{
 			StartCoroutine( "MomentaryMoveProcess" );
 			GameManager.Instance.playerMooveFlg = true;
+			mooveTimer = 0;
 		}
 	}
 
@@ -475,6 +503,7 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			nowSprite = disguiseSprite;
 			disguiseMode = 1;
+			gameObject.name = "PlayerDisguice";
 		}
 
 		//使用時処理
@@ -490,6 +519,7 @@ public class FixPlayerScript : MonoBehaviour
 			disguiseMode = 0;
 			disguiseFlg = false;
 			disguiseTimeCount = 0f;
+			gameObject.name = "Player";
 		}
 	}
 

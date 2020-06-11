@@ -106,7 +106,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// プレイヤーの残機数
 	/// </summary>
-	public int playerDeathNum { set; get; } = 4;
+	[SerializeField] int _playerDeathNum = 4;
+	public int playerDeathNum
+	{
+		set {
+			_playerDeathNum = value;
+		}
+		get {
+			return _playerDeathNum;
+		}
+	}
 
 	/// <summary>
 	/// プレイヤーが隠れ状態かどうか
@@ -249,8 +258,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 			SceneManager.LoadScene( SceneManager.GetActiveScene().name );
 		}
 
-		print( playerDeathNum );
-
+		print( enemyState );
 
 	}
 
