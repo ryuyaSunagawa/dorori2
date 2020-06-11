@@ -626,7 +626,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 1229746108}
-  SmoothDegree: 0.1
+  enemyObject: {fileID: 0}
+  xDistance: 0.5
+  yDistance: 0.5
+  chaseAllMen: 1
+  smoothDegree: 0.2
 --- !u!81 &892823885
 AudioListener:
   m_ObjectHideFlags: 0
@@ -982,6 +986,7 @@ MonoBehaviour:
   enemyObj: {fileID: 1236232143}
   _playerStairState: 0
   _AnimationController: {fileID: 694150209}
+  _playerDeathNum: 4
   framerateDrawText: {fileID: 0}
   buildTimeText: {fileID: 0}
 --- !u!4 &1050402181
@@ -1021,7 +1026,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7b3c52a148df47d47a230afac069d357, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1117,7 +1122,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3d7524c36f1ceef4595366c65ae0dc1e, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1213,7 +1218,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: daab226a087762b4db0900951158647a, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1309,7 +1314,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 78f7f40055b3d3b4c9d69b7f437279c0, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1621,9 +1626,12 @@ MonoBehaviour:
   stickRunRange: 0.5
   sacrificeObject: {fileID: 1047771022}
   respawnDistance: 5
+  disguiseFlg: 0
   moveDelta: 2
+  mooveCoolTime: 0
   disguiceTimeLimit: 0
   disguiseSprite: {fileID: 21300000, guid: 9ee2402d27e95d9488fdc51b369c38bc, type: 3}
+  enemyTrigger: {fileID: 0}
 --- !u!61 &1229746112
 BoxCollider2D:
   m_ObjectHideFlags: 0
