@@ -98,71 +98,71 @@ public class EnemyAnime2 : MonoBehaviour
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[0];
         }
-        else if (death_flm == 3 && death_flg == 1)
+        else if (death_flm == 4 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[1];
         }
-        else if (death_flm == 6 && death_flg == 1)
+        else if (death_flm == 8 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[2];
         }
-        else if (death_flm == 9 && death_flg == 1)
+        else if (death_flm == 12 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[3];
         }
-        else if (death_flm == 12 && death_flg == 1)
+        else if (death_flm == 16 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[4];
         }
-        else if (death_flm == 15 && death_flg == 1)
+        else if (death_flm == 20 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[5];
         }
-        else if (death_flm == 18 && death_flg == 1)
+        else if (death_flm == 24 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[6];
         }
-        else if (death_flm == 21 && death_flg == 1)
+        else if (death_flm == 28 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[7];
         }
-        else if (death_flm == 24 && death_flg == 1)
+        else if (death_flm == 32 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[8];
         }
-        else if (death_flm == 27 && death_flg == 1)
+        else if (death_flm == 36 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[9];
         }
-        else if (death_flm == 30 && death_flg == 1)
+        else if (death_flm == 40 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[10];
         }
-        else if (death_flm == 33 && death_flg == 1)
+        else if (death_flm == 44 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[11];
         }
-        else if (death_flm == 36 && death_flg == 1)
+        else if (death_flm == 48 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[12];
         }
-        else if (death_flm == 39 && death_flg == 1)
+        else if (death_flm == 52 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[13];
         }
-        else if (death_flm == 42 && death_flg == 1)
+        else if (death_flm == 56 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[14];
         }
-        else if (death_flm == 45 && death_flg == 1)
+        else if (death_flm == 60 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[15];
         }
-        else if (death_flm == 48 && death_flg == 1)
+        else if (death_flm == 64 && death_flg == 1)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[16];
         }
-        else if (death_flm == 51 && death_flg == 1)
+        else if (death_flm == 68 && death_flg == 1)
         {
             enemyscript.meltdowner = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[17];
@@ -211,12 +211,12 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (atk_flm == 34 && atk_flg == 1)
         {
-            enemyscript.attack_avoid = false;
-            enemyscript.lets_attack = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[8];
         }
         else if (atk_flm == 39 && atk_flg == 1)
         {
+            enemyscript.attack_avoid = false;
+            enemyscript.lets_attack = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[9];
         }
         else if (atk_flm == 44 && atk_flg == 1)
@@ -398,6 +398,7 @@ public class EnemyAnime2 : MonoBehaviour
         else if (ang_flg == 0)
         {
             enemyscript.angryflg = false;
+            enemyscript.lets_attack = false;
             ang_flm = 0;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = normalSprite;
         }
