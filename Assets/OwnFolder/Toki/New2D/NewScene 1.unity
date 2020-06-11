@@ -626,7 +626,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 1229746108}
-  SmoothDegree: 0.1
+  enemyObject: {fileID: 0}
+  xDistance: 0.5
+  yDistance: 0.5
+  chaseAllMen: 1
+  smoothDegree: 0.2
 --- !u!81 &892823885
 AudioListener:
   m_ObjectHideFlags: 0
@@ -806,7 +810,7 @@ PrefabInstance:
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: deathflg
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}

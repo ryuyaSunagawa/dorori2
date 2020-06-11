@@ -388,10 +388,11 @@ public class New2DEnemy : MonoBehaviour
 
 
             ///////変化との連携////////////////////
-            if(GameManager.Instance.playerDisguiceMode)
+            if(GameManager.Instance.playerDisguiceFlg)
             {
                 DisguiceTimingCheck();
 
+                Debug.Log("ahan");
                 if(Disguice_Timing)
                 {
                     find = false;
@@ -826,7 +827,7 @@ public class New2DEnemy : MonoBehaviour
             }
         }
 
-        Disguice_Past = GameManager.Instance.playerDisguiceMode;
+        Disguice_Past = GameManager.Instance.playerDisguiceFlg;
     }
 
     private void Enemy_Sound()
