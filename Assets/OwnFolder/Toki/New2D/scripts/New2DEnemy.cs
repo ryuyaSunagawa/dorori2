@@ -103,6 +103,8 @@ public class New2DEnemy : MonoBehaviour
 
     private FixPlayerScript P_script;
 
+    private SpriteRenderer P_Sprite;                //敵のspriterendrer
+
     [SerializeField] public GameManager game_manager;
 
     private bool Hide_past = false;        //1フレーム前のhideflg（現在のhideflgと前のhideflgを比べて隠れたタイミングをとらえる）
@@ -158,6 +160,8 @@ public class New2DEnemy : MonoBehaviour
         range3 = start_range3;
 
         P_script = Player.GetComponent<FixPlayerScript>();
+
+        P_Sprite = Player.GetComponent<SpriteRenderer>();
 
         enemy_se = GetComponent<AudioSource>();
     }
@@ -459,6 +463,7 @@ public class New2DEnemy : MonoBehaviour
                     if (!Syunpo_Timeing)
                     {
                         attackflg = false;
+                        
                         angryflg = true;
                     }
                 }
@@ -778,17 +783,21 @@ public class New2DEnemy : MonoBehaviour
     {
         if(!Syunpo_past)
         {
-            if(range_level <= 1.5f)
+            //プレイヤーと対面している瞬歩のみ威嚇する
+            if ((direction && P_Sprite.flipX) || (!direction && !P_Sprite.flipX))
             {
-                Syunpo_Timeing = true;
-            }
-            else if(range_level == 3 && attack_avoid)
-            {
-                Syunpo_Timeing = true;
-            }
-            else
-            {
-                Syunpo_Timeing = false;
+                if (range_level <= 1.5f)
+                {
+                    Syunpo_Timeing = true;
+                }
+                else if (range_level == 3 && attack_avoid)
+                {
+                    Syunpo_Timeing = true;
+                }
+                else
+                {
+                    Syunpo_Timeing = false;
+                }
             }
         }
 
