@@ -6921,7 +6921,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538772636}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 42.15, y: 13.093927, z: 13.95}
+  m_LocalPosition: {x: 42.15, y: 13.093927, z: 12.74}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children: []
   m_Father: {fileID: 1935385045}
@@ -8005,7 +8005,7 @@ MonoBehaviour:
   respawnDistance: 25
   disguiseFlg: 0
   moveDelta: 2
-  mooveCoolTime: 1.93
+  mooveCoolTime: 1.86
   disguiceTimeLimit: 0
   disguiseSprite: {fileID: 21300000, guid: 9ee2402d27e95d9488fdc51b369c38bc, type: 3}
   enemyTrigger: {fileID: 262334826}
@@ -8222,7 +8222,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034782080}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 74, y: 0.6039274, z: 13.66}
+  m_LocalPosition: {x: 74, y: 0.6039274, z: 12.4}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children: []
   m_Father: {fileID: 1935385045}
@@ -8301,7 +8301,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129514796}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 74, y: 13.093927, z: 13.95}
+  m_LocalPosition: {x: 74, y: 13.093927, z: 9.94}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_Children: []
   m_Father: {fileID: 1935385045}

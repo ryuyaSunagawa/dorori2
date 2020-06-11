@@ -46,6 +46,8 @@ public class FixPlayerScript : MonoBehaviour
 	[SerializeField, Range( 0f, 25f ), Header( "リスポーン場所の距離" )] float respawnDistance = 10f;
 
 	bool deathAnimationFlg = false;
+
+	New2DEnemy enemyScript = null;
 		
 	/*
 	 * Animation系変数
@@ -151,6 +153,7 @@ public class FixPlayerScript : MonoBehaviour
     {
 		myRenderer = GetComponent<SpriteRenderer>();
 		nowSprite = normalSprite;
+		enemyScript = GameManager.Instance.getenemyObj.GetComponent<New2DEnemy>();
     }
 
     // Update is called once per frame
@@ -179,7 +182,6 @@ public class FixPlayerScript : MonoBehaviour
 
 		//スプライトを管理
 		myRenderer.sprite = nowSprite;
-		Debug.Log( GameManager.Instance.playerDisguiceFlg );
 	}
 
 	private void FixedUpdate()
@@ -281,7 +283,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 
 		//隠れていない状態でHideButtonフラグを立てる
-		if( Input.GetButtonDown( "Hide" ) && nowHide == false )
+		if( Input.GetButtonDown( "Hide" ) && nowHide == false && !GameManager.Instance.playerMooveFlg )
 		{
 			hideButton = true;
 		}
@@ -341,9 +343,16 @@ public class FixPlayerScript : MonoBehaviour
 			}
 		}
 
+		//接敵且つ瞬歩していなければ
 		if( collision.tag == "Enemy" )
 		{
-			attackFlg = true;
+			//敵が右向いてる時にプレイヤーが左にいるか、もしくは敵が左向いてる時にプレイヤーが右にいる状態だとattackFlgをtrueにする
+			if( ( enemyScript.direction == false && ( GameManager.Instance.getenemyObj.position.x > transform.position.x ) )
+			|| ( enemyScript.direction == true && ( GameManager.Instance.getenemyObj.position.x < transform.position.x ) ) )
+			{
+				attackFlg = true;
+			}
+			
 		}
 
 	}
@@ -403,7 +412,7 @@ public class FixPlayerScript : MonoBehaviour
 	{
 		int attackFrame = 0;
 
-		if( attackFlg == true && Input.GetButtonDown( "Touch" ) && deathAnimationFlg == false )
+		if( attackFlg == true && Input.GetButtonDown( "Touch" ) && deathAnimationFlg == false && !GameManager.Instance.playerMooveFlg )
 		{
 			GameManager.Instance.playerAttackNowFlg = true;
 		}
@@ -443,9 +452,10 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( !GameManager.Instance.playerMooveFlg && Input.GetButtonDown( "Moove" ) && mooveTimer >= mooveCoolTime && !( disguiseMode == 1 ) && !nowHide )
 		{
-			StartCoroutine( "MomentaryMoveProcess" );
 			GameManager.Instance.playerMooveFlg = true;
 			mooveTimer = 0;
+
+			StartCoroutine( "MomentaryMoveProcess" );
 		}
 	}
 
@@ -490,8 +500,8 @@ public class FixPlayerScript : MonoBehaviour
 			}
 		}
 
-		yield return null;
 		GameManager.Instance.playerMooveFlg = false;
+		yield return null;
 	}
 
 	/// <summary>
@@ -539,6 +549,7 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			GameManager.Instance.playerDeathFlg = false;
 			GameManager.Instance.playerRespawnFlg = true;
+			nowHide = false;
 			gameObject.layer = 17;
 
 			StartCoroutine( "RespawnProcess" );
@@ -549,6 +560,7 @@ public class FixPlayerScript : MonoBehaviour
 			//Destroy( this.gameObject );
 			GameManager.Instance.playerDeathFlg = false;
 			deathAnimationFlg = true;
+			nowHide = false;
 			gameObject.layer = 17;
 
 			StartCoroutine( "DeadProcess" );
@@ -593,9 +605,6 @@ public class FixPlayerScript : MonoBehaviour
 
 			if( respawnAnimationFrame >= 70 )
 			{
-				//身代わりオブジェクトを作る
-				sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
-				sacrificeObject.SetActive( true );
 
 				//右側リスポーン
 				if( respawnDirectRight == true )
@@ -614,12 +623,12 @@ public class FixPlayerScript : MonoBehaviour
 					gameObject.layer = 13;
 					GameManager.Instance.playerRespawnFlg = false;
 
-
 					yield return null;
 				}
 				//左側リスポーン
 				else if( respawnDirectRight == false )
 				{
+					//
 					transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
 					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
 
@@ -628,11 +637,12 @@ public class FixPlayerScript : MonoBehaviour
 					sacrificeObject.GetComponent<sacrifice>().directRight = false;
 					sacrificeObject.SetActive( true );
 
-					gameObject.layer = 13;
-					GameManager.Instance.playerRespawnFlg = false;
-
+					//速度変更
 					rb.velocity = Vector2.zero;
 					rb.angularVelocity = 0f;
+
+					gameObject.layer = 13;
+					GameManager.Instance.playerRespawnFlg = false;
 
 					yield return null;
 				}
@@ -677,12 +687,10 @@ public class FixPlayerScript : MonoBehaviour
 		do
 		{
 			deathAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 1, out nowSprite );
-			print( deathAnimationFrame );
 
 			if( deathAnimationFrame >= 96 )
 			{
 				deathAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
-				print( "ahandeath" );
 				Destroy( this.gameObject );
 			}
 
