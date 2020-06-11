@@ -11,7 +11,7 @@ public class ButtonScript : MonoBehaviour
     }
     public void OnClickEnd()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        
         UnityEngine.Application.Quit();
     }
     public void OnClickTitleBack()

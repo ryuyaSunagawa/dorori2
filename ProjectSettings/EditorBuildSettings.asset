@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/OwnFolder/Nohina/FixProject/FixScene.unity
     guid: 5581390a152def242a8906b6f2dd1318
+  - enabled: 1
+    path: Assets/OwnFolder/Kazuna/zunaScene/GameOver.unity
+    guid: fa57c85732b26d145895efb5903ba15b
   m_configObjects: {}
