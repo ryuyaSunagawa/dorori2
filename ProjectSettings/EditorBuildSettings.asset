@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/OwnFolder/Kazuna/zunaScene/Starting.unity
     guid: 17aeb78da6110a747bcf7927c58901c1
   - enabled: 1
     path: Assets/OwnFolder/Nohina/FixProject/FixScene.unity
     guid: 5581390a152def242a8906b6f2dd1318
-  - enabled: 0
+  - enabled: 1
     path: Assets/OwnFolder/Kazuna/zunaScene/GameOver.unity
     guid: fa57c85732b26d145895efb5903ba15b
   m_configObjects: {}

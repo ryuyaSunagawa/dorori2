@@ -1126,7 +1126,7 @@ MonoBehaviour:
   enemyObj: {fileID: 518825917}
   _playerStairState: 0
   _AnimationController: {fileID: 1624485927}
-  _playerDeathNum: 1000
+  _playerDeathNum: 4
   framerateDrawText: {fileID: 166220411}
   buildTimeText: {fileID: 0}
 --- !u!4 &876954490
