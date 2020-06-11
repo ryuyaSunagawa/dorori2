@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour
 		if( enemyObject )
 		{
 			Vector3 ahan = enemyObject.position - cameraRightEndPosition;
-			Debug.Log( ahan );
+			//Debug.Log( ahan );
 
 			if( ahan.x < 1 && ahan.x > -38 && chaseAllMen )
 			{

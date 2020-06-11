@@ -179,6 +179,7 @@ public class FixPlayerScript : MonoBehaviour
 
 		//スプライトを管理
 		myRenderer.sprite = nowSprite;
+		Debug.Log( GameManager.Instance.playerDisguiceFlg );
 	}
 
 	private void FixedUpdate()
@@ -504,12 +505,14 @@ public class FixPlayerScript : MonoBehaviour
 			nowSprite = disguiseSprite;
 			disguiseMode = 1;
 			gameObject.name = "PlayerDisguice";
+			GameManager.Instance.playerDisguiceFlg = true;
 		}
 
 		//使用時処理
 		if( disguiseMode == 1 )
 		{
 			disguiseTimeCount += Time.deltaTime;
+			GameManager.Instance.playerDisguiceFlg = true;
 		}
 
 		//使用終了
@@ -520,6 +523,7 @@ public class FixPlayerScript : MonoBehaviour
 			disguiseFlg = false;
 			disguiseTimeCount = 0f;
 			gameObject.name = "Player";
+			GameManager.Instance.playerDisguiceFlg = false;
 		}
 	}
 
