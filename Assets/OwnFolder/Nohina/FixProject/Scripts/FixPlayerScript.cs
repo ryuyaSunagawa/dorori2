@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class FixPlayerScript : MonoBehaviour
 {
@@ -113,6 +114,8 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	[SerializeField, Range( 0, 5f ), Header( "瞬歩クールタイム" )] float mooveCoolTime = 0f;
 
+	[SerializeField] Scrollbar mooveBar = null;
+
 	/*
 	 * 変化系変数
 	 */
@@ -136,7 +139,25 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	[SerializeField] Sprite disguiseSprite = null;
 
+	[SerializeField] Scrollbar disguiceBar = null;
+
+
 	[SerializeField] Transform enemyTrigger = null;
+
+	/// <summary>
+	/// 変化可能回数
+	/// </summary>
+	[SerializeField] int disguiceNumber = 5;
+
+	/// <summary>
+	/// 変化待機時間
+	/// </summary>
+	[SerializeField, Range( 0, 10f ), Header( "変化クールタイム" ) ] float disguiceCoolTime = 5f;
+
+	/// <summary>
+	/// 変化待機時間カウンター
+	/// </summary>
+	float disguiceWaitTime = 5f;
 
 	/*
 	 * UnityEvent
@@ -302,7 +323,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 
 		//一定フレーム押されていたら変化
-		if( Input.GetButton( "Hide" ) && hideButton == true && ( hidePushFrame += Time.deltaTime ) >= 0.7f )
+		if( Input.GetButton( "Hide" ) && hideButton == true && ( hidePushFrame += Time.deltaTime ) >= 0.7f && ( disguiceWaitTime >= disguiceCoolTime ) )
 		{
 			disguiseFlg = true;
 			hideButton = false;
@@ -448,6 +469,8 @@ public class FixPlayerScript : MonoBehaviour
 		if( mooveTimer <= mooveCoolTime )
 		{
 			mooveTimer += Time.deltaTime;
+			float mooveTimeSize = mooveTimer / mooveCoolTime;
+			mooveBar.size = mooveTimer / mooveCoolTime;
 		}
 
 		if( !GameManager.Instance.playerMooveFlg && Input.GetButtonDown( "Moove" ) && mooveTimer >= mooveCoolTime && !( disguiseMode == 1 ) && !nowHide )
@@ -509,6 +532,13 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	void DisguiseMode()
 	{
+		//ウェイトタイムへ加算
+		if( disguiceWaitTime < disguiceCoolTime )
+		{
+			disguiceWaitTime += Time.deltaTime;
+			disguiceBar.size = disguiceWaitTime / disguiceCoolTime;
+		}
+
 		//初期設定
 		if( disguiseMode == 0 && disguiseFlg == true )
 		{
@@ -534,6 +564,9 @@ public class FixPlayerScript : MonoBehaviour
 			disguiseTimeCount = 0f;
 			gameObject.name = "Player";
 			GameManager.Instance.playerDisguiceFlg = false;
+
+			disguiceWaitTime = 0f;
+
 		}
 	}
 
@@ -543,6 +576,8 @@ public class FixPlayerScript : MonoBehaviour
 	void DeathProcess()
 	{
 		GameManager.Instance.playerDeathNum--;
+
+		GameManager.Instance.DecreaseLife();
 
 		//DeathFlgがたった時のリスポーン処理
 		if( GameManager.Instance.playerRespawnFlg == false && GameManager.Instance.playerDeathNum > 0 )
@@ -691,7 +726,8 @@ public class FixPlayerScript : MonoBehaviour
 			if( deathAnimationFrame >= 96 )
 			{
 				deathAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
-				Destroy( this.gameObject );
+				GameManager.Instance.playerFinishDeathAnimationFlg = true;
+				//Destroy( this.gameObject );
 			}
 
 			yield return new WaitForSeconds( Time.deltaTime );

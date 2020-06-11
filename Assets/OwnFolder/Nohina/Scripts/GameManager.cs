@@ -161,11 +161,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	/// <summary>
 	/// プレイヤーのアニメーションステートっていう夢の話
 	/// </summary>
-	public int playerState
+	public bool playerFinishDeathAnimationFlg
 	{
 		set;
 		get;
-	} = 0;
+	} = false;
 
 	[SerializeField] GameObject framerateDrawText = null;
 
@@ -182,6 +182,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
 	float timeElapsed = 0f;
 	int frameSize = 0;
+
+	[SerializeField] List<GameObject> lifeList = new List<GameObject>();
 
 	/// <summary>
 	/// 関数群
@@ -234,6 +236,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		return false;
 	}
 
+	public void DecreaseLife()
+	{
+		lifeList[ lifeList.Count - 1 ].SetActive( false );
+		lifeList.Remove( lifeList[ lifeList.Count - 1 ] );
+	}
+
 	private void Start()
 	{
 		DateTime buildTime = DateTime.Now;
@@ -258,7 +266,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 			SceneManager.LoadScene( SceneManager.GetActiveScene().name );
 		}
 
-		//print( enemyState );
+		if( playerFinishDeathAnimationFlg )
+		{
+			SceneManager.LoadScene( 2 );
+		}
 
 	}
 
