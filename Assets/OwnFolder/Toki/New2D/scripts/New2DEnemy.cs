@@ -81,6 +81,9 @@ public class New2DEnemy : MonoBehaviour
 
     [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
+    private float meltdestroy_time = 4.0f;
+    private float meltdestroy_count = 0.0f;
+
     [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
 
     [HideInInspector]public bool lets_attack = false;   //攻撃の判定出すときのフラグ
@@ -243,6 +246,11 @@ public class New2DEnemy : MonoBehaviour
             if(meltdowner)
             {
                 sr.material = poison;
+                meltdestroy_count += Time.deltaTime;
+                if(meltdestroy_count > meltdestroy_time)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
         
