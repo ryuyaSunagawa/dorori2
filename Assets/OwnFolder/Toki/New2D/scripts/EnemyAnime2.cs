@@ -164,6 +164,7 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (death_flm == 51 && death_flg == 1)
         {
+            enemyscript.meltdowner = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[17];
         }
         
