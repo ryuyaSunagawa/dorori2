@@ -37,7 +37,7 @@ public class textchilldren : MonoBehaviour
             {
                 reaction_renderer.sprite = red_reaction;
             }
-            else if (script.r2_5flg || script.range_level == 2.5f)
+            else if (script.r2_5flg)
             {
                 reaction_renderer.sprite = red_reaction;
             }
