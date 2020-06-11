@@ -78,7 +78,7 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    [HideInInspector]public bool deathflg = true;       //死亡フラグ
+    public bool deathflg = true;       //死亡フラグ
 
     [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
@@ -279,7 +279,7 @@ public class New2DEnemy : MonoBehaviour
                     }
                     else
                     {
-                        
+                        lets_attack = false;
                         walkflg = true;
                     }
 
@@ -771,6 +771,8 @@ public class New2DEnemy : MonoBehaviour
         }
 
         Enemy_Sound();
+
+        Debug.Log(lets_attack);
     }
 
     /// <summary>
