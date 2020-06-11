@@ -13,6 +13,10 @@ public class EnemyAnime2 : MonoBehaviour
     int run_flm = 0;
     int ang_flm = 0;
 
+    
+
+   
+
 
     [SerializeField] Sprite nowSprite = null;
 
@@ -30,6 +34,7 @@ public class EnemyAnime2 : MonoBehaviour
     void Start()
     {
         enemyscript = GetComponent<New2DEnemy>();
+        
     }
 
     // Update is called once per frame
@@ -401,6 +406,7 @@ public class EnemyAnime2 : MonoBehaviour
 
     void SuspiciousOnEnemy()
     {
+        
         this.gameObject.GetComponent<SpriteRenderer>().sprite = suspiciousSprite;
     }
 
