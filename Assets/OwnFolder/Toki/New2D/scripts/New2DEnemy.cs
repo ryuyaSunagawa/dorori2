@@ -123,6 +123,18 @@ public class New2DEnemy : MonoBehaviour
 
     private bool Disguice_Timing = true;                    //ばれる変化か、ばれない変化か
 
+    [SerializeField] private AudioClip find_se;
+    [SerializeField] private AudioClip hit_se;
+    [SerializeField] private AudioClip asioto_se;
+    [SerializeField] private AudioClip attack_se;
+
+    private AudioSource enemy_se;
+
+    private bool find_se_flg;
+    private bool hit_se_flg;
+    private bool asioto_se_flg;
+    private bool attack_se_flg;
+
 
     // Start is called before the first frame update
     void Start()
@@ -145,7 +157,9 @@ public class New2DEnemy : MonoBehaviour
         range2 = start_range2;
         range3 = start_range3;
 
-        P_script = Player.GetComponent<FixPlayerScript>(); 
+        P_script = Player.GetComponent<FixPlayerScript>();
+
+        enemy_se = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -652,7 +666,7 @@ public class New2DEnemy : MonoBehaviour
             
         }
 
-        Debug.Log(GameManager.Instance.enemyState);
+        //Debug.Log(GameManager.Instance.enemyState);
         //Debug.Log(settaiflg);
         
 		///<summary>
@@ -734,8 +748,7 @@ public class New2DEnemy : MonoBehaviour
 			}
 		}
 
-        
-            
+        Enemy_Sound();
     }
 
     /// <summary>
@@ -798,6 +811,71 @@ public class New2DEnemy : MonoBehaviour
 
         Disguice_Past = GameManager.Instance.playerDisguiceMode;
     }
+
+    private void Enemy_Sound()
+    {
+
+        ////////攻撃中なら攻撃SE鳴らす////////
+        if(lets_attack)
+        {
+            //すでにSEがなってたら終わるまでは鳴らさない
+            if(!attack_se_flg)
+            {
+                enemy_se.PlayOneShot(attack_se);
+                attack_se_flg = true;
+            }
+        }
+        else
+        {
+            attack_se_flg = false;
+        }
+
+        /////////歩行のSE/////////////////////
+        if((walkflg || runflg) && !suspicious)
+        {
+            //すでにSEがなってたら終わるまでは鳴らさない
+            if (!asioto_se_flg)
+            {
+                enemy_se.PlayOneShot(asioto_se);
+                asioto_se_flg = true;
+            }
+        }
+        else
+        {
+            asioto_se_flg = false;
+        }
+
+        ////////敵の攻撃が当たったSE///////////
+        if(GameManager.Instance.playerDeathFlg)
+        {
+            //すでにSEがなってたら終わるまでは鳴らさない
+            if (!hit_se_flg)
+            {
+                enemy_se.PlayOneShot(hit_se);
+                hit_se_flg = true;
+            }
+        }
+        else
+        {
+            hit_se_flg = false;
+        }
+
+        ////////敵の発見SE////////////////////
+        if(suspicious)
+        {
+            //すでにSEがなってたら終わるまでは鳴らさない
+            if (!find_se_flg)
+            {
+                enemy_se.PlayOneShot(find_se);
+                find_se_flg = true;
+            }
+        }
+        else
+        {
+            find_se_flg = false;
+        }
+    }
+
 
     private void OnCollisionEnter2D( Collision2D collision )
 	{
