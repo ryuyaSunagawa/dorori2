@@ -7099,14 +7099,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nowSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
   normalSprite: {fileID: 21300000, guid: 112b0d2af93f0a14a98fb2ac27fbd424, type: 3}
-  attackSprite:
+  attacked:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  walkSprite:
+  walked:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -7115,7 +7115,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  runSprite:
+  run:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -8158,19 +8158,19 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f0da2a464af04f341b627ce30e8c4e7f, type: 3}
   - {fileID: 21300000, guid: bb4a78b803ee592438492547a358a0ce, type: 3}
   deathSprite:
-  - {fileID: 21300000, guid: bd755f370f0e54648ad8b8152d0ea6b9, type: 3}
-  - {fileID: 21300000, guid: 1bc833c446f20f945a76186f9d264698, type: 3}
-  - {fileID: 21300000, guid: b2dfbeca46aa2044a9890ab8a81a1b1e, type: 3}
-  - {fileID: 21300000, guid: 17b625c1ab1c14f4db2fc162b93b1bc6, type: 3}
-  - {fileID: 21300000, guid: 6d16cef1efb1d8c4b903e19e986a2d09, type: 3}
-  - {fileID: 21300000, guid: f4b58d19935ec14418d7e56bc1265c93, type: 3}
-  - {fileID: 21300000, guid: 46595631ab4ed6b4da3d23b436ab3ed8, type: 3}
-  - {fileID: 21300000, guid: b616a50a08bb8114ebc521318f715d8a, type: 3}
-  - {fileID: 21300000, guid: 4c43addae62cf1f4985df9d9d8a04800, type: 3}
-  - {fileID: 21300000, guid: 20ea0182d60bcfd42aeda30a013153fd, type: 3}
-  - {fileID: 21300000, guid: 3738467a2e3cd9949a48476abe8961df, type: 3}
-  - {fileID: 21300000, guid: 87ebfd44583d508428bb9feddc8be4b2, type: 3}
-  - {fileID: 21300000, guid: 87ebfd44583d508428bb9feddc8be4b2, type: 3}
+  - {fileID: 21300000, guid: 77db10fe2045c6249bd42e66785dc9a8, type: 3}
+  - {fileID: 21300000, guid: 17f0161a8dc7970438dcb15b43b570ae, type: 3}
+  - {fileID: 21300000, guid: fe00177acdc9e5e418e403417c15d2d4, type: 3}
+  - {fileID: 21300000, guid: 3ae017191d302714ca3911b8c9eab633, type: 3}
+  - {fileID: 21300000, guid: 8991d2d16df554242b2f71e33fef9b6a, type: 3}
+  - {fileID: 21300000, guid: 6639b05ef03c6f849ac8152f72df4805, type: 3}
+  - {fileID: 21300000, guid: dc4d63494dab15644b9f217986ede0ec, type: 3}
+  - {fileID: 21300000, guid: 2d6dff814c0f14847a1066ca38cd9488, type: 3}
+  - {fileID: 21300000, guid: ff70940bdd828e942981be6d55281a8f, type: 3}
+  - {fileID: 21300000, guid: 5f27794aa4994a94286135d26485b06b, type: 3}
+  - {fileID: 21300000, guid: 2f1c0c03dbfd3af42a3670d407281f49, type: 3}
+  - {fileID: 21300000, guid: 0f7fe00e55a9c3b47b399cf14cc82f73, type: 3}
+  - {fileID: 21300000, guid: 0f7fe00e55a9c3b47b399cf14cc82f73, type: 3}
 --- !u!61 &1994425435
 BoxCollider2D:
   m_ObjectHideFlags: 0
