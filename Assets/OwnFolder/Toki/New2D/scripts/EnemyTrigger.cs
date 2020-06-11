@@ -39,8 +39,6 @@ public class EnemyTrigger : MonoBehaviour
             if(script.angryflg)
             {
                 
-                
-                GameManager.Instance.playerMooveFlg = false;
                 GameManager.Instance.playerDeathFlg = true;
             }
 

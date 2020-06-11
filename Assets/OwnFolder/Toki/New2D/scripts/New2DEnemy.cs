@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class New2DEnemy : MonoBehaviour
 {
+    public bool not_patrol = false;
 
     public bool patrol_only = false;            //パトロールだけさせる時用
 
@@ -77,11 +78,11 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-     public bool deathflg = true;      //死亡フラグ
+    [HideInInspector]public bool deathflg = true;       //死亡フラグ
 
     [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
-    private float meltdestroy_time = 4.0f;
+    private float meltdestroy_time = 4.0f;              //敵が溶けるて消えるまでの時間
     private float meltdestroy_count = 0.0f;
 
     [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
@@ -90,7 +91,7 @@ public class New2DEnemy : MonoBehaviour
 
     [HideInInspector] public bool attack_avoid = false; //敵の攻撃を回避できるフレームのフラグ
 
-    [HideInInspector]public bool walkflg = true;        //歩いてる時のフラグ(アニメーションの引き金)
+    [HideInInspector] public bool walkflg = false;        //歩いてる時のフラグ(アニメーションの引き金)
 
     [HideInInspector]public bool runflg = false;        //走ってる時のフラグ(アニメーションの引き金)
 
@@ -278,7 +279,7 @@ public class New2DEnemy : MonoBehaviour
                     }
                     else
                     {
-                        //atk_motion_count = 0.0f;
+                        
                         walkflg = true;
                     }
 
@@ -330,8 +331,10 @@ public class New2DEnemy : MonoBehaviour
                     suspicious = false;
                     if(!attackflg && !angryflg)
                     {
-                        //atk_motion_count = 0.0f;
-                        walkflg = true;
+                        if (!not_patrol)
+                        {
+                            walkflg = true;
+                        }
                     }
 
 
@@ -686,7 +689,7 @@ public class New2DEnemy : MonoBehaviour
 		///<summary>
 		///投げ待ち時にパトロールを止める
 		/// </summary>
-		if(!settaiflg && !deathflg && !tomadoi && !GameManager.Instance.playerRespawnFlg)
+		if(!not_patrol && !settaiflg && !deathflg && !tomadoi && !GameManager.Instance.playerRespawnFlg)
 		{
 
 			//目的地にいる、プレイヤーを見つけていない//
@@ -761,6 +764,11 @@ public class New2DEnemy : MonoBehaviour
 
 			}
 		}
+        else if(!find && not_patrol)
+        {
+            walkflg = false;
+            runflg = false;
+        }
 
         Enemy_Sound();
     }
