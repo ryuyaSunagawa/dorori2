@@ -10,9 +10,9 @@ using UnityEngine.UI;
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
 
-	/// <summary>
-	/// 変数群
-	/// </summary>
+    /// <summary>
+    /// 変数群
+    /// </summary>
 
 	//パッドモード( falseならマウス )
 	public bool padMode;
@@ -250,8 +250,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		}
 
 		print( playerDeathNum );
-
+        
 
 	}
 
+    
 }
