@@ -100,9 +100,11 @@ public class FixPlayerScript : MonoBehaviour
 	 * 瞬歩系変数
 	 */
 	/// <summary>
-	/// 瞬歩のレンジ
+	/// 瞬歩移動の速さ
 	/// </summary>
 	[SerializeField, Range( 0, 30f ) ] float moveDelta = 2f;
+
+	[SerializeField, Range( 0, 25f )] float mooveRange = 10f;
 
 	/// <summary>
 	/// 瞬歩のタイマー
@@ -159,6 +161,11 @@ public class FixPlayerScript : MonoBehaviour
 	/// </summary>
 	float disguiceWaitTime = 5f;
 
+	[SerializeField] Transform ahanObj = null;
+	
+	//ディスタンス比較用
+	Vector3 distanceComp = new Vector3( 100, 100, 100 );
+
 	/*
 	 * UnityEvent
 	 */
@@ -175,7 +182,10 @@ public class FixPlayerScript : MonoBehaviour
 		myRenderer = GetComponent<SpriteRenderer>();
 		nowSprite = normalSprite;
 		enemyScript = GameManager.Instance.getenemyObj.GetComponent<New2DEnemy>();
-    }
+
+		mooveRange = transform.position.x + ( myRenderer.bounds.size.x * 4 );
+
+	}
 
     // Update is called once per frame
     void Update()
@@ -435,6 +445,7 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( attackFlg == true && Input.GetButtonDown( "Touch" ) && deathAnimationFlg == false && !GameManager.Instance.playerMooveFlg )
 		{
+
 			GameManager.Instance.playerAttackNowFlg = true;
 		}
 		
@@ -445,8 +456,6 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( attackFrame == 55 )
 		{
-			Destroy( GameManager.Instance.getenemyObj.gameObject );
-
 			attackFlg = false;
 			GameManager.Instance.playerAttackNowFlg = false;
 			attackFrame = 0;
@@ -496,7 +505,17 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( directionRight == true )
 		{
-			Vector3 nextMovePosition = new Vector3( now + ( x * 4 ), transform.position.y, transform.position.z );
+			Vector3 nextMovePosition = Vector3.zero;
+
+			if( enemyScript.attack_avoid )
+			{
+				nextMovePosition = CollideJudge( mooveRange );
+			}
+
+			if( nextMovePosition == distanceComp )
+			{
+				nextMovePosition = new Vector3( now + ( x * 4 ), transform.position.y, transform.position.z );
+			}
 
 			while( nowFloor != nextFloor )
 			{
@@ -510,7 +529,17 @@ public class FixPlayerScript : MonoBehaviour
 		}
 		else if( directionRight == false )
 		{
-			Vector3 nextMovePosition = new Vector3( now - ( x * 4 ), transform.position.y, transform.position.z );
+			Vector3 nextMovePosition = Vector3.zero;
+
+			if( enemyScript.attack_avoid )
+			{
+				nextMovePosition = CollideJudge( mooveRange );
+			}
+
+			if( nextMovePosition == distanceComp )
+			{
+				nextMovePosition = new Vector3( now - ( x * 4 ), transform.position.y, transform.position.z );
+			}
 
 			while( nowFloor != nextFloor )
 			{
@@ -734,5 +763,48 @@ public class FixPlayerScript : MonoBehaviour
 		} while( deathAnimationFrame < 96 );
 
 		yield return null;
+	}
+
+	/// <summary>
+	/// 瞬歩前の当たり判定
+	/// </summary>
+	/// <param name="rayDistance">レイキャストの長さ</param>
+	Vector3 CollideJudge( float rayDistance )
+	{
+		//レイヤーマスク
+		int layerMask = ( 1 << 9 | 1 << 14 );
+
+		RaycastHit2D collideObject;
+		float collideObjectDistance = 0f;
+
+		//右の場合と左の場合
+		if( directionRight == true )
+		{
+			collideObject = Physics2D.Raycast( transform.position, Vector2.right, rayDistance, layerMask );
+
+			if( !collideObject )
+			{
+				return new Vector3( 100, 100, 100 );
+			}
+
+			//衝突判定のあるオブジェクトとテレポート先のディスタンスを設ける
+			collideObjectDistance = collideObject.transform.position.x - ( collideObject.collider.bounds.size.x / 2 ) - ( myRenderer.bounds.size.x / 2 ) - ( myRenderer.bounds.size.x / 8 );
+			Debug.Log( collideObject.transform.name );
+		}
+		else if( directionRight == false )
+		{
+			collideObject = Physics2D.Raycast( transform.position, Vector2.left, rayDistance, layerMask );
+
+			if( !collideObject )
+			{
+				return new Vector3( 100, 100, 100 );
+			}
+
+			collideObjectDistance = collideObject.transform.position.x + ( collideObject.collider.bounds.size.x / 2 ) + ( myRenderer.bounds.size.x / 2 ) + ( myRenderer.bounds.size.x / 8 );
+			Debug.Log( collideObject.transform.name );
+
+		}
+
+		return new Vector3( collideObjectDistance, transform.position.y, transform.position.z );
 	}
 }

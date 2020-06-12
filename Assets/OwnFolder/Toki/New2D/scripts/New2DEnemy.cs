@@ -772,7 +772,7 @@ public class New2DEnemy : MonoBehaviour
 
         Enemy_Sound();
 
-        Debug.Log(lets_attack);
+        //Debug.Log(lets_attack);
     }
 
     /// <summary>
