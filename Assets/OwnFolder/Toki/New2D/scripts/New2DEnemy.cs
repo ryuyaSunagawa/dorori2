@@ -121,7 +121,7 @@ public class New2DEnemy : MonoBehaviour
 
     private bool Syunpo_Timeing = true;                    //成功する瞬歩か、失敗する瞬歩か
 
-    [SerializeField] private float tomadoi_time = 2.0f;     //敵が瞬歩によってプレイヤーを見失た時とまる時間
+    [SerializeField] private float tomadoi_time = 5.0f;     //敵が瞬歩によってプレイヤーを見失た時とまる時間
 
     private float tomadoi_count = 0.0f;                     //↑のカウント用
 
@@ -244,9 +244,10 @@ public class New2DEnemy : MonoBehaviour
             attackflg = false;
             angryflg = false;
             range_level = 0.0f;
-            if(meltdowner)
+            sr.material = poison;
+            if (meltdowner)
             {
-                sr.material = poison;
+                
                 meltdestroy_count += Time.deltaTime;
                 if(meltdestroy_count > meltdestroy_time)
                 {
@@ -341,22 +342,22 @@ public class New2DEnemy : MonoBehaviour
                     if (range_level == 3f)
                     {
                         escape_playerx = hit.transform.position.x;
+
+                        r2_5flg = true;
                         
                         find = true;
                         range_level = 2.5f;
                     }
                     else if(range_level == 2f)
                     {
+                        
                         escape_playerx = hit.transform.position.x;
 
                         find = true;
                         if (!r2_5flg)
                         {
+                            range2 = start_range2;
                             range_level = 1.5f;
-                        }
-                        else
-                        {
-                            range_level = 2.5f;
                         }
                        
                     }
@@ -507,9 +508,12 @@ public class New2DEnemy : MonoBehaviour
 
                     if ((Vector2.Distance(hit.transform.position, transform.position)) < (start_range3 / 1.5))
                     {
-                        walkflg = false;
-                        runflg = false;
-                        attackflg = true;
+                        if (!GameManager.Instance.playerAttackNowFlg)
+                        {
+                            walkflg = false;
+                            runflg = false;
+                            attackflg = true;
+                        }
                     }
                 }
                 else if (range_level == 2.5f)
@@ -889,7 +893,7 @@ public class New2DEnemy : MonoBehaviour
         }
 
         ////////敵の発見SE////////////////////
-        if(suspicious)
+        if(range_level == 2)
         {
             //すでにSEがなってたら終わるまでは鳴らさない
             if (!find_se_flg)

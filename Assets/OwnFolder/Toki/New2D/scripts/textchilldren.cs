@@ -35,19 +35,19 @@ public class textchilldren : MonoBehaviour
         {
             if (script.range_level == 3f)
             {
-                reaction_renderer.sprite = red_reaction;
+                reaction_renderer.sprite = red_reaction;//
             }
-            else if (script.r2_5flg)
+            else if (script.range_level == 2.5f)
             {
-                reaction_renderer.sprite = red_reaction;
+                reaction_renderer.sprite = red_reaction;//
             }
             else if (script.range_level == 2f)
             {
-                reaction_renderer.sprite = red_question;
+                reaction_renderer.sprite = red_question;//
             }
             else if(script.range_level == 1.5f)
             {
-                reaction_renderer.sprite = red_question;
+                reaction_renderer.sprite = red_question;//
             }
             else if (script.range_level == 1f)
             {

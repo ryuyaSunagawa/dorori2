@@ -6,7 +6,10 @@
 		_PoisonTex("Texture", 2D) = "white"{}
 		_Color("Color", Color) = (1,1,1,1)
 		_ScrollY("Scrool Y", float) = 0
-		_Down("Down" ,float) = 5
+		_Down("Down", float) = 2
+
+		_Disolve("Texture(RGB)", 2D) = "white"{}
+		_Alpha("Threshold", Range(0, 1)) = 0.0
 
     }
     SubShader
@@ -43,7 +46,14 @@
                 float4 vertex : SV_POSITION;	//座標変換後の値
             };
 
+			
+
+
             sampler2D _MainTex;	//テクスチャ
+
+			sampler2D _Disolve;	//敵の消すところのテクスチャ
+
+			half _Alpha;	//透明が適用される強度
 
             float4 _MainTex_ST;	//TilingとOffsetのxyが入ってる
 
@@ -60,14 +70,16 @@
             v2f vert (appdata v)	//頂点シェーダからフラグメントシェーダにデータを渡す
             {
                 v2f o;
-				if (_Down > -1)
+
+				if (_Down > 0)
 				{
-					_Down -= _Time.y * 0.5;
+					_Down -= _Time.y * 0.45;
 				}
-				if (_Down < v.vertex.y)
+				if (v.vertex.y > _Down)
 				{
-					v.vertex.y -= (_Time.y * 0.1);
+					v.vertex.y += _Down * 0.45;
 				}
+
 				
                 o.vertex = UnityObjectToClipPos(v.vertex);	//座標変換する処理
 				
@@ -78,14 +90,33 @@
                 return o;
             }
 
+			UNITY_INSTANCING_BUFFER_START(Props)
+			UNITY_INSTANCING_BUFFER_END(Props)
+
             fixed4 frag (v2f i) : SV_Target
             {
+				fixed4 m = tex2D(_Disolve, i.uv_main);
+				half g = m.r * 0.2 + m.g * 0.7 + m.b * 0.1;
+				_Alpha += _Time.y * 0.15;
+
+				if (g < _Alpha)
+				{
+					discard;
+				}
+
 				float2 scroll = float2(0, _ScrollY) * _Time.y;
                 // sample the texture
-                fixed4 color_main = tex2D(_MainTex, i.uv_main);	//場所とテクスチャ
+				fixed4 color_main = tex2D(_MainTex, i.uv_main);	//場所とテクスチャ
+
+				if(color_main.a >= 1.0f)
+				{
+					color_main = fixed4(1,1,1,1);
+				}
+
 				fixed4 color_poison = tex2D(_PoisonTex, i.uv_poison + scroll);
 
 				fixed4 col = color_main * color_poison;
+				//fixed4 col = color_poison;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
 				return col * _Color;
