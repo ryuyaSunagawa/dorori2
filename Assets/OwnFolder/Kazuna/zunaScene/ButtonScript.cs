@@ -11,8 +11,7 @@ public class ButtonScript : MonoBehaviour
     }
     public void OnClickEnd()
     {
-        
-        UnityEngine.Application.Quit();
+		UnityEngine.Application.Quit();
     }
     public void OnClickTitleBack()
     {
