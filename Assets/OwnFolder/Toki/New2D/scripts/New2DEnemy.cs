@@ -78,12 +78,19 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    public bool deathflg = true;       //死亡フラグ
+    [HideInInspector] public bool deathflg = false;       //死亡フラグ
+
+    [HideInInspector] public bool waitdeath = false;
+
+    private float death_time = 0.5f;
+    private float death_count = 0.0f;
 
     [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
     private float meltdestroy_time = 4.0f;              //敵が溶けるて消えるまでの時間
     private float meltdestroy_count = 0.0f;
+
+    private bool set_poisonflg = true;
 
     [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
 
@@ -235,19 +242,39 @@ public class New2DEnemy : MonoBehaviour
         }
         
         Debug.DrawRay(ray.origin, ray.direction * range1, Color.red);
-
+        Debug.Log(sr.material.GetFloat("_Start"));
+        if (waitdeath)
+        {
+            death_count += Time.deltaTime;
+            if(death_count > death_time)
+            {
+                deathflg = true;
+            }
+        }
         if(deathflg)
         {
-            //Debug.Log("trueなってんで");
+            
             walkflg = false;
             runflg = false;
             attackflg = false;
             angryflg = false;
             range_level = 0.0f;
-            sr.material = poison;
+            
             if (meltdowner)
             {
+                sr.material = poison;
+                sr.material.SetFloat("_Start", 1.0f);
+                sr.material.SetFloat("_Timer", meltdestroy_count);
+                if (set_poisonflg)
+                {
+                    
+                    sr.material.SetFloat("_Down", 5.0f);
+                    sr.material.SetFloat("_Alpha", 0.0f);
+                    set_poisonflg = false;
+                }
                 
+                
+
                 meltdestroy_count += Time.deltaTime;
                 if(meltdestroy_count > meltdestroy_time)
                 {
@@ -302,6 +329,7 @@ public class New2DEnemy : MonoBehaviour
                         walkflg = false;
                         runflg = false;
                         range_level = 0f;
+                        
                     }
 
 
@@ -809,11 +837,11 @@ public class New2DEnemy : MonoBehaviour
             //プレイヤーと対面している瞬歩のみ威嚇する
             if ((direction && P_Sprite.flipX) || (!direction && !P_Sprite.flipX))
             {
-                if (range_level <= 1.5f)
+                /*if (range_level <= 1.5f)
                 {
                     Syunpo_Timeing = true;
-                }
-                else if (range_level == 3 && attack_avoid)
+                }*/
+                if (range_level == 3 && attack_avoid)
                 {
                     Syunpo_Timeing = true;
                 }
@@ -923,6 +951,7 @@ public class New2DEnemy : MonoBehaviour
     {
         if(GameManager.Instance.playerAttackNowFlg)
         {
+            waitdeath = true;
             settaiflg = true;
             runflg = false;
             walkflg = false;

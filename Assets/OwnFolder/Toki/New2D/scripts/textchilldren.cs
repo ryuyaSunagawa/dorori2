@@ -49,7 +49,7 @@ public class textchilldren : MonoBehaviour
             {
                 reaction_renderer.sprite = red_question;//
             }
-            else if (script.range_level == 1f)
+            else if (script.range_level == 1f && script.tomadoi)
             {
                 reaction_renderer.sprite = yellow_question;
             }
