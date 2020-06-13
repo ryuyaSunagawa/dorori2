@@ -31,8 +31,9 @@ public class textchilldren : MonoBehaviour
     {
         transform.position = new Vector2(enemy.transform.position.x, enemy.transform.position.y + 4);
 
-        if(script._poisonState != 3)
+        if(!script.deathflg)
         {
+
             if (script.range_level == 3f)
             {
                 reaction_renderer.sprite = red_reaction;//
@@ -49,7 +50,7 @@ public class textchilldren : MonoBehaviour
             {
                 reaction_renderer.sprite = red_question;//
             }
-            else if (script.range_level == 1f && script.tomadoi)
+            else if (script.range_level == 1f || script.tomadoi)
             {
                 reaction_renderer.sprite = yellow_question;
             }
@@ -60,7 +61,7 @@ public class textchilldren : MonoBehaviour
         }
         else
         {
-            changetext.text = "";
+            reaction_renderer.sprite = null;
         }
     }
 }

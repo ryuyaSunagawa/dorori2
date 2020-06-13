@@ -13,6 +13,10 @@ public class New2DEnemy : MonoBehaviour
 
     [SerializeField] private Material poison;   //紫色マテリアル
 
+    [SerializeField] private ParticleSystem poisonpar;//敵のポイズンパーティクル
+
+    private bool poisonpar_onetime = false;     //一回再生したか
+
     [SerializeField] private Sprite deadenemy;  //お遊びで作った死体スプライト
 
     [SerializeField] private float speed = 3.0f;//敵の歩行スピード
@@ -78,7 +82,7 @@ public class New2DEnemy : MonoBehaviour
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
-    [HideInInspector] public bool deathflg = false;       //死亡フラグ
+    [HideInInspector] public bool deathflg;       //死亡フラグ
 
     [HideInInspector] public bool waitdeath = false;
 
@@ -87,7 +91,7 @@ public class New2DEnemy : MonoBehaviour
 
     [HideInInspector] public bool meltdowner = false;   //敵が死んだあと溶ける処理
 
-    private float meltdestroy_time = 4.0f;              //敵が溶けるて消えるまでの時間
+    private float meltdestroy_time = 8.0f;              //敵が溶けるて消えるまでの時間
     private float meltdestroy_count = 0.0f;
 
     private bool set_poisonflg = true;
@@ -242,7 +246,6 @@ public class New2DEnemy : MonoBehaviour
         }
         
         Debug.DrawRay(ray.origin, ray.direction * range1, Color.red);
-        Debug.Log(sr.material.GetFloat("_Start"));
         if (waitdeath)
         {
             death_count += Time.deltaTime;
@@ -253,6 +256,7 @@ public class New2DEnemy : MonoBehaviour
         }
         if(deathflg)
         {
+            gameObject.layer = 16;
             
             walkflg = false;
             runflg = false;
@@ -260,8 +264,15 @@ public class New2DEnemy : MonoBehaviour
             angryflg = false;
             range_level = 0.0f;
             
+
             if (meltdowner)
             {
+                if (!poisonpar_onetime && !poisonpar.isPlaying)
+                {
+                    poisonpar.Play(true);
+                    poisonpar_onetime = true;
+                }
+
                 sr.material = poison;
                 sr.material.SetFloat("_Start", 1.0f);
                 sr.material.SetFloat("_Timer", meltdestroy_count);
@@ -278,11 +289,10 @@ public class New2DEnemy : MonoBehaviour
                 meltdestroy_count += Time.deltaTime;
                 if(meltdestroy_count > meltdestroy_time)
                 {
-                    Destroy(gameObject);
+                    Destroy(gameObject.transform.parent.gameObject);
                 }
             }
         }
-        
 
 
         //レイが何かに当たったか？//
@@ -486,7 +496,7 @@ public class New2DEnemy : MonoBehaviour
                     reactioncount = 0.0f;
                     range_level = 2f;
                 }
-                else if (range_level != 2f && range_level != 2.5f && range_level != 3f &&(Vector2.Distance(hit.transform.position, transform.position)) <= range1)
+                else if (range_level != 1.5 && range_level != 2f && range_level != 2.5f && range_level != 3f &&(Vector2.Distance(hit.transform.position, transform.position)) <= range1)
                 {
                     range_level = 1f;
                 }
@@ -631,6 +641,7 @@ public class New2DEnemy : MonoBehaviour
                     //プレイヤーが視界から脱出したときにその地点に行って探す
                     if (transform.position.x < escape_playerx + 3.0f && transform.position.x > escape_playerx - 3.0f)
                     {
+                        runflg = false;
                         walkflg = false;
                         search_count += Time.deltaTime;
                         if (search_time < search_count)
@@ -921,7 +932,7 @@ public class New2DEnemy : MonoBehaviour
         }
 
         ////////敵の発見SE////////////////////
-        if(range_level == 2)
+        if(range_level == 3)
         {
             //すでにSEがなってたら終わるまでは鳴らさない
             if (!find_se_flg)

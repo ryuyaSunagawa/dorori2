@@ -883,7 +883,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892823883}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &892823886
 Camera:
   m_ObjectHideFlags: 0
@@ -1131,6 +1131,26 @@ PrefabInstance:
     - target: {fileID: 8391389297752971479, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8685075248544324276, guid: 2faaff081b5da81428d82ace98664f5e,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8685075248544324276, guid: 2faaff081b5da81428d82ace98664f5e,
+        type: 3}
+      propertyPath: cullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8685075248544324276, guid: 2faaff081b5da81428d82ace98664f5e,
+        type: 3}
+      propertyPath: prewarm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8685075248544324276, guid: 2faaff081b5da81428d82ace98664f5e,
+        type: 3}
+      propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

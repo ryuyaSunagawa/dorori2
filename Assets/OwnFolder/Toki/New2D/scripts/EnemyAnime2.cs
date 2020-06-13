@@ -244,15 +244,15 @@ public class EnemyAnime2 : MonoBehaviour
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[15];
         }
-        else if (atk_flm == 72 && atk_flg == 1)
+        else if (atk_flm == 72 && atk_flg == 1)//72
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[16];
         }
-        else if (atk_flm == 76 && atk_flg == 1)
+        else if (atk_flm == 76 && atk_flg == 1)//76
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[17];
         }
-        else if (atk_flm == 80 && atk_flg == 1)
+        else if (atk_flm == 80 && atk_flg == 1)//80
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[18];
         }
