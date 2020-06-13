@@ -445,7 +445,6 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( attackFlg == true && Input.GetButtonDown( "Touch" ) && deathAnimationFlg == false && !GameManager.Instance.playerMooveFlg )
 		{
-
 			GameManager.Instance.playerAttackNowFlg = true;
 		}
 		
@@ -456,6 +455,8 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( attackFrame == 55 )
 		{
+			enemyScript.deathflg = true;
+
 			attackFlg = false;
 			GameManager.Instance.playerAttackNowFlg = false;
 			attackFrame = 0;
@@ -507,12 +508,12 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			Vector3 nextMovePosition = Vector3.zero;
 
-			if( enemyScript.attack_avoid )
+			if( !enemyScript.attack_avoid )
 			{
-				nextMovePosition = CollideJudge( mooveRange );
+				nextMovePosition = CollideJudge( mooveRange, directionRight );
 			}
 
-			if( nextMovePosition == distanceComp )
+			if( enemyScript.attack_avoid || GameManager.Instance.enemyState == 1 || nextMovePosition == distanceComp )
 			{
 				nextMovePosition = new Vector3( now + ( x * 4 ), transform.position.y, transform.position.z );
 			}
@@ -531,12 +532,12 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			Vector3 nextMovePosition = Vector3.zero;
 
-			if( enemyScript.attack_avoid )
+			if( !enemyScript.attack_avoid )
 			{
-				nextMovePosition = CollideJudge( mooveRange );
+				nextMovePosition = CollideJudge( mooveRange, directionRight );
 			}
 
-			if( nextMovePosition == distanceComp )
+			if( enemyScript.attack_avoid || nextMovePosition == distanceComp )
 			{
 				nextMovePosition = new Vector3( now - ( x * 4 ), transform.position.y, transform.position.z );
 			}
@@ -769,7 +770,7 @@ public class FixPlayerScript : MonoBehaviour
 	/// 瞬歩前の当たり判定
 	/// </summary>
 	/// <param name="rayDistance">レイキャストの長さ</param>
-	Vector3 CollideJudge( float rayDistance )
+	Vector3 CollideJudge( float rayDistance, bool direct )
 	{
 		//レイヤーマスク
 		int layerMask = ( 1 << 9 | 1 << 14 );
@@ -777,10 +778,13 @@ public class FixPlayerScript : MonoBehaviour
 		RaycastHit2D collideObject;
 		float collideObjectDistance = 0f;
 
+		//レイの起点
+		Vector2 rayOrigin = new Vector2( transform.position.x, -3f );
+
 		//右の場合と左の場合
-		if( directionRight == true )
+		if( direct == true )
 		{
-			collideObject = Physics2D.Raycast( transform.position, Vector2.right, rayDistance, layerMask );
+			collideObject = Physics2D.Raycast( rayOrigin, Vector2.right, rayDistance, layerMask );
 
 			if( !collideObject )
 			{
@@ -791,7 +795,7 @@ public class FixPlayerScript : MonoBehaviour
 			collideObjectDistance = collideObject.transform.position.x - ( collideObject.collider.bounds.size.x / 2 ) - ( myRenderer.bounds.size.x / 2 ) - ( myRenderer.bounds.size.x / 8 );
 			Debug.Log( collideObject.transform.name );
 		}
-		else if( directionRight == false )
+		else if( direct == false )
 		{
 			collideObject = Physics2D.Raycast( transform.position, Vector2.left, rayDistance, layerMask );
 
