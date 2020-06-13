@@ -2,11 +2,13 @@
 {
     Properties
     {
+		_Start("Start", float) = 0
+		_Timer("Timer", float) = 0
         _MainTex ("Texture", 2D) = "white" {}
 		_PoisonTex("Texture", 2D) = "white"{}
 		_Color("Color", Color) = (1,1,1,1)
 		_ScrollY("Scrool Y", float) = 0
-		_Down("Down", float) = 2
+		_Down("Down", float) = 5
 
 		_Disolve("Texture(RGB)", 2D) = "white"{}
 		_Alpha("Threshold", Range(0, 1)) = 0.0
@@ -47,7 +49,9 @@
             };
 
 			
+			float _Start;
 
+			float _Timer;
 
             sampler2D _MainTex;	//テクスチャ
 
@@ -71,13 +75,16 @@
             {
                 v2f o;
 
-				if (_Down > 0)
+				if (_Start == 1.0)
 				{
-					_Down -= _Time.y * 0.45;
-				}
-				if (v.vertex.y > _Down)
-				{
-					v.vertex.y += _Down * 0.45;
+					if (_Down > 0)
+					{
+						_Down -= _Timer * 0.5;
+					}
+					if (v.vertex.y > _Down)
+					{
+						v.vertex.y += _Down * 0.2;
+					}
 				}
 
 				
@@ -97,14 +104,14 @@
             {
 				fixed4 m = tex2D(_Disolve, i.uv_main);
 				half g = m.r * 0.2 + m.g * 0.7 + m.b * 0.1;
-				_Alpha += _Time.y * 0.15;
+				_Alpha += _Timer * 0.15;
 
 				if (g < _Alpha)
 				{
 					discard;
 				}
 
-				float2 scroll = float2(0, _ScrollY) * _Time.y;
+				float2 scroll = float2(0, _ScrollY) * _Timer;
                 // sample the texture
 				fixed4 color_main = tex2D(_MainTex, i.uv_main);	//場所とテクスチャ
 

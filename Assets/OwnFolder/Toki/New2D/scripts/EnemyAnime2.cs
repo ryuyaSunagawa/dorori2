@@ -100,6 +100,7 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (death_flm == 4 && death_flg == 1)
         {
+            enemyscript.meltdowner = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[1];
         }
         else if (death_flm == 8 && death_flg == 1)
@@ -164,7 +165,6 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (death_flm == 68 && death_flg == 1)
         {
-            enemyscript.meltdowner = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = death[17];
         }
         
