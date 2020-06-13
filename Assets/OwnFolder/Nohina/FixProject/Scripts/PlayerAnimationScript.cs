@@ -13,6 +13,9 @@ public class PlayerAnimationScript : MonoBehaviour
 
 	int deathAnimationFrame = 0;
 
+	//アタックの時に溜めるフレーム
+	public int attackWaitFrame = 60;
+
 
 	/// <summary>
 	/// 現在のスプライト
@@ -45,24 +48,25 @@ public class PlayerAnimationScript : MonoBehaviour
 		{
 			nowSprite = attackSprite[ 1 ];
 		}
-		else if( atk_flm == 25 && atk_flg == 1 )
+		else if( atk_flm == 25 + attackWaitFrame && atk_flg == 1 )
 		{
 			nowSprite = attackSprite[ 2 ];
 		}
-		else if( atk_flm == 35 && atk_flg == 1 )
+		else if( atk_flm == 35 + attackWaitFrame && atk_flg == 1 )
 		{
 			nowSprite = attackSprite[ 3 ];
 		}
-		else if( atk_flm == 40 && atk_flg == 1 )
+		else if( atk_flm == 40 + attackWaitFrame && atk_flg == 1 )
 		{
 			nowSprite = attackSprite[ 4 ];
 		}
-		else if( atk_flm == 45 && atk_flg == 1 )
+		else if( atk_flm == 45 + attackWaitFrame && atk_flg == 1 )
 		{
 			nowSprite = attackSprite[ 5 ];
 		}
-		else if( atk_flm == 55 && atk_flg == 1 )
+		else if( atk_flm == 55 + attackWaitFrame && atk_flg == 1 )
 		{
+			nowSprite = normalSprite;
 			atk_flg = 0;
 			atk_flm = 0;
 		}

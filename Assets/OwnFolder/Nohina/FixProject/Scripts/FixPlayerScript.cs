@@ -172,6 +172,24 @@ public class FixPlayerScript : MonoBehaviour
 	//パーティクルの比較
 	bool pushFrameAt2 = false;
 
+	//攻撃パーティクル生成場所(プレイヤーDirectionRightと同じ)
+	//左
+	[SerializeField] Transform attackLeft = null;
+	//右
+	[SerializeField] Transform attackRight = null;
+
+	[SerializeField] GameObject attackParticle = null;
+
+	//攻撃のパーティクル
+	GameObject useAttackParticle = null;
+	Transform useAttackParticlePos = null;
+
+	//ローカル内の攻撃パーティクル最終到達場所
+	Vector2 localAttackTrail = new Vector2( 1.018f, 0.219f );
+
+	float attackParticleDistance = 0f;
+	float attackParticleSpeed = 0f;
+
 	/*
 	 * UnityEvent
 	 */
@@ -474,11 +492,97 @@ public class FixPlayerScript : MonoBehaviour
 		if( GameManager.Instance.playerAttackNowFlg == true )
 		{
 			attackFrame = GetComponent<PlayerAnimationScript>().Attack( 1, out nowSprite );
+
+			//11フレーム目で炎的なエフェクトを出す
+			if( attackFrame == 11 )
+			{
+				if( directionRight == true )
+				{
+					useAttackParticle = Instantiate( attackParticle, attackRight.position, Quaternion.identity ) as GameObject;
+					print( useAttackParticle.gameObject.name );
+				}
+				else if( directionRight == false )
+				{
+					useAttackParticle = Instantiate( attackParticle, attackLeft.position, Quaternion.identity ) as GameObject;
+					print( useAttackParticle.gameObject.name );
+				}
+			}
+
+			//85f~の処理
+			if( directionRight == true && attackFrame >= 85 && attackFrame < 95 )
+			{
+				if( attackFrame == 85 )
+				{
+					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( 0.591f, 0.281f ) + transform.localPosition ) );
+					attackParticleSpeed = attackParticleDistance / 10;
+				}
+				else if( attackFrame == 94 )
+				{
+					attackParticleDistance = 0f;
+					attackParticleSpeed = 0f;
+				}
+
+				Vector3 nowParticlePos = useAttackParticle.GetComponent<Transform>().position;
+				Vector3 worldPos = transform.root.TransformPoint( new Vector3( 0.591f, 0.281f ) + transform.localPosition );
+				worldPos.z = attackRight.position.z;
+				useAttackParticle.GetComponent<Transform>().position = Vector3.MoveTowards( nowParticlePos, worldPos, attackParticleSpeed );
+			}
+			else if( directionRight == false && attackFrame >= 85 && attackFrame < 95 )
+			{
+				if( attackFrame == 85 )
+				{
+					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( -0.591f, 0.281f ) + transform.localPosition ) );
+					attackParticleSpeed = attackParticleDistance / 10;
+				}
+				else if( attackFrame == 94 )
+				{
+					attackParticleDistance = 0f;
+					attackParticleSpeed = 0f;
+				}
+
+				Vector3 nowParticlePos = useAttackParticle.GetComponent<Transform>().position;
+				Vector3 worldPos = transform.root.TransformPoint( new Vector3( -0.591f, 0.281f ) + transform.localPosition );
+				worldPos.z = attackLeft.position.z;
+				useAttackParticle.GetComponent<Transform>().position = Vector3.MoveTowards( nowParticlePos, worldPos, attackParticleSpeed );
+			}
+
+			//95f~からの処理
+			if( directionRight == true && attackFrame >= 95 )
+			{
+				print( "aaha" );
+				if( attackFrame == 95 )
+				{
+					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( 1.5f, 0.12f ) + transform.localPosition ) );
+					attackParticleSpeed = attackParticleDistance / 0.08f;
+				}
+
+				Vector3 nowParticlePos = useAttackParticle.GetComponent<Transform>().position;
+				Vector3 worldPos = transform.root.TransformPoint( new Vector3( 1.8f, 0.12f ) + transform.localPosition );
+				worldPos.z = attackRight.position.z;
+				useAttackParticle.GetComponent<Transform>().position = Vector3.MoveTowards( nowParticlePos, worldPos, attackParticleSpeed );
+			}
+			else if( directionRight == false && attackFrame >= 95 )
+			{
+				if( attackFrame == 95 )
+				{
+					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( -1.5f, 0.12f ) + transform.localPosition ) );
+					attackParticleSpeed = attackParticleDistance / 0.08f;
+				}
+
+				Vector3 nowParticlePos = useAttackParticle.GetComponent<Transform>().position;
+				Vector3 worldPos = transform.root.TransformPoint( new Vector3( -1.8f, 0.12f ) + transform.localPosition );
+				worldPos.z = attackLeft.position.z;
+				useAttackParticle.GetComponent<Transform>().position = Vector3.MoveTowards( nowParticlePos, worldPos, attackParticleSpeed );
+			}
 		}
 
-		if( attackFrame == 55 )
+		if( attackFrame == ( 55 + GetComponent<PlayerAnimationScript>().attackWaitFrame ) )
 		{
+			print( attackFrame );
 			enemyScript.deathflg = true;
+
+			attackParticleDistance = 0f;
+			attackParticleSpeed = 0f;
 
 			attackFlg = false;
 			GameManager.Instance.playerAttackNowFlg = false;
