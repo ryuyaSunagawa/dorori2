@@ -160,11 +160,17 @@ public class FixPlayerScript : MonoBehaviour
 	/// 変化待機時間カウンター
 	/// </summary>
 	float disguiceWaitTime = 5f;
-
-	[SerializeField] Transform ahanObj = null;
 	
 	//ディスタンス比較用
 	Vector3 distanceComp = new Vector3( 100, 100, 100 );
+
+	//変化のパーティクルプレハブ
+	[SerializeField] GameObject disguiceParticle = null;
+
+	float disguiceChangeFrame = 0f;
+
+	//パーティクルの比較
+	bool pushFrameAt2 = false;
 
 	/*
 	 * UnityEvent
@@ -218,7 +224,8 @@ public class FixPlayerScript : MonoBehaviour
 	private void FixedUpdate()
 	{
 		//プレイヤーの移動
-		if( nowHide == false && !GameManager.Instance.playerRespawnFlg && !GameManager.Instance.playerAttackNowFlg && !GameManager.Instance.playerDeathFlg )
+		if( nowHide == false && !GameManager.Instance.playerRespawnFlg && !GameManager.Instance.playerAttackNowFlg && !GameManager.Instance.playerDeathFlg 
+			&& !hideButton && disguiseMode != 1 )
 		{
 			//プレイヤーの移動
 			MovePlayer();
@@ -242,7 +249,7 @@ public class FixPlayerScript : MonoBehaviour
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			}
-			else if( disguiseMode == 1 )
+			else if( disguiseMode == 2 )
 			{
 				nowSprite = disguiseSprite;
 			}
@@ -255,7 +262,7 @@ public class FixPlayerScript : MonoBehaviour
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 1, out nowSprite );
 			}
-			else if( disguiseMode == 1 )
+			else if( disguiseMode == 2 )
 			{
 				nowSprite = disguiseSprite;
 			}
@@ -268,7 +275,7 @@ public class FixPlayerScript : MonoBehaviour
 			{
 				GetComponent<PlayerAnimationScript>().Walk( 0, out nowSprite );
 			}
-			else if( disguiseMode == 1 )
+			else if( disguiseMode == 2 )
 			{
 				nowSprite = disguiseSprite;
 			}
@@ -303,6 +310,8 @@ public class FixPlayerScript : MonoBehaviour
 		}
 	}
 
+	int buttondownnum = 0;
+
 	/// <summary>
 	/// hideWaitTimeの更新とHideボタンを押したかの確認
 	/// </summary>
@@ -330,6 +339,7 @@ public class FixPlayerScript : MonoBehaviour
 			hideButton = false;
 			hideBackCancelFlg = false;
 			hidePushFrame = 0f;
+			pushFrameAt2 = false;
 		}
 
 		//一定フレーム押されていたら変化
@@ -338,15 +348,28 @@ public class FixPlayerScript : MonoBehaviour
 			disguiseFlg = true;
 			hideButton = false;
 			hidePushFrame = 0f;
+			disguiceChangeFrame += 0.001f;
+		}
+		else if( disguiseFlg == false && pushFrameAt2 && !nowHide && Input.GetButton( "Hide" ) )
+		{
+			print( ++buttondownnum );
+			StartCoroutine( "DisguiceParticle" );
+			pushFrameAt2 = false;
 		}
 
 		//変化の解除
-		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 1 ) && ( Input.GetButtonDown( "Hide" ) || Input.GetButtonDown( "Touch" ) ) )
+		if( ( disguiseTimeCount >= 5.0f || disguiseMode == 2 ) && ( Input.GetButtonDown( "Hide" ) || Input.GetButtonDown( "Touch" ) ) )
 		{
 			disguiseFlg = true;
 			hideButton = false;
-			disguiseMode = 2;
+			disguiseMode = 3;
 		}
+
+		if( Input.GetButtonDown( "Hide" ) )
+		{
+			pushFrameAt2 = true;
+		}
+
 	}
 
 	/// <summary>
@@ -390,9 +413,9 @@ public class FixPlayerScript : MonoBehaviour
 
 	private void OnCollisionEnter2D( Collision2D collision )
 	{
-		if( collision.collider.tag == "Enemy" )
+		if( !( disguiseMode == 0 ) && collision.collider.tag == "Enemy" )
 		{
-			disguiseMode = 2;
+			disguiseMode = 3;
 		}
 	}
 
@@ -483,7 +506,8 @@ public class FixPlayerScript : MonoBehaviour
 			mooveBar.size = mooveTimer / mooveCoolTime;
 		}
 
-		if( !GameManager.Instance.playerMooveFlg && Input.GetButtonDown( "Moove" ) && mooveTimer >= mooveCoolTime && !( disguiseMode == 1 ) && !nowHide )
+		if( !GameManager.Instance.playerMooveFlg && Input.GetButtonDown( "Moove" ) && mooveTimer >= mooveCoolTime && !( disguiseMode == 2 ) && !nowHide
+			&& !GameManager.Instance.playerDeathFlg && !GameManager.Instance.playerRespawnFlg )
 		{
 			GameManager.Instance.playerMooveFlg = true;
 			mooveTimer = 0;
@@ -572,22 +596,34 @@ public class FixPlayerScript : MonoBehaviour
 		//初期設定
 		if( disguiseMode == 0 && disguiseFlg == true )
 		{
-			nowSprite = disguiseSprite;
 			disguiseMode = 1;
 			gameObject.name = "PlayerDisguice";
 			GameManager.Instance.playerDisguiceFlg = true;
 		}
 
-		//使用時処理
 		if( disguiseMode == 1 )
+		{
+			disguiceChangeFrame += Time.deltaTime;
+
+			if( disguiceChangeFrame >= 0.8f )
+			{
+				print( disguiceChangeFrame );
+				disguiseMode = 2;
+				nowSprite = disguiseSprite;
+			}
+		}
+
+		//使用時処理
+		if( disguiseMode == 2 )
 		{
 			disguiseTimeCount += Time.deltaTime;
 			GameManager.Instance.playerDisguiceFlg = true;
 		}
 
 		//使用終了
-		if( disguiseMode == 2 && disguiseFlg == true )
+		if( disguiseMode == 3 && disguiseFlg == true )
 		{
+			disguiceChangeFrame = 0f;
 			nowSprite = normalSprite;
 			disguiseMode = 0;
 			disguiseFlg = false;
@@ -810,5 +846,51 @@ public class FixPlayerScript : MonoBehaviour
 		}
 
 		return new Vector3( collideObjectDistance, transform.position.y, transform.position.z );
+	}
+
+	int coroutine = 0;
+
+	IEnumerator DisguiceParticle()
+	{
+		Debug.Log( ++coroutine );
+		//変化パーティクル再生フレーム
+		float disguiceFrame = 0f;
+
+		//ボタンが押されたフレーム
+		float iButtonPushFrame = 0f;
+
+		//ボタンが離された場合のフラグ
+		bool buttonUp = false;
+
+		//パーティクルDestroy用フラグ
+		bool particleDeathFlg = false;
+
+		Quaternion particleRotation = Quaternion.Euler( 90f, 0f, 0f );
+		GameObject _disguiceParticleInCoroutine = Instantiate( disguiceParticle, new Vector3( transform.position.x, transform.position.y, transform.position.z - 3f ), particleRotation ) as GameObject;
+		DisguiceParticleScript particleScript = _disguiceParticleInCoroutine.GetComponent<DisguiceParticleScript>();
+
+		do
+		{
+			disguiceFrame += Time.deltaTime;
+			iButtonPushFrame += Time.deltaTime;
+
+			if( ( iButtonPushFrame < 0.7f ) && !Input.GetButton( "Hide" ) )
+			{
+				buttonUp = true;
+			}
+
+			yield return null;
+		} while( buttonUp == false && disguiceFrame <= 4f );
+
+		do
+		{
+			particleDeathFlg = particleScript.deathParticle( true );
+
+			yield return null;
+		} while( buttonUp == true && !particleDeathFlg );
+
+		Destroy( _disguiceParticleInCoroutine );
+
+		yield return null;
 	}
 }
