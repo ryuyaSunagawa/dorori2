@@ -49,6 +49,8 @@ public class FixPlayerScript : MonoBehaviour
 	bool deathAnimationFlg = false;
 
 	New2DEnemy enemyScript = null;
+
+	[SerializeField] Sprite hideSprite;
 		
 	/*
 	 * Animation系変数
@@ -189,6 +191,15 @@ public class FixPlayerScript : MonoBehaviour
 
 	float attackParticleDistance = 0f;
 	float attackParticleSpeed = 0f;
+
+	//箱に入るパーティクル
+	[SerializeField] GameObject inBoxParticle = null;
+
+	//箱から出るパーティクル
+	[SerializeField] GameObject outBoxParticle = null;
+
+	//死亡時のエフェクト
+	[SerializeField] GameObject deathParticle = null;
 
 	/*
 	 * UnityEvent
@@ -370,7 +381,6 @@ public class FixPlayerScript : MonoBehaviour
 		}
 		else if( disguiseFlg == false && pushFrameAt2 && !nowHide && Input.GetButton( "Hide" ) )
 		{
-			print( ++buttondownnum );
 			StartCoroutine( "DisguiceParticle" );
 			pushFrameAt2 = false;
 		}
@@ -402,14 +412,18 @@ public class FixPlayerScript : MonoBehaviour
 			//箱隠れ処理
 			if( collision.tag == "BackHideTrigger" && hideButton == true && nowHide == false )
 			{
-				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 3 );
+				SetHideConfig();
+				transform.position = new Vector3( collision.transform.position.x, collision.transform.position.y, 0 );
+				StartCoroutine( "inBoxProcess" );
 				gameObject.layer = 15;
 				GameManager.Instance.playerHideFlg = true;
 			}
 			//箱隠れ解除処理
 			else if( collision.tag == "BackHideTrigger" && hideBackCancelFlg == true && nowHide == true )
 			{
-				SetHideConfig( collision.transform.position.x, collision.transform.position.y, 0 );
+				SetHideConfig();
+				transform.position = new Vector3( collision.transform.position.x, collision.transform.position.y, 3 );
+				StartCoroutine( "outBoxProcess" );
 				GameManager.Instance.playerHideFlg = false;
 				gameObject.layer = 13;
 			}
@@ -455,9 +469,8 @@ public class FixPlayerScript : MonoBehaviour
 	/// <param name="nextPosX">隠れ先X</param>
 	/// <param name="nextPosY">隠れ先Y</param>
 	/// <param name="nextPosZ">隠れ先Z</param>
-	void SetHideConfig( float nextPosX, float nextPosY, float nextPosZ )
+	void SetHideConfig()
 	{
-		_nextPosition = new Vector3( nextPosX, nextPosY, nextPosZ );
 		hideWaitTime = 0f;
 		hideAnimation = true;
 		nowHide = !nowHide;
@@ -472,7 +485,7 @@ public class FixPlayerScript : MonoBehaviour
 	{
 		if( hideAnimation == true )
 		{
-			MoveToNextPosition();
+			//MoveToNextPosition();
 			hideAnimation = false;
 		}
 	}
@@ -499,12 +512,10 @@ public class FixPlayerScript : MonoBehaviour
 				if( directionRight == true )
 				{
 					useAttackParticle = Instantiate( attackParticle, attackRight.position, Quaternion.identity ) as GameObject;
-					print( useAttackParticle.gameObject.name );
 				}
 				else if( directionRight == false )
 				{
 					useAttackParticle = Instantiate( attackParticle, attackLeft.position, Quaternion.identity ) as GameObject;
-					print( useAttackParticle.gameObject.name );
 				}
 			}
 
@@ -551,7 +562,6 @@ public class FixPlayerScript : MonoBehaviour
 			//95f~からの処理
 			if( directionRight == true && attackFrame >= 95 )
 			{
-				print( "aaha" );
 				if( attackFrame == 95 )
 				{
 					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( 1.5f, 0.12f ) + transform.localPosition ) );
@@ -580,7 +590,6 @@ public class FixPlayerScript : MonoBehaviour
 
 		if( attackFrame == ( 55 + GetComponent<PlayerAnimationScript>().attackWaitFrame ) )
 		{
-			print( attackFrame );
 			enemyScript.deathflg = true;
 
 			attackParticleDistance = 0f;
@@ -713,7 +722,6 @@ public class FixPlayerScript : MonoBehaviour
 
 			if( disguiceChangeFrame >= 0.8f )
 			{
-				print( disguiceChangeFrame );
 				disguiseMode = 2;
 				nowSprite = disguiseSprite;
 			}
@@ -816,14 +824,18 @@ public class FixPlayerScript : MonoBehaviour
 				//右側リスポーン
 				if( respawnDirectRight == true )
 				{
-					transform.position = new Vector3( now + respawnDistance, transform.position.y, transform.position.z );
-					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
+					StartCoroutine( RespawnParticle( transform.position ) );
 
 					//身代わりオブジェクトを作る
 					sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
 					sacrificeObject.GetComponent<sacrifice>().directRight = true;
 					sacrificeObject.SetActive( true );
+					
+					//テレポート先設定
+					transform.position = new Vector3( now + respawnDistance, transform.position.y, transform.position.z );
+					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
 
+					//velocityなどを消去
 					rb.velocity = Vector2.zero;
 					rb.angularVelocity = 0f;
 
@@ -835,16 +847,18 @@ public class FixPlayerScript : MonoBehaviour
 				//左側リスポーン
 				else if( respawnDirectRight == false )
 				{
-					//
-					transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
-					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
+					StartCoroutine( RespawnParticle( transform.position ) );
 
 					//身代わりオブジェクトを作る
 					sacrificeObject.GetComponent<sacrifice>().enablePosition = transform.position;
 					sacrificeObject.GetComponent<sacrifice>().directRight = false;
 					sacrificeObject.SetActive( true );
 
-					//速度変更
+					//テレポート先設定
+					transform.position = new Vector3( now - respawnDistance, transform.position.y, transform.position.z );
+					respawnAnimationFrame = GetComponent<PlayerAnimationScript>().PlayerDeathAnimation( 0, out nowSprite );
+
+					//velocityなどを消去
 					rb.velocity = Vector2.zero;
 					rb.angularVelocity = 0f;
 
@@ -956,6 +970,7 @@ public class FixPlayerScript : MonoBehaviour
 
 	int coroutine = 0;
 
+	//変化パーティクル
 	IEnumerator DisguiceParticle()
 	{
 		Debug.Log( ++coroutine );
@@ -999,4 +1014,100 @@ public class FixPlayerScript : MonoBehaviour
 
 		yield return null;
 	}
+
+	//箱に入る処理
+	IEnumerator inBoxProcess( )
+	{
+		nowSprite = hideSprite;
+
+		float inBoxFrame = 0f;
+
+		bool deathFlg = false;
+
+		bool spriteChange = false;
+
+		Quaternion particleRotation = Quaternion.Euler( 90f, 0f, 0f );
+		GameObject _inBoxParticleInCoroutine = Instantiate( inBoxParticle, new Vector3( transform.position.x, transform.position.y, transform.position.z - 3f ), particleRotation ) as GameObject;
+		InBoxScript particleScript = _inBoxParticleInCoroutine.GetComponent<InBoxScript>();
+
+		do
+		{
+			if( !spriteChange && inBoxFrame >= 0.6f )
+			{
+				transform.position = new Vector3( transform.position.x, transform.position.y, 3 );
+				spriteChange = true;
+			}
+
+			if( ( inBoxFrame += Time.deltaTime ) >= 3.1f )
+			{
+				deathFlg = particleScript.deathParticle( true );
+			}
+
+			yield return null;
+		} while( !deathFlg );
+
+		yield return null;
+	}
+	
+	//箱を出る処理
+	IEnumerator outBoxProcess()
+	{
+		nowSprite = hideSprite;
+
+		float outBoxFrame = 0f;
+
+		bool deathFlg = false;
+
+		bool spriteChange = false;
+
+		Quaternion particleRotation = Quaternion.Euler( 90f, 0f, 0f );
+		GameObject _outBoxParticleInCoroutine = Instantiate( outBoxParticle, new Vector3( transform.position.x, transform.position.y, transform.position.z - 6f ), particleRotation ) as GameObject;
+		InBoxScript particleScript = _outBoxParticleInCoroutine.GetComponent<InBoxScript>();
+
+		do
+		{
+			if( !spriteChange && outBoxFrame >= 0.6f )
+			{
+				transform.position = new Vector3( transform.position.x, transform.position.y, 0 );
+				spriteChange = true;
+			}
+
+			if( ( outBoxFrame += Time.deltaTime ) >= 3.1f )
+			{
+				deathFlg = particleScript.deathParticle( true );
+			}
+
+			yield return null;
+		} while( !deathFlg );
+
+		nowSprite = normalSprite;
+
+		yield return null;
+	}
+
+	IEnumerator RespawnParticle( Vector3 nowPosition )
+	{
+		float respawnFrame = 0f;
+
+		bool deathFlg = false;
+
+		Quaternion particleRotation = Quaternion.Euler( 90f, 0f, 0f );
+		GameObject _respawnParticleInCoroutine = Instantiate( deathParticle, new Vector3( nowPosition.x, nowPosition.y, nowPosition.z - 6f ), particleRotation ) as GameObject;
+		DisguiceParticleScript particleScript = _respawnParticleInCoroutine.GetComponent<DisguiceParticleScript>();
+
+		do
+		{
+			if( ( respawnFrame += Time.deltaTime ) >= 0.5f )
+			{
+				deathFlg = particleScript.deathParticle( true );
+			}
+
+			yield return null;
+		} while( !deathFlg );
+
+		nowSprite = normalSprite;
+
+		yield return null;
+	}
+	
 }

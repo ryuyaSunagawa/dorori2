@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class ParticleHoming : MonoBehaviour
 {
+	ParticleSystem ps;
+	ParticleSystem.Particle[] m_Particles;
 
-	ParticleSystem myParticleSystem;
-	ParticleSystem.Particle[] myParticle;
+	// ターゲットをセットする
+	public Transform target;
+	public float _speed = 6.0f;    // 1秒間に進む距離
+	public float _rotSpeed = 180.0f;  // 1秒間に回転する角度
 
-	//ターゲットするポジションを決める
-	[SerializeField] Transform targetPosition;
-
-	[SerializeField] float threshold = 100f;
-	[SerializeField] float intensity = 1f;
-	[SerializeField] bool targetting = false;
+	[SerializeField] bool targetting = true;
 
 	// Start is called before the first frame update
 	void Start()
     {
-		myParticleSystem = GetComponent<ParticleSystem>();
+		ps = GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -26,30 +25,12 @@ public class ParticleHoming : MonoBehaviour
     {
 		if( targetting == true )
 		{
-			myParticle = new ParticleSystem.Particle[ myParticleSystem.main.maxParticles ];
-			int numParticlesAlive = myParticleSystem.GetParticles( myParticle );
+			m_Particles = new ParticleSystem.Particle[ ps.main.maxParticles ];
+			int numParticlesAlive = ps.GetParticles( m_Particles );
 			for( int i = 0; i < numParticlesAlive; i++ )
 			{
-				var velocity = myParticleSystem.transform.TransformPoint( myParticle[ i ].velocity );
-				var position = myParticleSystem.transform.TransformPoint( myParticle[ i ].position );
-
-				//var period = myParticle[ i ].remainingLifetime * 0.9f;
-
-				//////ターゲットと自分自身の差
-				//var diff = targetPosition.TransformPoint( targetPosition.position ) - position;
-				//Vector3 accel = ( diff - velocity * period ) * 2f / ( period * period );
-
-				////加速度が一定以上だと追尾を弱くする
-				//if( accel.magnitude > threshold )
-				//{
-				//	accel = accel.normalized * threshold;
-				//}
-
-				//// 速度の計算
-				//velocity += accel * Time.deltaTime * intensity;
-				//myParticle[ i ].velocity = myParticleSystem.transform.InverseTransformPoint( velocity );
 			}
-			myParticleSystem.SetParticles( myParticle, numParticlesAlive );
+			ps.SetParticles( m_Particles, numParticlesAlive );
 		}
 	}
 }
