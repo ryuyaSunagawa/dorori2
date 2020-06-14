@@ -16,7 +16,6 @@ public class textchilldren : MonoBehaviour
 
     [SerializeField] private Sprite yellow_question;
 
-    [SerializeField] private Sprite syunpo_succuces;
 
     SpriteRenderer reaction_renderer;
 
@@ -31,16 +30,19 @@ public class textchilldren : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector2(enemy.transform.position.x, enemy.transform.position.y + 4);
+        if (script.direction)
+        {
+            transform.position = new Vector2(enemy.transform.position.x - 1.7f, enemy.transform.position.y + 3);
+        }
+        else
+        {
+            transform.position = new Vector2(enemy.transform.position.x + 1.7f, enemy.transform.position.y + 3);
+        }
 
         if(!script.deathflg)
         {
-            if(script.attack_avoid)
-            {
-                reaction_renderer.sprite = syunpo_succuces;
-            }
 
-            else if (script.range_level == 3f)
+            if (script.range_level == 3f)
             {
                 reaction_renderer.sprite = red_reaction;//
             }

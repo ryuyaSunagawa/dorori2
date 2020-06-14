@@ -547,6 +547,7 @@ MonoBehaviour:
   stickRunRange: 0.5
   sacrificeObject: {fileID: 1047771022}
   respawnDistance: 25
+  hideSprite: {fileID: 0}
   disguiseFlg: 0
   moveDelta: 2
   mooveRange: 10
@@ -562,6 +563,9 @@ MonoBehaviour:
   attackLeft: {fileID: 0}
   attackRight: {fileID: 0}
   attackParticle: {fileID: 0}
+  inBoxParticle: {fileID: 0}
+  outBoxParticle: {fileID: 0}
+  deathParticle: {fileID: 0}
 --- !u!61 &572357791
 BoxCollider2D:
   m_ObjectHideFlags: 0
