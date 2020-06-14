@@ -520,7 +520,7 @@ public class New2DEnemy : MonoBehaviour
                 else
                 {
                     Syunpo_past = false;
-                    Syunpo_Timeing = false;
+                    Syunpo_Timeing = true;
                 }
 
 
@@ -813,7 +813,7 @@ public class New2DEnemy : MonoBehaviour
 
         Enemy_Sound();
 
-        //Debug.Log(lets_attack);
+        Debug.Log(attackflg);
     }
 
     /// <summary>
@@ -846,10 +846,6 @@ public class New2DEnemy : MonoBehaviour
             //プレイヤーと対面している瞬歩のみ威嚇する
             if ((direction && P_Sprite.flipX) || (!direction && !P_Sprite.flipX))
             {
-                /*if (range_level <= 1.5f)
-                {
-                    Syunpo_Timeing = true;
-                }*/
                 if (range_level == 3 && attack_avoid)
                 {
                     Syunpo_Timeing = true;

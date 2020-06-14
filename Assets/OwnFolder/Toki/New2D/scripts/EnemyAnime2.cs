@@ -198,11 +198,11 @@ public class EnemyAnime2 : MonoBehaviour
         }
         else if (atk_flm == 18 && atk_flg == 1)
         {
+            enemyscript.attack_avoid = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[5];
         }
         else if (atk_flm == 24 && atk_flg == 1)
         {
-            enemyscript.attack_avoid = true;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[6];
         }
         else if (atk_flm == 29 && atk_flg == 1)

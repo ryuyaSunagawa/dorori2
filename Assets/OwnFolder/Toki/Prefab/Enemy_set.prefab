@@ -192,7 +192,7 @@ MonoBehaviour:
   red_reaction: {fileID: 21300000, guid: f09694b1e303f8f48b7827b43f5fefcf, type: 3}
   red_question: {fileID: 21300000, guid: 268bc78a7b21a7241af8f2e638935c1f, type: 3}
   yellow_question: {fileID: 21300000, guid: db7d5e2b5d238344c952092c34e6114a, type: 3}
-  syunpo_succuces: {fileID: 21300000, guid: d7a88cb94af35e740a91d81d98eddd91, type: 3}
+  syunpo_succuces: {fileID: 21300000, guid: a9a3236454e23e64d8b20d5944eb9bac, type: 3}
 --- !u!1 &5810848832485613423
 GameObject:
   m_ObjectHideFlags: 0
