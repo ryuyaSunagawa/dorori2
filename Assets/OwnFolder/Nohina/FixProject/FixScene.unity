@@ -32787,7 +32787,7 @@ PrefabInstance:
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: patrol_only
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
