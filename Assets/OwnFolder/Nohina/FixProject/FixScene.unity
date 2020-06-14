@@ -201,7 +201,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &166220412
 RectTransform:
   m_ObjectHideFlags: 0
@@ -26963,7 +26963,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -149, y: -49.899902}
+  m_AnchoredPosition: {x: -569, y: -49.899902}
   m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1206715147
@@ -32787,7 +32787,7 @@ PrefabInstance:
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
       propertyPath: patrol_only
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8391389297752971476, guid: 2faaff081b5da81428d82ace98664f5e,
         type: 3}
@@ -34295,6 +34295,11 @@ PrefabInstance:
     - target: {fileID: 3408150404039040455, guid: 4be0aa6a05ac3c043ab933701a5e38e7,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235205856395885649, guid: 4be0aa6a05ac3c043ab933701a5e38e7,
+        type: 3}
+      propertyPath: TrailModule.enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

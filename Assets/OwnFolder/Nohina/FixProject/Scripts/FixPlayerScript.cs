@@ -513,6 +513,7 @@ public class FixPlayerScript : MonoBehaviour
 			{
 				if( attackFrame == 85 )
 				{
+					useAttackParticle.transform.eulerAngles = new Vector3( 0f, 0f, 90f );
 					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( 0.591f, 0.281f ) + transform.localPosition ) );
 					attackParticleSpeed = attackParticleDistance / 10;
 				}
@@ -531,6 +532,7 @@ public class FixPlayerScript : MonoBehaviour
 			{
 				if( attackFrame == 85 )
 				{
+					useAttackParticle.transform.eulerAngles = new Vector3( 0f, 0f, -90f );
 					attackParticleDistance = Vector2.Distance( transform.position, transform.root.TransformPoint( new Vector3( -0.591f, 0.281f ) + transform.localPosition ) );
 					attackParticleSpeed = attackParticleDistance / 10;
 				}
