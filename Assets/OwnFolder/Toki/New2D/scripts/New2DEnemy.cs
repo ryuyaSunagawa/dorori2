@@ -42,22 +42,22 @@ public class New2DEnemy : MonoBehaviour
     [SerializeField] private float reaction = 1.5f;//プレイヤーを見つけた時の反応時間
 
 
-	public int _poisonState = 0;
-	public int poisonState
-	{
-		set {
-			_poisonState = value;
-		}
-	}
+    public int _poisonState = 0;
+    public int poisonState
+    {
+        set {
+            _poisonState = value;
+        }
+    }
 
-	private float pAmount = 0f;
-	[SerializeField] float maxPoisonAmount = 1.5f;
+    private float pAmount = 0f;
+    [SerializeField] float maxPoisonAmount = 1.5f;
 
-    
+
     Ray2D ray;                                      //敵のレイ
     RaycastHit2D hit;                               //レイが当たった奴の保存箱
 
-    [HideInInspector]public bool find = false;                      //プレイヤーを見つけたかフラグ
+    [HideInInspector] public bool find = false;                      //プレイヤーを見つけたかフラグ
 
     [HideInInspector] public bool tomadoi = false;                  //瞬歩でかわされたら少し止まって振り返る処理フラグ
 
@@ -70,21 +70,19 @@ public class New2DEnemy : MonoBehaviour
     private float start_range3;                     //range3の初期値が入ってるよ
 
 
-    [HideInInspector]public float range_level = 0;                   //プレイヤーの発見段階
+    [HideInInspector] public float range_level = 0;                   //プレイヤーの発見段階
 
-    [HideInInspector]public bool r2_5flg = false;                    //rangelevel2.5になったらrange2の距離を常時広がってる状況にするためのフラグ
+    [HideInInspector] public bool r2_5flg = false;                    //rangelevel2.5になったらrange2の距離を常時広がってる状況にするためのフラグ
 
     private float escape_playerx = 0.0f;                //プレイヤーが視界から脱出したときに座標を保存するとこ
 
     private float search_count = 0.0f;                  //プレイヤーが視界から脱出したときに探す時間カウント
-    
+
     [SerializeField] private float search_time = 2.5f;  //プレイヤーが視界から脱出したときに探す時間
 
     private bool settaiflg = false;                 //プレイヤーの攻撃中に待ってくれる接待フラグ
 
     [HideInInspector] public bool deathflg;       //死亡フラグ
-
-    [HideInInspector] public bool waitdeath = false;
 
     private float death_time = 0.5f;
     private float death_count = 0.0f;
@@ -96,15 +94,15 @@ public class New2DEnemy : MonoBehaviour
 
     private bool set_poisonflg = true;
 
-    [HideInInspector]public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
+    [HideInInspector] public bool attackflg = false;     //攻撃のモーションに入るときのフラグ(アニメーションの引き金)
 
-    [HideInInspector]public bool lets_attack = false;   //攻撃の判定出すときのフラグ
+    [HideInInspector] public bool lets_attack = false;   //攻撃の判定出すときのフラグ
 
     [HideInInspector] public bool attack_avoid = false; //敵の攻撃を回避できるフレームのフラグ
 
     [HideInInspector] public bool walkflg = false;        //歩いてる時のフラグ(アニメーションの引き金)
 
-    [HideInInspector]public bool runflg = false;        //走ってる時のフラグ(アニメーションの引き金)
+    [HideInInspector] public bool runflg = false;        //走ってる時のフラグ(アニメーションの引き金)
 
     [HideInInspector] public bool angryflg = false;       //敵の瞬歩弾きのフラグ(アニメーションの引き金)
 
@@ -130,9 +128,9 @@ public class New2DEnemy : MonoBehaviour
 
     private bool Syunpo_past = false;                       //1フレーム前の瞬歩
 
-    private bool Syunpo_Timeing = true;                    //成功する瞬歩か、失敗する瞬歩か
+    [HideInInspector] public bool Syunpo_Timeing = true;                    //成功する瞬歩か、失敗する瞬歩か
 
-    [SerializeField] private float tomadoi_time = 5.0f;     //敵が瞬歩によってプレイヤーを見失た時とまる時間
+    [SerializeField] private float tomadoi_time = 2.0f;     //敵が瞬歩によってプレイヤーを見失た時とまる時間
 
     private float tomadoi_count = 0.0f;                     //↑のカウント用
 
@@ -144,6 +142,7 @@ public class New2DEnemy : MonoBehaviour
     [SerializeField] private AudioClip hit_se;
     [SerializeField] private AudioClip asioto_se;
     [SerializeField] private AudioClip attack_se;
+    [SerializeField] private AudioClip angry_se;
 
     private AudioSource enemy_se;
 
@@ -151,6 +150,7 @@ public class New2DEnemy : MonoBehaviour
     private bool hit_se_flg;
     private bool asioto_se_flg;
     private bool attack_se_flg;
+    private bool angry_se_flg;
 
 
     // Start is called before the first frame update
@@ -246,50 +246,49 @@ public class New2DEnemy : MonoBehaviour
         }
         
         Debug.DrawRay(ray.origin, ray.direction * range1, Color.red);
-        if (waitdeath)
-        {
-            death_count += Time.deltaTime;
-            if(death_count > death_time)
-            {
-                deathflg = true;
-            }
-        }
+
+        
         if(deathflg)
         {
-            gameObject.layer = 16;
-            
-            walkflg = false;
-            runflg = false;
-            attackflg = false;
-            angryflg = false;
-            range_level = 0.0f;
-            
-
-            if (meltdowner)
+            death_count += Time.deltaTime;
+            if (death_count > death_time)
             {
-                if (!poisonpar_onetime && !poisonpar.isPlaying)
-                {
-                    poisonpar.Play(true);
-                    poisonpar_onetime = true;
-                }
+                gameObject.layer = 16;
 
-                sr.material = poison;
-                sr.material.SetFloat("_Start", 1.0f);
-                sr.material.SetFloat("_Timer", meltdestroy_count);
-                if (set_poisonflg)
-                {
-                    
-                    sr.material.SetFloat("_Down", 5.0f);
-                    sr.material.SetFloat("_Alpha", 0.0f);
-                    set_poisonflg = false;
-                }
-                
-                
+                walkflg = false;
+                runflg = false;
+                attackflg = false;
+                angryflg = false;
+                range_level = 0.0f;
 
-                meltdestroy_count += Time.deltaTime;
-                if(meltdestroy_count > meltdestroy_time)
+
+                if (meltdowner)
                 {
-                    Destroy(gameObject.transform.parent.gameObject);
+                    if (!poisonpar_onetime && !poisonpar.isPlaying)
+                    {
+                        poisonpar.Play(true);
+                        poisonpar_onetime = true;
+                    }
+
+                    sr.material = poison;
+                    sr.material.SetFloat("_Start", 1.0f);
+                    sr.material.SetFloat("_Timer", meltdestroy_count);
+                    if (set_poisonflg)
+                    {
+
+                        sr.material.SetFloat("_Down", 5.0f);
+                        sr.material.SetFloat("_Alpha", 0.0f);
+                        set_poisonflg = false;
+                    }
+
+
+
+                    meltdestroy_count += Time.deltaTime;
+                    if (meltdestroy_count > meltdestroy_time)
+                    {
+                        Destroy(gameObject.transform.parent.gameObject);
+                    }
+
                 }
             }
         }
@@ -298,9 +297,9 @@ public class New2DEnemy : MonoBehaviour
         //レイが何かに当たったか？//
         if (hit.collider && !deathflg && !GameManager.Instance.playerRespawnFlg)
         {
-           
 
-            if (hit.collider.name == "Player")
+            
+            if (hit.collider.gameObject.layer == 13)
             {
 
                
@@ -449,7 +448,7 @@ public class New2DEnemy : MonoBehaviour
 
 
             ///////瞬歩によってプレイヤを見失ったらしばらくとまる処理//////////
-            if(tomadoi)
+            if(tomadoi && !settaiflg)
             {
                 walkflg = false;
                 runflg = false;
@@ -521,7 +520,7 @@ public class New2DEnemy : MonoBehaviour
                 else
                 {
                     Syunpo_past = false;
-                    Syunpo_Timeing = true;
+                    Syunpo_Timeing = false;
                 }
 
 
@@ -727,7 +726,6 @@ public class New2DEnemy : MonoBehaviour
         }
 
         //Debug.Log(GameManager.Instance.enemyState);
-        //Debug.Log(settaiflg);
         
 		///<summary>
 		///投げ待ち時にパトロールを止める
@@ -945,6 +943,20 @@ public class New2DEnemy : MonoBehaviour
         {
             find_se_flg = false;
         }
+
+        ////////敵の威嚇SE/////////////////////
+        if(angryflg)
+        {
+            if(angry_se_flg)
+            {
+                enemy_se.PlayOneShot(angry_se);
+                angry_se_flg = true;
+            }
+        }
+        else
+        {
+            angry_se_flg = false;
+        }
     }
 
 
@@ -962,7 +974,6 @@ public class New2DEnemy : MonoBehaviour
     {
         if(GameManager.Instance.playerAttackNowFlg)
         {
-            waitdeath = true;
             settaiflg = true;
             runflg = false;
             walkflg = false;

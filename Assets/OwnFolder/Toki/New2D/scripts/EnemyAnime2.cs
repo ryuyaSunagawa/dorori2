@@ -240,23 +240,23 @@ public class EnemyAnime2 : MonoBehaviour
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[14];
         }
-        else if (atk_flm == 68 && atk_flg == 1)
+        else if ((!enemyscript.Syunpo_Timeing && atk_flm == 68 && atk_flg == 1) || (enemyscript.Syunpo_Timeing && atk_flm == 68 + 20 && atk_flg == 1))
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[15];
         }
-        else if (atk_flm == 72 && atk_flg == 1)//72
+        else if ((!enemyscript.Syunpo_Timeing && atk_flm == 72 && atk_flg == 1) || (enemyscript.Syunpo_Timeing && atk_flm == 72 + 20 && atk_flg == 1))
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[16];
         }
-        else if (atk_flm == 76 && atk_flg == 1)//76
+        else if ((!enemyscript.Syunpo_Timeing && atk_flm == 76 && atk_flg == 1) || (enemyscript.Syunpo_Timeing && atk_flm == 76 + 20 && atk_flg == 1))
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[17];
         }
-        else if (atk_flm == 80 && atk_flg == 1)//80
+        else if ((!enemyscript.Syunpo_Timeing && atk_flm == 80 && atk_flg == 1) || (enemyscript.Syunpo_Timeing && atk_flm == 80 + 20 && atk_flg == 1))
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = attacked[18];
         }
-        else if (atk_flm == 84 && atk_flg == 1)
+        else if ((!enemyscript.Syunpo_Timeing && atk_flm == 84 && atk_flg == 1) || (enemyscript.Syunpo_Timeing && atk_flm == 84 + 20 &&  atk_flg == 1))
         {
             atk_flg = 0;
             atk_flm = 0;

@@ -192,6 +192,7 @@ MonoBehaviour:
   red_reaction: {fileID: 21300000, guid: f09694b1e303f8f48b7827b43f5fefcf, type: 3}
   red_question: {fileID: 21300000, guid: 268bc78a7b21a7241af8f2e638935c1f, type: 3}
   yellow_question: {fileID: 21300000, guid: db7d5e2b5d238344c952092c34e6114a, type: 3}
+  syunpo_succuces: {fileID: 21300000, guid: d7a88cb94af35e740a91d81d98eddd91, type: 3}
 --- !u!1 &5810848832485613423
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +415,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.5395159, g: 0.16820933, b: 0.5660378, a: 1}
+      maxColor: {r: 0.44296363, g: 0.13737096, b: 0.46226418, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -927,7 +928,7 @@ ParticleSystem:
     m_UseMeshMaterialIndex: 0
     m_UseMeshColors: 1
     alignToDirection: 0
-    m_Texture: {fileID: 2800000, guid: cdc244696f3d3fb488fbc0667deae4d4, type: 3}
+    m_Texture: {fileID: 0}
     m_TextureClipChannel: 3
     m_TextureClipThreshold: 0
     m_TextureUVChannel: 0
@@ -5401,6 +5402,16 @@ PrefabInstance:
       propertyPath: poisonpar
       value: 
       objectReference: {fileID: 8685075248544324276}
+    - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: angry_se
+      value: 
+      objectReference: {fileID: 8300000, guid: f1b605cc7db11a54fbf85a0d4653c1c0, type: 3}
+    - target: {fileID: 8512516387051245091, guid: b601a44d2c3c4574ea7ab295cf37715e,
+        type: 3}
+      propertyPath: tomadoi_time
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8512516387051245095, guid: b601a44d2c3c4574ea7ab295cf37715e,
         type: 3}
       propertyPath: m_Name

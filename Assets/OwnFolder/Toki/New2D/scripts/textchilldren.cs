@@ -16,6 +16,8 @@ public class textchilldren : MonoBehaviour
 
     [SerializeField] private Sprite yellow_question;
 
+    [SerializeField] private Sprite syunpo_succuces;
+
     SpriteRenderer reaction_renderer;
 
     private Text changetext;
@@ -33,8 +35,12 @@ public class textchilldren : MonoBehaviour
 
         if(!script.deathflg)
         {
+            if(script.attack_avoid)
+            {
+                reaction_renderer.sprite = syunpo_succuces;
+            }
 
-            if (script.range_level == 3f)
+            else if (script.range_level == 3f)
             {
                 reaction_renderer.sprite = red_reaction;//
             }
