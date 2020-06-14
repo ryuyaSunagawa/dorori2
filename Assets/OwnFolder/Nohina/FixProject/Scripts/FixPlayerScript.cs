@@ -280,7 +280,7 @@ public class FixPlayerScript : MonoBehaviour
 			}
 			else if( disguiseMode == 2 )
 			{
-				nowSprite = disguiseSprite;
+				GetComponent<PlayerAnimationScript>().disgueMode( 1, out nowSprite );
 			}
 
 			transform.Translate( horizontal * playerSpeed_Normal, 0f, 0f );
@@ -293,7 +293,7 @@ public class FixPlayerScript : MonoBehaviour
 			}
 			else if( disguiseMode == 2 )
 			{
-				nowSprite = disguiseSprite;
+				GetComponent<PlayerAnimationScript>().disgueMode( 1, out nowSprite );
 			}
 
 			transform.Translate( Math.Sign( horizontal ) * playerSpeed_Normal, 0f, 0f );
@@ -306,7 +306,7 @@ public class FixPlayerScript : MonoBehaviour
 			}
 			else if( disguiseMode == 2 )
 			{
-				nowSprite = disguiseSprite;
+				GetComponent<PlayerAnimationScript>().disgueMode( 0, out nowSprite );
 			}
 		}
 	}
@@ -352,7 +352,7 @@ public class FixPlayerScript : MonoBehaviour
 		}
 
 		//隠れていない状態でHideButtonフラグを立てる
-		if( Input.GetButtonDown( "Hide" ) && nowHide == false && !GameManager.Instance.playerMooveFlg )
+		if( Input.GetButtonDown( "Hide" ) && nowHide == false && !GameManager.Instance.playerMooveFlg && !GameManager.Instance.playerAttackNowFlg )
 		{
 			hideButton = true;
 		}
@@ -379,7 +379,7 @@ public class FixPlayerScript : MonoBehaviour
 			hidePushFrame = 0f;
 			disguiceChangeFrame += 0.001f;
 		}
-		else if( disguiseFlg == false && pushFrameAt2 && !nowHide && Input.GetButton( "Hide" ) )
+		else if( disguiseFlg == false && pushFrameAt2 && !nowHide && Input.GetButton( "Hide" ) && !GameManager.Instance.playerAttackNowFlg )
 		{
 			StartCoroutine( "DisguiceParticle" );
 			pushFrameAt2 = false;
@@ -592,6 +592,8 @@ public class FixPlayerScript : MonoBehaviour
 		{
 			enemyScript.deathflg = true;
 
+			Destroy( useAttackParticle );
+
 			attackParticleDistance = 0f;
 			attackParticleSpeed = 0f;
 
@@ -652,7 +654,7 @@ public class FixPlayerScript : MonoBehaviour
 				nextMovePosition = CollideJudge( mooveRange, directionRight );
 			}
 
-			if( enemyScript.attack_avoid || GameManager.Instance.enemyState == 1 || nextMovePosition == distanceComp )
+			if( enemyScript.attack_avoid || GameManager.Instance.enemyState == 1 || nextMovePosition == distanceComp || ( directionRight == enemyScript.direction ) )
 			{
 				nextMovePosition = new Vector3( now + ( x * 4 ), transform.position.y, transform.position.z );
 			}
@@ -676,7 +678,7 @@ public class FixPlayerScript : MonoBehaviour
 				nextMovePosition = CollideJudge( mooveRange, directionRight );
 			}
 
-			if( enemyScript.attack_avoid || nextMovePosition == distanceComp )
+			if( enemyScript.attack_avoid || nextMovePosition == distanceComp || ( directionRight == enemyScript.direction ) )
 			{
 				nextMovePosition = new Vector3( now - ( x * 4 ), transform.position.y, transform.position.z );
 			}
@@ -723,6 +725,7 @@ public class FixPlayerScript : MonoBehaviour
 			if( disguiceChangeFrame >= 0.8f )
 			{
 				disguiseMode = 2;
+				disguiceChangeFrame = 0f;
 				nowSprite = disguiseSprite;
 			}
 		}
@@ -746,7 +749,6 @@ public class FixPlayerScript : MonoBehaviour
 			GameManager.Instance.playerDisguiceFlg = false;
 
 			disguiceWaitTime = 0f;
-
 		}
 	}
 
@@ -940,7 +942,7 @@ public class FixPlayerScript : MonoBehaviour
 		//右の場合と左の場合
 		if( direct == true )
 		{
-			collideObject = Physics2D.Raycast( rayOrigin, Vector2.right, rayDistance, layerMask );
+			collideObject = Physics2D.Raycast( transform.position, Vector2.right, rayDistance, layerMask );
 
 			if( !collideObject )
 			{
@@ -1038,7 +1040,7 @@ public class FixPlayerScript : MonoBehaviour
 				spriteChange = true;
 			}
 
-			if( ( inBoxFrame += Time.deltaTime ) >= 3.1f )
+			if( ( inBoxFrame += Time.deltaTime ) >= 1.1f )
 			{
 				deathFlg = particleScript.deathParticle( true );
 			}
@@ -1072,7 +1074,7 @@ public class FixPlayerScript : MonoBehaviour
 				spriteChange = true;
 			}
 
-			if( ( outBoxFrame += Time.deltaTime ) >= 3.1f )
+			if( ( outBoxFrame += Time.deltaTime ) >= 1.1f )
 			{
 				deathFlg = particleScript.deathParticle( true );
 			}

@@ -11,6 +11,9 @@ public class PlayerAnimationScript : MonoBehaviour
 	int runSprite_flm = 0;
 	int runSprite_flg = 0;
 
+	int disgue_flm = 0;
+	int disSprite_flg = 0;
+
 	int deathAnimationFrame = 0;
 
 	//アタックの時に溜めるフレーム
@@ -26,11 +29,13 @@ public class PlayerAnimationScript : MonoBehaviour
 	/// ノーマル(立ち絵)のスプライト
 	/// </summary>
 	[SerializeField] Sprite normalSprite = null;
+	[SerializeField] Sprite disguiceNormalSprite = null;
 
 	[SerializeField, Header( "攻撃アニメーション" )] Sprite[] attackSprite = new Sprite[6];
 	[SerializeField, Header( "歩行アニメーション" )] Sprite[] walkSprite = new Sprite[8];
 	[SerializeField, Header( "走行アニメーション" )] Sprite[] runSprite = new Sprite[8];
 	[SerializeField, Header( "死亡アニメーション" )] Sprite[] deathSprite = new Sprite[ 12 ];
+	[SerializeField, Header( "変化歩行アニメーション" )] Sprite[] disguiceSprite = new Sprite[ 7 ];
 
 	/// <summary>
 	/// プレイヤーのアタックアニメーション
@@ -225,5 +230,54 @@ public class PlayerAnimationScript : MonoBehaviour
 		outDeathSprite = nowSprite;
 
 		return deathAnimationFrame;
+	}
+
+	public void disgueMode( int useComp, out Sprite runSpriteSprite )
+	{
+
+		disSprite_flg = useComp;
+
+		if( disgue_flm == 0 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 0 ];
+		}
+		else if( disgue_flm == 6 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 1 ];
+		}
+		else if( disgue_flm == 12 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 2 ];
+		}
+		else if( disgue_flm == 18 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 3 ];
+		}
+		else if( disgue_flm == 24 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 4 ];
+		}
+		else if( disgue_flm == 30 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 5 ];
+		}
+		else if( disgue_flm == 36 && disSprite_flg == 1 )
+		{
+			nowSprite = disguiceSprite[ 6 ];
+		}
+		else if( disgue_flm == 42 && disSprite_flg == 1 )
+		{
+			disgue_flm = 0;
+		}
+		else if( disSprite_flg == 0 )
+		{
+			disgue_flm = 0;
+			nowSprite = disguiceNormalSprite;
+		}
+
+		if( disSprite_flg == 1 )
+			disgue_flm++;
+
+		runSpriteSprite = nowSprite;
 	}
 }
