@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/OwnFolder/Kazuna/zunaScene/GameOver.unity
     guid: fa57c85732b26d145895efb5903ba15b
+  - enabled: 1
+    path: Assets/OwnFolder/Kazuna/zunaScene/ClearScene.unity
+    guid: 47a6e9be91f1e624183dda1ec7727b14
   m_configObjects: {}

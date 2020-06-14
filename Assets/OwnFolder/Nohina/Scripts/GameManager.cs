@@ -183,6 +183,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 	float timeElapsed = 0f;
 	int frameSize = 0;
 
+	float clearState = 0f;
+
 	[SerializeField] List<GameObject> lifeList = new List<GameObject>();
 
 	/// <summary>
@@ -269,6 +271,22 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 		if( playerFinishDeathAnimationFlg )
 		{
 			SceneManager.LoadScene( 2 );
+		}
+
+		if( GameManager.Instance.enemyObj.GetComponent<New2DEnemy>().deathflg == true && clearState < 1f )
+		{
+			print( "ahahahan" );
+			clearState = 1f;
+		}
+
+		if( clearState >= 1f )
+		{
+			clearState += Time.deltaTime;
+
+			if( clearState >= 5f )
+			{
+				SceneManager.LoadScene( 3 );
+			}
 		}
 
 	}

@@ -654,7 +654,7 @@ public class FixPlayerScript : MonoBehaviour
 				nextMovePosition = CollideJudge( mooveRange, directionRight );
 			}
 
-			if( enemyScript.attack_avoid || GameManager.Instance.enemyState == 1 || nextMovePosition == distanceComp || ( directionRight == enemyScript.direction ) )
+			if( enemyScript.attack_avoid || GameManager.Instance.enemyState == 1 || nextMovePosition == distanceComp || ( directionRight != enemyScript.direction ) )
 			{
 				nextMovePosition = new Vector3( now + ( x * 4 ), transform.position.y, transform.position.z );
 			}
@@ -678,7 +678,7 @@ public class FixPlayerScript : MonoBehaviour
 				nextMovePosition = CollideJudge( mooveRange, directionRight );
 			}
 
-			if( enemyScript.attack_avoid || nextMovePosition == distanceComp || ( directionRight == enemyScript.direction ) )
+			if( enemyScript.attack_avoid || nextMovePosition == distanceComp || ( directionRight != enemyScript.direction ) )
 			{
 				nextMovePosition = new Vector3( now - ( x * 4 ), transform.position.y, transform.position.z );
 			}
